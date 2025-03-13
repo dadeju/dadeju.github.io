@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Mar 13 2025 19:33:33 GMT+0800">2025-03-13 19:33:33</span>
+                    <span class="datetime" data-updated="Thu Mar 13 2025 19:41:11 GMT+0800">2025-03-13 19:41:11</span>
                 </span>
             
         
@@ -219,7 +219,7 @@
                     
 
                     
-                         <p>在freertos中PendSV 中断服务函数是真正实现任务切换的地方，任务切换的本质就是CPU寄存器的切换<br>基本流程：<br>触发PendSV中断 → 硬件自动保存R0-R3, R12, LR, PC, xPSR → 手动保存R4-R11, LR → 切换TCB → 恢复新任务寄存器 → 返回新任务<br>本文主要讲解在任务切换过程中是如何保存上一个任务的寄存器到栈<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.2320vbbgf2.png"  alt="图片2"><br>当进入xPortPendSVHandler的这个时刻，硬件此时已经就帮我们将xPSR， PC（任务入口地址）， R14， R12， R3， R2， R1， R0自动压入栈中了。在 FreeRTOS 操作系统中，主堆栈指针 MSP 是给系统栈空间使用的， 进程堆栈指针 PSP 是给任务栈使用的。<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.png"  alt="图片1"><br>PSP的值为0x20001100，在memory窗口中查看，与右边cpu寄存器的值相同<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.3gojzcosq5.png"  alt="图片3"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%874.39lc3x2naj.png"  alt="图片4"></p>
+                         <p>在freertos中PendSV 中断服务函数是真正实现任务切换的地方，任务切换的本质就是CPU寄存器的切换<br>基本流程：<br>触发PendSV中断 → 硬件自动保存R0-R3, R12, LR, PC, xPSR → 手动保存R4-R11, LR → 切换TCB → 恢复新任务寄存器 → 返回新任务<br>本文主要讲解在任务切换过程中是如何保存上一个任务的寄存器到栈<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.2320vbbgf2.png"  alt="图片2"><br>当进入xPortPendSVHandler的这个时刻，硬件此时已经就帮我们将xPSR， PC（任务入口地址）， R14， R12， R3， R2， R1， R0自动压入栈中了。<br><mark> 在 FreeRTOS 操作系统中，主堆栈指针 MSP 是给系统栈空间使用的， 进程堆栈指针 PSP 是给任务栈使用的。 </mark><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.png"  alt="图片1"><br>PSP的值为0x20001100，在memory窗口中查看，与右边cpu寄存器的值相同<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.3gojzcosq5.png"  alt="图片3"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%874.39lc3x2naj.png"  alt="图片4"></p>
 <p>这里需要注意的是在flash中数据是小端存储（在 小端模式 下，低地址存 低字节，高地址存 高字节），以R2为例，实际值为：0x2000 0350，在flash中是这样存储的”50 03 00 20”<br>余下的9个寄存器（r4~r11，r14）需要我们手动更新<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%875.54xwwjf2wa.png"  alt="图片5"></p>
 <p>执行为这一句后，R0的地址将由0x20001100-&gt;0x200010DC<br>即 （9*4）&#x3D; 36 十六进制为0x24<br> 0x1100-0x24 &#x3D; 0x10DC<br>Debug可知R0变为0x200010DC 与预期相符<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%876.2obohm86zt.png"  alt="图片6"><br>r4~r11和r14的值也一一对应相同<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%877.8hgmqwvn8o.png"  alt="图片7"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%878.8z6ofhx0tk.png"  alt="图片8"><br>至此，上下文切换中的上文已全部压入栈中保存完成</p>
 <p>另外：在debug过程中需要注意一下：将pxCurrentTCB添加到wathc窗口后，value栏的值不是pxCurrentTCB的地址；而是TCB结构体第一个变量的地址， pxTopOfStack的地址。<br>pxCurrentTCB的地址我们通过代码逻辑可知为R3，通过观察debug窗口可知为0x2000001C。<br>如果你直接 watch pxCurrentTCB，watch 窗口默认解引用它，显示的是 pxCurrentTCB 指向的 TCB_t 结构的 第一个成员。<br>TCB_t 的第一个成员是 pxTopOfStack，所以 watch 窗口会显示 pxTopOfStack 的值，而不是 pxCurrentTCB 本身的地址。<br>（这里有些绕，值得好好咂摸一下）<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%879.b920eudt3.png"  alt="图片9"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%8710.5tr6gk2lwm.png"  alt="图片10"></p>
