@@ -9,7 +9,7 @@
     
     <title>
         
-            linux下使用QQ的四种姿势 |
+            freertos PendSV 任务切换函数解析 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        linux下使用QQ的四种姿势
+                        freertos PendSV 任务切换函数解析
                     </div>
                 
 
@@ -177,19 +177,28 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2021-08-09 18:04:37</span>
+                <span class="datetime">2025-03-13 19:12:28</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Mon Aug 09 2021 18:04:37 GMT+0800">2021-08-09 18:04:37</span>
+                    <span class="datetime" data-updated="Thu Mar 13 2025 19:33:33 GMT+0800">2025-03-13 19:33:33</span>
                 </span>
             
         
 
         
 
+        
+            <span class="post-tag meta-info-item border-box">
+                <ul class="post-tag-ul">
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/RTOS/">RTOS</a></li>
+                        
+                    
+                </ul>
+            </span>
         
 
         
@@ -210,17 +219,10 @@
                     
 
                     
-                         <p>排名分先后</p>
-<ol>
-<li><p>electron-qq<br><a class="link"   target="_blank" rel="noopener" href="https://github.com/Clansty/Icalingua" >https://github.com/Clansty/Icalingua<i class="fas fa-external-link-alt"></i></a><br>优点：界面好看；可以使用本地收藏表情包，可同步漫游表情包；可发送、接收文件；头像、图片显示正常；<br>缺点：没有群文件；<br>绝对是Linux上使用QQ的最优选择。</p>
-</li>
-<li><p>wine-qq<br>优点：功能几乎和原版一样（群文件功能半残；<br>缺点：图片显示有时候有问题，占用内存大；wine有时候会崩；不能同步表情包，不能收藏表情包；<br><img   src="https://cdn.jsdelivr.net/gh/dadeju/picx-images-hosting@master/2021-08-28_16-01.6s7kl22g8200.7i0j7yin4a.webp" ></p>
-</li>
-<li><p>vscode-qq<br>曲线救国了属于是，你甚至可以用vscode写代码（doge<br>是vscode里面的一个插件。<br>优点：轻量，光速打开；可发图片；可同步漫游表情包；可自动登录；<br>缺点：没有群文件；聊天记录显示偶尔有问题（硬伤；<br><img   src="https://cdn.jsdelivr.net/gh/dadeju/picx-images-hosting@master/2021-08-28_16-11.2jnn5zdsnzk0.5tr6aryke8.webp"  alt="2021-08-28_16-11"></p>
-</li>
-<li><p>linux-qq<br>最拉跨的一个，官方版linuxqq<br>优点：勉强能用；<br>缺点：只能扫码登录，10次扫码8次崩，经常登不上；登上了也极不稳定；在我的电脑上没有稳定运行30分钟过；不能显示头像，图片显示有问题；没有群文件；梦回2003,我指的界面，功能还不如;<br>linux-qq<br><img   src="https://cdn.jsdelivr.net/gh/dadeju/picx-images-hosting@master/2021-08-28_16-21.11xezx7f5xi8.6bh7zd0s2n.webp"  alt="2021-08-28_16-21"><br>谢谢阅读，祝君好运</p>
-</li>
-</ol>
+                         <p>在freertos中PendSV 中断服务函数是真正实现任务切换的地方，任务切换的本质就是CPU寄存器的切换<br>基本流程：<br>触发PendSV中断 → 硬件自动保存R0-R3, R12, LR, PC, xPSR → 手动保存R4-R11, LR → 切换TCB → 恢复新任务寄存器 → 返回新任务<br>本文主要讲解在任务切换过程中是如何保存上一个任务的寄存器到栈<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.2320vbbgf2.png"  alt="图片2"><br>当进入xPortPendSVHandler的这个时刻，硬件此时已经就帮我们将xPSR， PC（任务入口地址）， R14， R12， R3， R2， R1， R0自动压入栈中了。在 FreeRTOS 操作系统中，主堆栈指针 MSP 是给系统栈空间使用的， 进程堆栈指针 PSP 是给任务栈使用的。<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.png"  alt="图片1"><br>PSP的值为0x20001100，在memory窗口中查看，与右边cpu寄存器的值相同<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.3gojzcosq5.png"  alt="图片3"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%874.39lc3x2naj.png"  alt="图片4"></p>
+<p>这里需要注意的是在flash中数据是小端存储（在 小端模式 下，低地址存 低字节，高地址存 高字节），以R2为例，实际值为：0x2000 0350，在flash中是这样存储的”50 03 00 20”<br>余下的9个寄存器（r4~r11，r14）需要我们手动更新<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%875.54xwwjf2wa.png"  alt="图片5"></p>
+<p>执行为这一句后，R0的地址将由0x20001100-&gt;0x200010DC<br>即 （9*4）&#x3D; 36 十六进制为0x24<br> 0x1100-0x24 &#x3D; 0x10DC<br>Debug可知R0变为0x200010DC 与预期相符<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%876.2obohm86zt.png"  alt="图片6"><br>r4~r11和r14的值也一一对应相同<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%877.8hgmqwvn8o.png"  alt="图片7"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%878.8z6ofhx0tk.png"  alt="图片8"><br>至此，上下文切换中的上文已全部压入栈中保存完成</p>
+<p>另外：在debug过程中需要注意一下：将pxCurrentTCB添加到wathc窗口后，value栏的值不是pxCurrentTCB的地址；而是TCB结构体第一个变量的地址， pxTopOfStack的地址。<br>pxCurrentTCB的地址我们通过代码逻辑可知为R3，通过观察debug窗口可知为0x2000001C。<br>如果你直接 watch pxCurrentTCB，watch 窗口默认解引用它，显示的是 pxCurrentTCB 指向的 TCB_t 结构的 第一个成员。<br>TCB_t 的第一个成员是 pxTopOfStack，所以 watch 窗口会显示 pxTopOfStack 的值，而不是 pxCurrentTCB 本身的地址。<br>（这里有些绕，值得好好咂摸一下）<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%879.b920eudt3.png"  alt="图片9"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%8710.5tr6gk2lwm.png"  alt="图片10"></p>
 
                     
                 </div>
@@ -229,6 +231,14 @@
 
                 <div class="post-bottom-tags-and-share border-box">
                     <div>
+                        
+                            <ul class="post-tags-box border-box">
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/RTOS/">RTOS</a>
+                                    </li>
+                                
+                            </ul>
                         
                     </div>
                     <div>
@@ -241,31 +251,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2021/11/08/ubuntu%E4%B8%8B%E9%85%8D%E7%BD%AE51%E5%8D%95%E7%89%87%E6%9C%BA%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/"
-                                   title="ubuntu下配置51单片机开发环境"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">ubuntu下配置51单片机开发环境</span>
-                                        <span class="post-nav-item">Prev posts</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2020/05/07/%E5%8D%81%E5%88%86%E9%92%9F%E5%AD%A6%E4%BC%9Amarkdown/"
-                                   title="十分钟学会markdown"
+                                   href="/2025/03/11/%E4%BA%91%E9%80%94HA-%E4%BB%8EPower-down%E6%A8%A1%E5%BC%8F%E5%94%A4%E9%86%92%E5%90%8E%EF%BC%8C%E4%BF%9D%E6%8C%81RTC%E6%97%B6%E9%92%9F%E7%9A%84%E6%96%B9%E6%B3%95%E5%88%86%E4%BA%AB/"
+                                   title="云途HA 从Power down模式唤醒后，保持RTC时钟的方法分享"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">十分钟学会markdown</span>
+                                        <span class="post-nav-title-item text-ellipsis">云途HA 从Power down模式唤醒后，保持RTC时钟的方法分享</span>
                                         <span class="post-nav-item">Next posts</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
