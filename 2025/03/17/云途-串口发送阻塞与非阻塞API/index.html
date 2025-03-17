@@ -9,7 +9,7 @@
     
     <title>
         
-            SPI 读取数据&#39;错位&#39; |
+            云途 串口发送阻塞与非阻塞API |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        SPI 读取数据&#39;错位&#39;
+                        云途 串口发送阻塞与非阻塞API
                     </div>
                 
 
@@ -177,13 +177,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-03-14 23:08:01</span>
+                <span class="datetime">2025-03-17 22:10:04</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Fri Mar 14 2025 23:30:32 GMT+0800">2025-03-14 23:30:32</span>
+                    <span class="datetime" data-updated="Mon Mar 17 2025 22:36:03 GMT+0800">2025-03-17 22:36:03</span>
                 </span>
             
         
@@ -219,9 +219,15 @@
                     
 
                     
-                         <p>在FAE群里面有人说SPI读取的数据出现了错位，然后这个问题我刚好遇到过，遂记录一下<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20250314231545.3nrrwg2soq.png"  alt="微信图片_20250314231545"><br>可以观察到其实这组数据还是很有规律的</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">正确数据</span><br><span class="line">01 02 03 04 05 06 07 08 09</span><br><span class="line"></span><br><span class="line">错位数据</span><br><span class="line">80 81 01 82 02 83 03 84 04</span><br></pre></td></tr></table></figure>
-<p>每个字节的最高位变成了 1（0x80, 0x81, 0x82, 0x83）<br>低 7 位数据仍然有部分对得上<br>这个现象通常是 数据整体左移了一位，即 最左边多出一个 1，最后一个位丢失。<br>这种情况一般是SPI的模式主从两边不一致导致的，比如SCK空闲电平错误，就会导致第一个电平读取的时机错误<br>以02错码成81举例：0000 0010，首先左移一位，变为 0000 0001，又由于第一个bit，读取的时机错误，相当于多加了一个1，变为 1000 0001,即81<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20250314232215.83a71pr0ab.png"  alt="微信图片_20250314232215"></p>
+                         <p>云途MCU串口数据发送常用的有两套API（其实有三套）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LINFlexD_UART_DRV_SendData</span><br><span class="line">LINFlexD_UART_DRV_SendDataBlocking</span><br></pre></td></tr></table></figure>
+<p>下面简要说明一下带blocking的这个API，为了简明，我把API做了一下删减</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">status_t</span> <span class="title function_">LINFlexD_UART_DRV_SendDataBlocking</span><span class="params">(<span class="type">uint32_t</span> instance,</span></span><br><span class="line"><span class="params">                                            <span class="type">const</span> <span class="type">uint8_t</span> * txBuff,</span></span><br><span class="line"><span class="params">                                            <span class="type">uint32_t</span> txSize,</span></span><br><span class="line"><span class="params">                                            <span class="type">uint32_t</span> timeout)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">linflexd_uart_state_t</span> * uartState;</span><br><span class="line">    <span class="type">status_t</span> retVal;</span><br><span class="line"></span><br><span class="line">    uartState = (<span class="type">linflexd_uart_state_t</span> *)s_uartLINFlexDStatePtr[instance];</span><br><span class="line">    retVal = STATUS_SUCCESS;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Indicates this is a blocking transaction. */</span></span><br><span class="line">    uartState-&gt;isTxBlocking = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">/* Reset signal before transfer */</span></span><br><span class="line">    <span class="comment">//这里会尝试获取txcomplete信号量，</span></span><br><span class="line">    (<span class="type">void</span>)OSIF_SemaWait(&amp;(uartState-&gt;txComplete), <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Start the transmission process using DMA */</span></span><br><span class="line">        <span class="comment">//真正发送数据的入口API</span></span><br><span class="line">        retVal = LINFlexD_UART_DRV_StartSendUsingDma(instance, txBuff, txSize);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (retVal == STATUS_SUCCESS)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//等待信号量</span></span><br><span class="line">        <span class="comment">/* Wait until to transmit is complete. */</span></span><br><span class="line">        retVal = OSIF_SemaWait(&amp;uartState-&gt;txComplete, timeout);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Finish the transmission if timeout expired */</span></span><br><span class="line">        <span class="keyword">if</span> (retVal == STATUS_TIMEOUT)</span><br><span class="line">        &#123;</span><br><span class="line">            uartState-&gt;isTxBlocking = <span class="literal">false</span>;</span><br><span class="line">            uartState-&gt;transmitStatus = STATUS_TIMEOUT;</span><br><span class="line"></span><br><span class="line">            LINFlexD_UART_DRV_CompleteSendUsingDma(((<span class="type">void</span> *)instance), DMA_CHN_NORMAL);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> retVal;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20250317222408.7lk5hcv61f.webp"  alt="微信图片_20250317222408"><br>在上面这个API中，发送完成后底层驱动会释放信号量txComplete（send前会尝试获取）,一般用freertos的都建议用带block的API</p>
+<p>补充：之前我在看关于串口回调函数事件的时候有一个点非常困惑,UART_EVENT_TX_EMPTY和UART_EVENT_END_TRANSFER难道不是一个事件吗？TX的fifo为空，应该是代表了传输完成；今天突然看到<mark>Linflexd_Uart_Continuous_Transmission_Demo</mark>例程才反应过来，tx fifo为空本次传输的的8个字节传输完成了。硬件已准备好接收下一个待发送的字节，一般用在逐字节流式传输。如果是整个传输任务（如多字节发送完成）此时触发的是UART_EVENT_END_TRANSFER事件</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    UART_EVENT_RX_FULL      = <span class="number">0x00U</span>,    <span class="comment">/*!&lt; Rx buffer is full */</span></span><br><span class="line">    UART_EVENT_TX_EMPTY     = <span class="number">0x01U</span>,    <span class="comment">/*!&lt; Tx buffer is empty */</span></span><br><span class="line">    UART_EVENT_END_TRANSFER = <span class="number">0x02U</span>,    <span class="comment">/*!&lt; The current transfer is ending */</span></span><br><span class="line">    UART_EVENT_ERROR        = <span class="number">0x03U</span>,    <span class="comment">/*!&lt; An error occured during transfer */</span></span><br><span class="line">    UART_EVENT_TIMEOUT      = <span class="number">0x04U</span>,    <span class="comment">/*!&lt; Uart TimeOut */</span></span><br><span class="line"></span><br><span class="line">&#125; <span class="type">uart_event_t</span>;</span><br></pre></td></tr></table></figure>
+
+<p>水平有限，有什么疏漏之处欢迎指问</p>
 
                     
                 </div>
@@ -250,31 +256,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/03/17/%E4%BA%91%E9%80%94-%E4%B8%B2%E5%8F%A3%E5%8F%91%E9%80%81%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9EAPI/"
-                                   title="云途 串口发送阻塞与非阻塞API"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">云途 串口发送阻塞与非阻塞API</span>
-                                        <span class="post-nav-item">Prev posts</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/03/13/freertos-PendSV-%E4%BB%BB%E5%8A%A1%E5%88%87%E6%8D%A2%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90/"
-                                   title="freertos PendSV 任务切换函数解析"
+                                   href="/2025/03/14/SPI-%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE-%E9%94%99%E4%BD%8D/"
+                                   title="SPI 读取数据&#39;错位&#39;"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">freertos PendSV 任务切换函数解析</span>
+                                        <span class="post-nav-title-item text-ellipsis">SPI 读取数据&#39;错位&#39;</span>
                                         <span class="post-nav-item">Next posts</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
