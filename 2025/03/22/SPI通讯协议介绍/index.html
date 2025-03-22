@@ -9,7 +9,7 @@
     
     <title>
         
-            云途 串口发送阻塞与非阻塞API |
+            SPI通讯协议介绍 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        云途 串口发送阻塞与非阻塞API
+                        SPI通讯协议介绍
                     </div>
                 
 
@@ -177,13 +177,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-03-17 22:10:04</span>
+                <span class="datetime">2025-03-22 15:36:45</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Mon Mar 17 2025 22:36:03 GMT+0800">2025-03-17 22:36:03</span>
+                    <span class="datetime" data-updated="Sat Mar 22 2025 15:39:17 GMT+0800">2025-03-22 15:39:17</span>
                 </span>
             
         
@@ -219,15 +219,48 @@
                     
 
                     
-                         <p>云途MCU串口数据发送常用的有两套API（其实有三套）</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LINFlexD_UART_DRV_SendData</span><br><span class="line">LINFlexD_UART_DRV_SendDataBlocking</span><br></pre></td></tr></table></figure>
-<p>下面简要说明一下带blocking的这个API，为了简明，我把API做了一下删减</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">status_t</span> <span class="title function_">LINFlexD_UART_DRV_SendDataBlocking</span><span class="params">(<span class="type">uint32_t</span> instance,</span></span><br><span class="line"><span class="params">                                            <span class="type">const</span> <span class="type">uint8_t</span> * txBuff,</span></span><br><span class="line"><span class="params">                                            <span class="type">uint32_t</span> txSize,</span></span><br><span class="line"><span class="params">                                            <span class="type">uint32_t</span> timeout)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">linflexd_uart_state_t</span> * uartState;</span><br><span class="line">    <span class="type">status_t</span> retVal;</span><br><span class="line"></span><br><span class="line">    uartState = (<span class="type">linflexd_uart_state_t</span> *)s_uartLINFlexDStatePtr[instance];</span><br><span class="line">    retVal = STATUS_SUCCESS;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Indicates this is a blocking transaction. */</span></span><br><span class="line">    uartState-&gt;isTxBlocking = <span class="literal">true</span>;</span><br><span class="line">    <span class="comment">/* Reset signal before transfer */</span></span><br><span class="line">    <span class="comment">//这里会尝试获取txcomplete信号量，</span></span><br><span class="line">    (<span class="type">void</span>)OSIF_SemaWait(&amp;(uartState-&gt;txComplete), <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Start the transmission process using DMA */</span></span><br><span class="line">        <span class="comment">//真正发送数据的入口API</span></span><br><span class="line">        retVal = LINFlexD_UART_DRV_StartSendUsingDma(instance, txBuff, txSize);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (retVal == STATUS_SUCCESS)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//等待信号量</span></span><br><span class="line">        <span class="comment">/* Wait until to transmit is complete. */</span></span><br><span class="line">        retVal = OSIF_SemaWait(&amp;uartState-&gt;txComplete, timeout);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Finish the transmission if timeout expired */</span></span><br><span class="line">        <span class="keyword">if</span> (retVal == STATUS_TIMEOUT)</span><br><span class="line">        &#123;</span><br><span class="line">            uartState-&gt;isTxBlocking = <span class="literal">false</span>;</span><br><span class="line">            uartState-&gt;transmitStatus = STATUS_TIMEOUT;</span><br><span class="line"></span><br><span class="line">            LINFlexD_UART_DRV_CompleteSendUsingDma(((<span class="type">void</span> *)instance), DMA_CHN_NORMAL);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> retVal;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img   src="https://dadeju.github.io/picx-images-hosting/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20250317222408.7lk5hcv61f.webp"  alt="微信图片_20250317222408"><br>在上面这个API中，发送完成后底层驱动会释放信号量txComplete（send前会尝试获取）,一般用freertos的都建议用带block的API</p>
-<p>补充：之前我在看关于串口回调函数事件的时候有一个点非常困惑,UART_EVENT_TX_EMPTY和UART_EVENT_END_TRANSFER难道不是一个事件吗？TX的fifo为空，应该是代表了传输完成；今天突然看到<mark>Linflexd_Uart_Continuous_Transmission_Demo</mark>例程才反应过来，tx fifo为空本次传输的的8个字节传输完成了。硬件已准备好接收下一个待发送的字节，一般用在逐字节流式传输。如果是整个传输任务（如多字节发送完成）此时触发的是UART_EVENT_END_TRANSFER事件</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    UART_EVENT_RX_FULL      = <span class="number">0x00U</span>,    <span class="comment">/*!&lt; Rx buffer is full */</span></span><br><span class="line">    UART_EVENT_TX_EMPTY     = <span class="number">0x01U</span>,    <span class="comment">/*!&lt; Tx buffer is empty */</span></span><br><span class="line">    UART_EVENT_END_TRANSFER = <span class="number">0x02U</span>,    <span class="comment">/*!&lt; The current transfer is ending */</span></span><br><span class="line">    UART_EVENT_ERROR        = <span class="number">0x03U</span>,    <span class="comment">/*!&lt; An error occured during transfer */</span></span><br><span class="line">    UART_EVENT_TIMEOUT      = <span class="number">0x04U</span>,    <span class="comment">/*!&lt; Uart TimeOut */</span></span><br><span class="line"></span><br><span class="line">&#125; <span class="type">uart_event_t</span>;</span><br></pre></td></tr></table></figure>
+                         <p>本文简单介绍一下SPI这个协议，这个协议算是众多协议里面<strong>相对简单</strong>的了。<br>本质：​<strong>串行外设接口</strong>​（Serial Peripheral Interface Bus，SPI）,这些只介绍最基础的SPI，什么QSPI暂时不做讨论（后续可能会补充）。由于速度快，经常有作大容量E方，SD卡等的通讯方式</p>
+<p>第一原则：SPI通讯的核心是，同步发送,交换数据<br>SPI至少需要占用四个IO口（一主一从的情况）：</p>
+<ul>
+<li>SCLK（Serial Clock）：串列时脉，由主机发出</li>
+<li>MOSI（Master Output, Slave Input）：主机输出，从机输入信号（数据由主机发出）</li>
+<li>MISO（Master Input, Slave Output）：主机输入，从机输出信号（数据由从机发出）</li>
+<li>SS（PCS，CS, Slave Select）：片选信号，由主机发出，一般是低电位有效（当有多个从机时可以通过将对应SS引脚置低的方式来选择从机）</li>
+</ul>
+<p>毕竟速度快，在资源方面就要做出一些让步。相比IIC就多占用两个IO口。</p>
+<p>在接线方面是主机的MOSI接从机的MOSI；主机的MISO接从机的MISO；即同名引脚直接相连<br>下面直接通过云途YCT工具来看相关SPI外设的配置项<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7zqletbvzm.webp"  alt="image"><br>PCS是片选引脚，图中选择了PCS0，即在PCS0低电平时，选择对应的从机进行数据通讯<br>Pcs polarity 为极性<br>Bits&#x2F;frame 一帧大小bits,一般来说都是设置成8位，比较常见的还有12位和16位<br>云途MCU帧长度设置比较灵活<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9rjk9qcbce.webp"  alt="image"></p>
+<p>下面就是经典的通过配置SPI的时钟极性(CPOL)和时钟相位(CPHA)：来选择四个模式<br>云途使用的这种表述方式也挺直观的<br><img   src="https://dadeju.github.io/picx-images-hosting/image.99til5i2va.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.8dx15p992e.webp"  alt="image"><br>根据我的经验，选择CPHA&#x3D;&#x3D;1的情况（偶尔边沿采样）通讯可能会稳定一些</p>
+<p>默认是MSB，即高位先行</p>
+<p><strong>每次通信时，SPI 必须同时发送和接收数据。如果主机想读取从机数据，需要先发送占位字节（Dummy Data）。发送的数据按位（Bit）在 SCLK 的有效边沿传输。数据在时钟的采样边沿被接收并存储到接收寄存器中</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//云途</span></span><br><span class="line"><span class="type">status_t</span> <span class="title function_">SPI_DRV_MasterTransfer</span><span class="params">(<span class="type">uint32_t</span> instance,</span></span><br><span class="line"><span class="params"><span class="type">const</span> <span class="type">uint8_t</span> *sendBuffer,</span></span><br><span class="line"><span class="params"><span class="type">uint8_t</span> *receiveBuffer,</span></span><br><span class="line"><span class="params"><span class="type">uint16_t</span> transferByteCount)</span>;</span><br><span class="line"><span class="comment">//国民技术</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">SPI_Data_Transmit</span><span class="params">(<span class="type">uint16_t</span> Data)</span></span><br><span class="line"></span><br><span class="line"><span class="type">uint16_t</span> <span class="title function_">SPI_I2S_ReceiveData</span><span class="params">(SPI_Module* SPIx)</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">SPI_I2S_TransmitData</span><span class="params">(SPI_Module* SPIx, <span class="type">uint16_t</span> Data)</span></span><br></pre></td></tr></table></figure>
 
-<p>水平有限，有什么疏漏之处欢迎指问</p>
+<p>可以看到在有一些MCU的SPI里面send和receive没有独立的API，都是一个transmit</p>
+<p>下面我来看一个例子：</p>
+<p>同时收发数据通常出现在主设备（Master）在向从设备（Slave）发送某些命令或数据的同时，从设备也将状态或数据返回给主设备。</p>
+<p>主设备（比如 MCU）需要从 SPI Flash 存储器中读取数据。</p>
+<p>主设备需要发送一条命令来指定要读取的内存地址，同时从设备将指定地址的数据返回给主设备。</p>
+<ol>
+<li>主设备发送“读取命令”（通常为一个字节，比如 0x03）。</li>
+<li>主设备继续发送目标内存地址（通常是 3 个字节，比如 0x001234）。</li>
+<li>同时，从设备在接收命令和地址时会返回无意义的占位数据（Dummy Data）。</li>
+<li>地址发送完毕后，从设备会根据主设备生成的时钟信号，将存储器中指定地址的数据返回。</li>
+</ol>
+<p>在这整个过程中：主设备发送数据时，同时接收数据。</p>
+<p>最初接收的数据可能是无意义的占位数据，而后续接收的则是有意义的有效数据。</p>
+<p>假设需要读取地址 <code>0x001234</code> 的数据：</p>
+<pre><div><section class="code-snippet__fix code-snippet__js"><pre class="code-snippet__js" data-lang="makefile"><code><span class="code-snippet_outer">主设备发送: 0x03  0x00  0x12  0x34  0xFF  0xFF  0xFF ...</span></code><code><span class="code-snippet_outer">从设备返回: 0xXX  0xXX  0xXX  0xXX  0x45  0x67  0x89 ...</span></code></pre></section></div></pre>
+
+<ol>
+<li>0x03 是读取命令。</li>
+<li>0x00 0x12 0x34 是要读取的地址。</li>
+<li>0xFF 是主设备发送的占位数据，用于驱动时钟。</li>
+<li>0x45 0x67 0x89 是从设备返回的有效数据。注意看是从设备给的</li>
+</ol>
+<p>在阅读国民关于SPI的手册发现一个有趣的点，部分LCD屏通过SPI通讯时需要用到单线模式；其中双线单向模式可以同时使用MOSI及MISO数据线向一个方向传输数据，可以加快一倍的传输速度<br><img   src="https://dadeju.github.io/picx-images-hosting/1742624620335.64e0m9s7yn.webp"  alt="1742624620335"></p>
+<p>我们在逻辑分析仪中取一段来分析一下<br><img   src="https://dadeju.github.io/picx-images-hosting/image.3rbe53w9dc.webp"  alt="image"><br>可以看到时钟线默认是低，即CPOL为0<br>在第一个边沿就开始采样了，即CPHA为0<br>所以会SCK信号的上升沿进行数据采样<br>MOSI的bits 为 0010  0001,接收到的数据是21，可以看出是高位优先的逻辑</p>
+<p>暂时先写到这里，后续可能还会补充。笔者能力有限，有疏漏之处还请指出</p>
+<p>参考文献:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">国民技术032 DS，RM手册</span><br><span class="line">N32 MCU SPI工作模式介绍</span><br><span class="line">云途 SDK-SPI配置文档</span><br><span class="line">https://mp.weixin.qq.com/s/999S2mw20iFcjvExbgzaiA</span><br></pre></td></tr></table></figure>
 
                     
                 </div>
@@ -256,31 +289,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/03/22/SPI%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/"
-                                   title="SPI通讯协议介绍"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">SPI通讯协议介绍</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/03/14/SPI-%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE-%E9%94%99%E4%BD%8D/"
-                                   title="SPI 读取数据&#39;错位&#39;"
+                                   href="/2025/03/17/%E4%BA%91%E9%80%94-%E4%B8%B2%E5%8F%A3%E5%8F%91%E9%80%81%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9EAPI/"
+                                   title="云途 串口发送阻塞与非阻塞API"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">SPI 读取数据&#39;错位&#39;</span>
+                                        <span class="post-nav-title-item text-ellipsis">云途 串口发送阻塞与非阻塞API</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
