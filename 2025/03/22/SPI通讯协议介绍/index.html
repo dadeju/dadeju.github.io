@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Sat Mar 22 2025 15:39:17 GMT+0800">2025-03-22 15:39:17</span>
+                    <span class="datetime" data-updated="Sat Mar 22 2025 15:42:03 GMT+0800">2025-03-22 15:42:03</span>
                 </span>
             
         
@@ -248,7 +248,7 @@
 <p>在这整个过程中：主设备发送数据时，同时接收数据。</p>
 <p>最初接收的数据可能是无意义的占位数据，而后续接收的则是有意义的有效数据。</p>
 <p>假设需要读取地址 <code>0x001234</code> 的数据：</p>
-<pre><div><section class="code-snippet__fix code-snippet__js"><pre class="code-snippet__js" data-lang="makefile"><code><span class="code-snippet_outer">主设备发送: 0x03  0x00  0x12  0x34  0xFF  0xFF  0xFF ...</span></code><code><span class="code-snippet_outer">从设备返回: 0xXX  0xXX  0xXX  0xXX  0x45  0x67  0x89 ...</span></code></pre></section></div></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">主设备发送: <span class="number">0x03</span>  <span class="number">0x00</span>  <span class="number">0x12</span>  <span class="number">0x34</span>  <span class="number">0xFF</span>  <span class="number">0xFF</span>  <span class="number">0xFF</span> ...</span><br><span class="line">从设备返回: <span class="number">0</span>xXX  <span class="number">0</span>xXX  <span class="number">0</span>xXX  <span class="number">0</span>xXX  <span class="number">0x45</span>  <span class="number">0x67</span>  <span class="number">0x89</span> ...</span><br></pre></td></tr></table></figure>
 
 <ol>
 <li>0x03 是读取命令。</li>
