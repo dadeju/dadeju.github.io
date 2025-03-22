@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Sat Mar 22 2025 15:42:03 GMT+0800">2025-03-22 15:42:03</span>
+                    <span class="datetime" data-updated="Sat Mar 22 2025 17:13:05 GMT+0800">2025-03-22 17:13:05</span>
                 </span>
             
         
@@ -219,10 +219,10 @@
                     
 
                     
-                         <p>本文简单介绍一下SPI这个协议，这个协议算是众多协议里面<strong>相对简单</strong>的了。<br>本质：​<strong>串行外设接口</strong>​（Serial Peripheral Interface Bus，SPI）,这些只介绍最基础的SPI，什么QSPI暂时不做讨论（后续可能会补充）。由于速度快，经常有作大容量E方，SD卡等的通讯方式</p>
+                         <p>本文简单介绍一下SPI这个协议，SPI算是众多协议里<strong>相对简单</strong>的.<br>本质：​<strong>串行外设接口</strong>​（Serial Peripheral Interface Bus，SPI）,这些只介绍最基础的SPI，QSPI暂时不做讨论（后续可能会补充）。由于速度快，经常有作大容量E方，SD卡等的通讯方式</p>
 <p>第一原则：SPI通讯的核心是，同步发送,交换数据<br>SPI至少需要占用四个IO口（一主一从的情况）：</p>
 <ul>
-<li>SCLK（Serial Clock）：串列时脉，由主机发出</li>
+<li>SCLK（Serial Clock）：时钟信号，由主机发出</li>
 <li>MOSI（Master Output, Slave Input）：主机输出，从机输入信号（数据由主机发出）</li>
 <li>MISO（Master Input, Slave Output）：主机输入，从机输出信号（数据由从机发出）</li>
 <li>SS（PCS，CS, Slave Select）：片选信号，由主机发出，一般是低电位有效（当有多个从机时可以通过将对应SS引脚置低的方式来选择从机）</li>
