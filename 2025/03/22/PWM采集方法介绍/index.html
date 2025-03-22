@@ -9,7 +9,7 @@
     
     <title>
         
-            SPI通讯协议介绍 |
+            PWM采集方法介绍 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        SPI通讯协议介绍
+                        PWM采集方法介绍
                     </div>
                 
 
@@ -177,28 +177,19 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-03-22 15:36:45</span>
+                <span class="datetime">2025-03-22 21:35:12</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Sat Mar 22 2025 17:13:05 GMT+0800">2025-03-22 17:13:05</span>
+                    <span class="datetime" data-updated="Sat Mar 22 2025 23:57:09 GMT+0800">2025-03-22 23:57:09</span>
                 </span>
             
         
 
         
 
-        
-            <span class="post-tag meta-info-item border-box">
-                <ul class="post-tag-ul">
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE/">通讯协议</a></li>
-                        
-                    
-                </ul>
-            </span>
         
 
         
@@ -219,48 +210,16 @@
                     
 
                     
-                         <p>本文简单介绍一下SPI这个协议，SPI算是众多协议里<strong>相对简单</strong>的.<br>本质：​<strong>串行外设接口</strong>​（Serial Peripheral Interface Bus，SPI）,这些只介绍最基础的SPI，QSPI暂时不做讨论（后续可能会补充）。由于速度快，经常有作大容量E方，SD卡等的通讯方式</p>
-<p>第一原则：SPI通讯的核心是，同步发送,交换数据<br>SPI至少需要占用四个IO口（一主一从的情况）：</p>
-<ul>
-<li>SCLK（Serial Clock）：时钟信号，由主机发出</li>
-<li>MOSI（Master Output, Slave Input）：主机输出，从机输入信号（数据由主机发出）</li>
-<li>MISO（Master Input, Slave Output）：主机输入，从机输出信号（数据由从机发出）</li>
-<li>SS（PCS，CS, Slave Select）：片选信号，由主机发出，一般是低电位有效（当有多个从机时可以通过将对应SS引脚置低的方式来选择从机）</li>
-</ul>
-<p>毕竟速度快，在资源方面就要做出一些让步。相比IIC就多占用两个IO口。</p>
-<p>在接线方面是主机的MOSI接从机的MOSI；主机的MISO接从机的MISO；即同名引脚直接相连<br>下面直接通过云途YCT工具来看相关SPI外设的配置项<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7zqletbvzm.webp"  alt="image"><br>PCS是片选引脚，图中选择了PCS0，即在PCS0低电平时，选择对应的从机进行数据通讯<br>Pcs polarity 为极性<br>Bits&#x2F;frame 一帧大小bits,一般来说都是设置成8位，比较常见的还有12位和16位<br>云途MCU帧长度设置比较灵活<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9rjk9qcbce.webp"  alt="image"></p>
-<p>下面就是经典的通过配置SPI的时钟极性(CPOL)和时钟相位(CPHA)：来选择四个模式<br>云途使用的这种表述方式也挺直观的<br><img   src="https://dadeju.github.io/picx-images-hosting/image.99til5i2va.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.8dx15p992e.webp"  alt="image"><br>根据我的经验，选择CPHA&#x3D;&#x3D;1的情况（偶尔边沿采样）通讯可能会稳定一些</p>
-<p>默认是MSB，即高位先行</p>
-<p><strong>每次通信时，SPI 必须同时发送和接收数据。如果主机想读取从机数据，需要先发送占位字节（Dummy Data）。发送的数据按位（Bit）在 SCLK 的有效边沿传输。数据在时钟的采样边沿被接收并存储到接收寄存器中</strong></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//云途</span></span><br><span class="line"><span class="type">status_t</span> <span class="title function_">SPI_DRV_MasterTransfer</span><span class="params">(<span class="type">uint32_t</span> instance,</span></span><br><span class="line"><span class="params"><span class="type">const</span> <span class="type">uint8_t</span> *sendBuffer,</span></span><br><span class="line"><span class="params"><span class="type">uint8_t</span> *receiveBuffer,</span></span><br><span class="line"><span class="params"><span class="type">uint16_t</span> transferByteCount)</span>;</span><br><span class="line"><span class="comment">//国民技术</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">SPI_Data_Transmit</span><span class="params">(<span class="type">uint16_t</span> Data)</span></span><br><span class="line"></span><br><span class="line"><span class="type">uint16_t</span> <span class="title function_">SPI_I2S_ReceiveData</span><span class="params">(SPI_Module* SPIx)</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">SPI_I2S_TransmitData</span><span class="params">(SPI_Module* SPIx, <span class="type">uint16_t</span> Data)</span></span><br></pre></td></tr></table></figure>
+                         <p>本介绍两种常用的PWM采集方法<br>1.TIM的PWM输入捕获<br>2.IO中断+定时器</p>
+<p>方法一：<br>定时器的通道的IO存在映射关系，可以把两个通道的信号（TI1，TI2）映射到同一个端口。<br>通过TIM的TI1通道采集PWM的上升沿，TI2来采集PWM的下降沿。这样就实现了对同一信号的<mark>双沿采集</mark>.<br>配置从模式中的复位模式，选择IC1捕获的上升沿有效信号为触发信号，并在上升沿触发时将记数值归零。这样在中断中CC1的值就为外部PWM的频率，CC2的值即为PWM的占空比<br><img   src="https://dadeju.github.io/picx-images-hosting/image.5tr6tk9lfu.webp"  alt="image"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">TIM_Input_Struct_Initialize(&amp;TIM_ICInitStructure);</span><br><span class="line">TIM_ICInitStructure.Channel     = TIM_CH_2;</span><br><span class="line">TIM_ICInitStructure.IcPolarity  = TIM_IC_POLARITY_RISING;<span class="comment">//IC1 产生上升沿时发生捕获动作</span></span><br><span class="line">TIM_ICInitStructure.IcSelection = TIM_IC_SELECTION_DIRECTTI;</span><br><span class="line">TIM_ICInitStructure.IcPrescaler = TIM_IC_PSC_DIV1;</span><br><span class="line">TIM_ICInitStructure.IcFilter    = <span class="number">0x0</span>;</span><br><span class="line">TIM_PWM_Input_Channel_Config(TIM3, &amp;TIM_ICInitStructure);</span><br><span class="line"></span><br><span class="line"><span class="comment">//选择通道2的滤波后信号作为触发源，即CH的上升沿	</span></span><br><span class="line"><span class="comment">/* Select the TIM3 Input Trigger: TI2FP2 */</span></span><br><span class="line">TIM_Trigger_Source_Select(TIM3, TIM_TRIG_SEL_TI2FP2);</span><br><span class="line"></span><br><span class="line"><span class="comment">//上升沿复位计数器，便于直接测量周期 TIM3-&gt;CNT复位为0</span></span><br><span class="line"><span class="comment">/* Select the slave Mode: Reset Mode */</span></span><br><span class="line">TIM_Slave_Mode_Select(TIM3, TIM_SLAVE_MODE_RESET);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Enable the Master/Slave Mode */</span></span><br><span class="line">TIM_Master_Slave_Mode_Set(TIM3, TIM_MASTER_SLAVE_MODE_ENABLE);</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line"><span class="comment">/* TIM enable counter */</span></span><br><span class="line">TIM_On(TIM3);</span><br><span class="line"></span><br><span class="line"><span class="comment">//使能CC2中断，捕获上升沿完成时触发</span></span><br><span class="line"><span class="comment">/* Enable the CC2 Interrupt Request */</span></span><br><span class="line">TIM_Interrupt_Enable(TIM3,TIM_INT_CC2);</span><br></pre></td></tr></table></figure>
+<p>下面是中断函数，可以说是非常简洁了,需要注意的点是：<mark>当上升沿触发时，输入捕获操作会先将当前的TIM3-&gt;CNT值锁存到CCR2寄存器，然后计数器TIM3-&gt;CNT才被复位为0</mark></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">TIM3_IRQHandler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Clear TIM3 Capture compare interrupt pending bit */</span></span><br><span class="line">    TIM_Interrupt_Status_Clear(TIM3, TIM_INT_CC2);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Get the Input Capture value */</span></span><br><span class="line">    IC2Value = TIM_Compare_Capture2_Get(TIM3);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (IC2Value != <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Duty cycle computation */</span></span><br><span class="line">        DutyCycle = (TIM_Compare_Capture1_Get(TIM3) * <span class="number">100</span>) / IC2Value;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Frequency computation */</span></span><br><span class="line">        Frequency = SystemCoreClockFrequency / IC2Value;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="comment">//说明是首次进入上升沿中断</span></span><br><span class="line">    &#123;</span><br><span class="line">        DutyCycle = <span class="number">0</span>;</span><br><span class="line">        Frequency = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这种方法只有IC1和IC2可以作为捕获通道，配置其中一个就行，另一个会被硬件自动配置相反极性。</p>
+<p>方法二：<br>用IO口外部中断两次进入上升沿的时间差来计算频率（如果需要计算占空比需要将IO配置成双边沿触发），这种方法简单粗暴，对IO口也什么要求，不需要是TIM的CH1或者CH2，但是使用中需要考虑这种频率进中断会不会对系统代码造成影响，并且这种方法能够采集的PWM频率上限相较方法一会低很多</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">EXTI0_IRQHandler</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="type">static</span> <span class="type">uint16_t</span> lastRiseTime = <span class="number">0</span>;</span><br><span class="line">    <span class="type">uint16_t</span> currentTime = TIM2-&gt;CNT; <span class="comment">// 读取当前定时器值</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (EXTI_GetITStatus(PWM_INPUT_EXTI) &#123;</span><br><span class="line">        <span class="comment">// 判断当前电平</span></span><br><span class="line">        <span class="keyword">if</span> (GPIO_ReadInputDataBit(PWM_INPUT_PORT, PWM_INPUT_PIN) == Bit_SET) &#123;</span><br><span class="line">            <span class="comment">// 上升沿：记录时间戳，计算周期</span></span><br><span class="line">            <span class="keyword">if</span> (currentTime &gt;= lastRiseTime) &#123;</span><br><span class="line">                period = currentTime - lastRiseTime;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 发生一次溢出：period = (0xFFFF - lastRiseTime) + currentTime</span></span><br><span class="line">                period = (<span class="number">0xFFFF</span> - lastRiseTime) + currentTime;</span><br><span class="line">            &#125;</span><br><span class="line">            lastRiseTime = currentTime;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 下降沿：记录时间戳，计算高电平时间</span></span><br><span class="line">            <span class="keyword">if</span> (currentTime &gt;= riseTime) &#123;</span><br><span class="line">                highTime = currentTime - riseTime;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 发生一次溢出：highTime = (0xFFFF - riseTime) + currentTime</span></span><br><span class="line">                highTime = (<span class="number">0xFFFF</span> - riseTime) + currentTime;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 计算频率和占空比</span></span><br><span class="line">            <span class="keyword">if</span> (period != <span class="number">0</span>) &#123;</span><br><span class="line">                frequency = <span class="number">1e6</span>f / period;   <span class="comment">// 1MHz时钟，单位Hz</span></span><br><span class="line">                dutyCycle = ((<span class="type">float</span>)highTime / period) * <span class="number">100.0f</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        EXTI_ClearITPendingBit(PWM_INPUT_EXTI); <span class="comment">// 清除中断标志</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>可以看到在有一些MCU的SPI里面send和receive没有独立的API，都是一个transmit</p>
-<p>下面我来看一个例子：</p>
-<p>同时收发数据通常出现在主设备（Master）在向从设备（Slave）发送某些命令或数据的同时，从设备也将状态或数据返回给主设备。</p>
-<p>主设备（比如 MCU）需要从 SPI Flash 存储器中读取数据。</p>
-<p>主设备需要发送一条命令来指定要读取的内存地址，同时从设备将指定地址的数据返回给主设备。</p>
-<ol>
-<li>主设备发送“读取命令”（通常为一个字节，比如 0x03）。</li>
-<li>主设备继续发送目标内存地址（通常是 3 个字节，比如 0x001234）。</li>
-<li>同时，从设备在接收命令和地址时会返回无意义的占位数据（Dummy Data）。</li>
-<li>地址发送完毕后，从设备会根据主设备生成的时钟信号，将存储器中指定地址的数据返回。</li>
-</ol>
-<p>在这整个过程中：主设备发送数据时，同时接收数据。</p>
-<p>最初接收的数据可能是无意义的占位数据，而后续接收的则是有意义的有效数据。</p>
-<p>假设需要读取地址 <code>0x001234</code> 的数据：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">主设备发送: <span class="number">0x03</span>  <span class="number">0x00</span>  <span class="number">0x12</span>  <span class="number">0x34</span>  <span class="number">0xFF</span>  <span class="number">0xFF</span>  <span class="number">0xFF</span> ...</span><br><span class="line">从设备返回: <span class="number">0</span>xXX  <span class="number">0</span>xXX  <span class="number">0</span>xXX  <span class="number">0</span>xXX  <span class="number">0x45</span>  <span class="number">0x67</span>  <span class="number">0x89</span> ...</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>0x03 是读取命令。</li>
-<li>0x00 0x12 0x34 是要读取的地址。</li>
-<li>0xFF 是主设备发送的占位数据，用于驱动时钟。</li>
-<li>0x45 0x67 0x89 是从设备返回的有效数据。注意看是从设备给的</li>
-</ol>
-<p>在阅读国民关于SPI的手册发现一个有趣的点，部分LCD屏通过SPI通讯时需要用到单线模式；其中双线单向模式可以同时使用MOSI及MISO数据线向一个方向传输数据，可以加快一倍的传输速度<br><img   src="https://dadeju.github.io/picx-images-hosting/1742624620335.64e0m9s7yn.webp"  alt="1742624620335"></p>
-<p>我们在逻辑分析仪中取一段来分析一下<br><img   src="https://dadeju.github.io/picx-images-hosting/image.3rbe53w9dc.webp"  alt="image"><br>可以看到时钟线默认是低，即CPOL为0<br>在第一个边沿就开始采样了，即CPHA为0<br>所以会SCK信号的上升沿进行数据采样<br>MOSI的bits 为 0010  0001,接收到的数据是21，可以看出是高位优先的逻辑</p>
-<p>暂时先写到这里，后续可能还会补充。笔者能力有限，有疏漏之处还请指出</p>
-<p>参考文献:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">国民技术032 DS，RM手册</span><br><span class="line">N32 MCU SPI工作模式介绍</span><br><span class="line">云途 SDK-SPI配置文档</span><br><span class="line">https://mp.weixin.qq.com/s/999S2mw20iFcjvExbgzaiA</span><br></pre></td></tr></table></figure>
+<p>需要特别注意的点：<br>如果要使用PWM_IN的话只能使用通道1和通道2<br><img   src="https://dadeju.github.io/picx-images-hosting/1742658755748.4g4npndjuv.webp"  alt="1742658755748"><br><img   src="https://dadeju.github.io/picx-images-hosting/1742658876424.3yem12eq60.webp"  alt="1742658876424"></p>
 
                     
                 </div>
@@ -269,14 +228,6 @@
 
                 <div class="post-bottom-tags-and-share border-box">
                     <div>
-                        
-                            <ul class="post-tags-box border-box">
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE/">通讯协议</a>
-                                    </li>
-                                
-                            </ul>
                         
                     </div>
                     <div>
@@ -289,31 +240,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/03/22/PWM%E9%87%87%E9%9B%86%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/"
-                                   title="PWM采集方法介绍"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">PWM采集方法介绍</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/03/17/%E4%BA%91%E9%80%94-%E4%B8%B2%E5%8F%A3%E5%8F%91%E9%80%81%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9EAPI/"
-                                   title="云途 串口发送阻塞与非阻塞API"
+                                   href="/2025/03/22/SPI%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/"
+                                   title="SPI通讯协议介绍"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">云途 串口发送阻塞与非阻塞API</span>
+                                        <span class="post-nav-title-item text-ellipsis">SPI通讯协议介绍</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
