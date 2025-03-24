@@ -9,7 +9,7 @@
     
     <title>
         
-            PWM采集方法介绍 |
+            IIC协议介绍 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        PWM采集方法介绍
+                        IIC协议介绍
                     </div>
                 
 
@@ -177,13 +177,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-03-22 21:35:12</span>
+                <span class="datetime">2025-03-24 20:23:34</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Sat Mar 22 2025 23:57:09 GMT+0800">2025-03-22 23:57:09</span>
+                    <span class="datetime" data-updated="Mon Mar 24 2025 20:57:27 GMT+0800">2025-03-24 20:57:27</span>
                 </span>
             
         
@@ -210,16 +210,40 @@
                     
 
                     
-                         <p>本介绍两种常用的PWM采集方法<br>1.TIM的PWM输入捕获<br>2.IO中断+定时器</p>
-<p>方法一：<br>定时器的通道的IO存在映射关系，可以把两个通道的信号（TI1，TI2）映射到同一个端口。<br>通过TIM的TI1通道采集PWM的上升沿，TI2来采集PWM的下降沿。这样就实现了对同一信号的<mark>双沿采集</mark>.<br>配置从模式中的复位模式，选择IC1捕获的上升沿有效信号为触发信号，并在上升沿触发时将记数值归零。这样在中断中CC1的值就为外部PWM的频率，CC2的值即为PWM的占空比<br><img   src="https://dadeju.github.io/picx-images-hosting/image.5tr6tk9lfu.webp"  alt="image"></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">TIM_Input_Struct_Initialize(&amp;TIM_ICInitStructure);</span><br><span class="line">TIM_ICInitStructure.Channel     = TIM_CH_2;</span><br><span class="line">TIM_ICInitStructure.IcPolarity  = TIM_IC_POLARITY_RISING;<span class="comment">//IC1 产生上升沿时发生捕获动作</span></span><br><span class="line">TIM_ICInitStructure.IcSelection = TIM_IC_SELECTION_DIRECTTI;</span><br><span class="line">TIM_ICInitStructure.IcPrescaler = TIM_IC_PSC_DIV1;</span><br><span class="line">TIM_ICInitStructure.IcFilter    = <span class="number">0x0</span>;</span><br><span class="line">TIM_PWM_Input_Channel_Config(TIM3, &amp;TIM_ICInitStructure);</span><br><span class="line"></span><br><span class="line"><span class="comment">//选择通道2的滤波后信号作为触发源，即CH的上升沿	</span></span><br><span class="line"><span class="comment">/* Select the TIM3 Input Trigger: TI2FP2 */</span></span><br><span class="line">TIM_Trigger_Source_Select(TIM3, TIM_TRIG_SEL_TI2FP2);</span><br><span class="line"></span><br><span class="line"><span class="comment">//上升沿复位计数器，便于直接测量周期 TIM3-&gt;CNT复位为0</span></span><br><span class="line"><span class="comment">/* Select the slave Mode: Reset Mode */</span></span><br><span class="line">TIM_Slave_Mode_Select(TIM3, TIM_SLAVE_MODE_RESET);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Enable the Master/Slave Mode */</span></span><br><span class="line">TIM_Master_Slave_Mode_Set(TIM3, TIM_MASTER_SLAVE_MODE_ENABLE);</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line"><span class="comment">/* TIM enable counter */</span></span><br><span class="line">TIM_On(TIM3);</span><br><span class="line"></span><br><span class="line"><span class="comment">//使能CC2中断，捕获上升沿完成时触发</span></span><br><span class="line"><span class="comment">/* Enable the CC2 Interrupt Request */</span></span><br><span class="line">TIM_Interrupt_Enable(TIM3,TIM_INT_CC2);</span><br></pre></td></tr></table></figure>
-<p>下面是中断函数，可以说是非常简洁了,需要注意的点是：<mark>当上升沿触发时，输入捕获操作会先将当前的TIM3-&gt;CNT值锁存到CCR2寄存器，然后计数器TIM3-&gt;CNT才被复位为0</mark></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">TIM3_IRQHandler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Clear TIM3 Capture compare interrupt pending bit */</span></span><br><span class="line">    TIM_Interrupt_Status_Clear(TIM3, TIM_INT_CC2);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Get the Input Capture value */</span></span><br><span class="line">    IC2Value = TIM_Compare_Capture2_Get(TIM3);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (IC2Value != <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Duty cycle computation */</span></span><br><span class="line">        DutyCycle = (TIM_Compare_Capture1_Get(TIM3) * <span class="number">100</span>) / IC2Value;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Frequency computation */</span></span><br><span class="line">        Frequency = SystemCoreClockFrequency / IC2Value;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="comment">//说明是首次进入上升沿中断</span></span><br><span class="line">    &#123;</span><br><span class="line">        DutyCycle = <span class="number">0</span>;</span><br><span class="line">        Frequency = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>这种方法只有IC1和IC2可以作为捕获通道，配置其中一个就行，另一个会被硬件自动配置相反极性。</p>
-<p>方法二：<br>用IO口外部中断两次进入上升沿的时间差来计算频率（如果需要计算占空比需要将IO配置成双边沿触发），这种方法简单粗暴，对IO口也什么要求，不需要是TIM的CH1或者CH2，但是使用中需要考虑这种频率进中断会不会对系统代码造成影响，并且这种方法能够采集的PWM频率上限相较方法一会低很多</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">EXTI0_IRQHandler</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="type">static</span> <span class="type">uint16_t</span> lastRiseTime = <span class="number">0</span>;</span><br><span class="line">    <span class="type">uint16_t</span> currentTime = TIM2-&gt;CNT; <span class="comment">// 读取当前定时器值</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (EXTI_GetITStatus(PWM_INPUT_EXTI) &#123;</span><br><span class="line">        <span class="comment">// 判断当前电平</span></span><br><span class="line">        <span class="keyword">if</span> (GPIO_ReadInputDataBit(PWM_INPUT_PORT, PWM_INPUT_PIN) == Bit_SET) &#123;</span><br><span class="line">            <span class="comment">// 上升沿：记录时间戳，计算周期</span></span><br><span class="line">            <span class="keyword">if</span> (currentTime &gt;= lastRiseTime) &#123;</span><br><span class="line">                period = currentTime - lastRiseTime;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 发生一次溢出：period = (0xFFFF - lastRiseTime) + currentTime</span></span><br><span class="line">                period = (<span class="number">0xFFFF</span> - lastRiseTime) + currentTime;</span><br><span class="line">            &#125;</span><br><span class="line">            lastRiseTime = currentTime;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 下降沿：记录时间戳，计算高电平时间</span></span><br><span class="line">            <span class="keyword">if</span> (currentTime &gt;= riseTime) &#123;</span><br><span class="line">                highTime = currentTime - riseTime;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 发生一次溢出：highTime = (0xFFFF - riseTime) + currentTime</span></span><br><span class="line">                highTime = (<span class="number">0xFFFF</span> - riseTime) + currentTime;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 计算频率和占空比</span></span><br><span class="line">            <span class="keyword">if</span> (period != <span class="number">0</span>) &#123;</span><br><span class="line">                frequency = <span class="number">1e6</span>f / period;   <span class="comment">// 1MHz时钟，单位Hz</span></span><br><span class="line">                dutyCycle = ((<span class="type">float</span>)highTime / period) * <span class="number">100.0f</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        EXTI_ClearITPendingBit(PWM_INPUT_EXTI); <span class="comment">// 清除中断标志</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>需要特别注意的点：<br>如果要使用PWM_IN的话只能使用通道1和通道2<br><img   src="https://dadeju.github.io/picx-images-hosting/1742658755748.4g4npndjuv.webp"  alt="1742658755748"><br><img   src="https://dadeju.github.io/picx-images-hosting/1742658876424.3yem12eq60.webp"  alt="1742658876424"></p>
+                         <p>飞利浦公司开发，对硬件的依赖小(如果代码使用的软件IIC，移植起来非常方便)，<mark>半双工</mark>，高位先行，带数据应答。支持总线挂载多设备（一主多从、多主多从）</p>
+<p>抗干扰能力弱，低速，短距离<br>(异步时序的好处就是省一根时钟线，节省资源。但对时间要求严格)</p>
+<p>同步时序对时间要求不严格，对硬件电路依赖小。 但多一根时钟线</p>
+<p>标准模式：100Kbit   </p>
+<p>High-Speed 模式：3.4Mbit&#x2F;s </p>
+<p>主机拥有对SCL线的完全控制，空闲时主机可以发起对SDA的控制</p>
+<p>只有在从机发送数据和从机应答时，主机才会移交SDA的控制权给从机</p>
+<p>从机的权利较小，对于SCL时钟，在任何时候都只能被动的读取。从机不允许主动发起对SDA的控制</p>
+<p>在SCL的高电平（下降沿）采集SDA上面的数据</p>
+<p>保证SDA只能在SCL为低的时候发生数据位的反转</p>
+<p>设备的主机和从机都要设置成开漏输出模式</p>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/image.7i0jtjr1n6.webp"  alt="image"></p>
+<p>起始条件和终止条件</p>
+<p>接收一个字节：</p>
+<p>SCL低电平期间，从机将数据位一次放到SDA线（高位先行），然后释放SCL，主机将在SCL高电平期间读取数据位，所以SCL高电平期间SDA不允许有数据变化，依次循环上述过程8次。即可接收一个字节（主机在接收这前，需要释放SDA）</p>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/image.92qat0rt2x.webp"  alt="image"></p>
+<p>应答机制：数据0表示应答，数据1表示非应答。简单来说是一个低电平</p>
+<p>IIC总线上的所有数据都是以8位字节传送的。发送器每发送一个字节，就在第9个时钟脉冲期间释放数据线，由接收器反馈一个应答信号。应答信号为低电平时，规定为有效应答（ACK简称为应答位），表示接收器已经成功接收到了该字节</p>
+<p>ACK就是响应信号，每个字节后面都应该有响应信号，表示Slave成功响应了Marter，在Master产生的第九个时钟，Master放开SDA的控制权，Slave拉低了SDA，并持续整个时钟的高电平，因此ACK是属于Slave的动作。</p>
+<p>仲裁：时钟同步采用线与</p>
+<p>时钟拉长是一种SLK持续为低的总线状态</p>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/image.13lxxyh8f2.webp"  alt="image"></p>
+<p>不是每个IIC设备都有这个功能，大部分的slave设备都不具备这个功能</p>
+<p>一个设备可能能够快速的接受数据，但是其存储数据需要时间，因此在接受数据并发送ACK之后，拉低SCL，表明占用总线直到其做好接收下一字节数据的准备</p>
+<p>从字节的角度理解，多个Master一起，高速的SCL会被低速的SCL降速，这个过程跟时钟同步相同。</p>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/image.8z6ovb4g1p.webp"  alt="image"></p>
+<p>IIC锁死：</p>
+<p>IIC总线写操作的过程中，主机在产生启动信号控制SCL产生8个时钟脉冲，然后拉低SCL信号为低电平，在这个时候，从机输出应答信号，将SDA拉成低电平。</p>
+<p>如果这个时候主机异常复位，SCL就会被释放为高电平，此时，如果从机复位，就会继续IIC应答，将SDA一直拉成低电平，直到SCL变为低电平，才会结束应答信号。而对于主机来说，复位后一直在检测SCL和SDA的信号，如果发现SDA信号为低电平，则会认为IIC总线被占用，会一直等待SCL和SDA变为高电平。</p>
+<p>这样，主机等待从机释放SDA信号，而同时从机又在等待主机将SCL信号拉低以释放应答信号，两者相互等待，IIC总线进入一种死锁</p>
+<p>同样，当IIC进行读操作时，从机应答后输出数据，如果在这个时刻主机异常复位而此时从机输出的数据刚好为0，SCL会变成高电平，但是从机一直等待主机拿数据，也会导致IIC总线进入死锁状态</p>
+<p>SCK的占空比可以低一点，因为只能在时钟线低的时候变化SDA</p>
+<p><strong>I2C从地址要左移1位？</strong></p>
+<p>这是i2c协议决定的，i2c地址实际为7位。剩下的一位用来判断是读还是写。需要注意在有些MCU的底层驱动中，这个左移的动作已经帮我们实现了</p>
 
                     
                 </div>
@@ -240,31 +264,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/03/24/IIC%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/"
-                                   title="IIC协议介绍"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">IIC协议介绍</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/03/22/SPI%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/"
-                                   title="SPI通讯协议介绍"
+                                   href="/2025/03/22/PWM%E9%87%87%E9%9B%86%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/"
+                                   title="PWM采集方法介绍"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">SPI通讯协议介绍</span>
+                                        <span class="post-nav-title-item text-ellipsis">PWM采集方法介绍</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
