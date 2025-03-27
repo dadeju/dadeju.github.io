@@ -9,7 +9,7 @@
     
     <title>
         
-            IIC协议介绍 |
+            云途HA SPI外设介绍 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        IIC协议介绍
+                        云途HA SPI外设介绍
                     </div>
                 
 
@@ -177,19 +177,28 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-03-24 20:23:34</span>
+                <span class="datetime">2025-03-27 20:28:49</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Mar 27 2025 20:28:17 GMT+0800">2025-03-27 20:28:17</span>
+                    <span class="datetime" data-updated="Thu Mar 27 2025 21:34:37 GMT+0800">2025-03-27 21:34:37</span>
                 </span>
             
         
 
         
 
+        
+            <span class="post-tag meta-info-item border-box">
+                <ul class="post-tag-ul">
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE/">通讯协议</a></li>
+                        
+                    
+                </ul>
+            </span>
         
 
         
@@ -210,40 +219,10 @@
                     
 
                     
-                         <p>IIC由飞利浦公司开发，对硬件的依赖小(如果代码使用的软件IIC，移植起来非常方便)，<mark>半双工</mark>，高位先行，带数据应答。支持总线挂载多设备（一主多从、多主多从）</p>
-<p>抗干扰能力弱，低速，短距离<br>(异步时序的好处就是省一根时钟线，节省资源。但对时间要求严格)</p>
-<p>同步时序对时间要求不严格，对硬件电路依赖小。 但多一根时钟线</p>
-<p>标准模式：100Kbit   </p>
-<p>High-Speed 模式：3.4Mbit&#x2F;s </p>
-<p>主机拥有对SCL线的完全控制，空闲时主机可以发起对SDA的控制</p>
-<p>只有在从机发送数据和从机应答时，主机才会移交SDA的控制权给从机</p>
-<p>从机的权利较小，对于SCL时钟，在任何时候都只能被动的读取。从机不允许主动发起对SDA的控制</p>
-<p>在SCL的高电平（下降沿）采集SDA上面的数据</p>
-<p>保证SDA只能在SCL为低的时候发生数据位的反转</p>
-<p>设备的主机和从机都要设置成开漏输出模式</p>
-<p><img   src="https://dadeju.github.io/picx-images-hosting/image.7i0jtjr1n6.webp"  alt="image"></p>
-<p>起始条件和终止条件</p>
-<p>接收一个字节：</p>
-<p>SCL低电平期间，从机将数据位一次放到SDA线（高位先行），然后释放SCL，主机将在SCL高电平期间读取数据位，所以SCL高电平期间SDA不允许有数据变化，依次循环上述过程8次。即可接收一个字节（主机在接收这前，需要释放SDA）</p>
-<p><img   src="https://dadeju.github.io/picx-images-hosting/image.92qat0rt2x.webp"  alt="image"></p>
-<p>应答机制：数据0表示应答，数据1表示非应答。简单来说是一个低电平</p>
-<p>IIC总线上的所有数据都是以8位字节传送的。发送器每发送一个字节，就在第9个时钟脉冲期间释放数据线，由接收器反馈一个应答信号。应答信号为低电平时，规定为有效应答（ACK简称为应答位），表示接收器已经成功接收到了该字节</p>
-<p>ACK就是响应信号，每个字节后面都应该有响应信号，表示Slave成功响应了Marter，在Master产生的第九个时钟，Master放开SDA的控制权，Slave拉低了SDA，并持续整个时钟的高电平，因此ACK是属于Slave的动作。</p>
-<p>仲裁：时钟同步采用线与</p>
-<p>时钟拉长是一种SLK持续为低的总线状态</p>
-<p><img   src="https://dadeju.github.io/picx-images-hosting/image.13lxxyh8f2.webp"  alt="image"></p>
-<p>不是每个IIC设备都有这个功能，大部分的slave设备都不具备这个功能</p>
-<p>一个设备可能能够快速的接受数据，但是其存储数据需要时间，因此在接受数据并发送ACK之后，拉低SCL，表明占用总线直到其做好接收下一字节数据的准备</p>
-<p>从字节的角度理解，多个Master一起，高速的SCL会被低速的SCL降速，这个过程跟时钟同步相同。</p>
-<p><img   src="https://dadeju.github.io/picx-images-hosting/image.8z6ovb4g1p.webp"  alt="image"></p>
-<p>IIC锁死：</p>
-<p>IIC总线写操作的过程中，主机在产生启动信号控制SCL产生8个时钟脉冲，然后拉低SCL信号为低电平，在这个时候，从机输出应答信号，将SDA拉成低电平。</p>
-<p>如果这个时候主机异常复位，SCL就会被释放为高电平，此时，如果从机复位，就会继续IIC应答，将SDA一直拉成低电平，直到SCL变为低电平，才会结束应答信号。而对于主机来说，复位后一直在检测SCL和SDA的信号，如果发现SDA信号为低电平，则会认为IIC总线被占用，会一直等待SCL和SDA变为高电平。</p>
-<p>这样，主机等待从机释放SDA信号，而同时从机又在等待主机将SCL信号拉低以释放应答信号，两者相互等待，IIC总线进入一种死锁</p>
-<p>同样，当IIC进行读操作时，从机应答后输出数据，如果在这个时刻主机异常复位而此时从机输出的数据刚好为0，SCL会变成高电平，但是从机一直等待主机拿数据，也会导致IIC总线进入死锁状态</p>
-<p>SCK的占空比可以低一点，因为只能在时钟线低的时候变化SDA</p>
-<p><strong>I2C从地址要左移1位？</strong></p>
-<p>这是i2c协议决定的，i2c地址实际为7位。剩下的一位用来判断是读还是写。需要注意在有些MCU的底层驱动中，这个左移的动作已经帮我们实现了</p>
+                         <p>首先来看HA的DS手册中对SPI外设的描述：<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7axc2dsvaf.webp"  alt="image"><br>SPI外设的电路系统框图如下所示：<br><img   src="https://dadeju.github.io/picx-images-hosting/1743079265174.3nrsev9vea.webp"  alt="1743079265174"><br>通过RM手册的IPC章节可知，SPI模块的外设功能时钟是可选的<br><img   src="https://dadeju.github.io/picx-images-hosting/image.6t7adtdydb.webp"  alt="image"><br>首先是IPC的DIV分频，是一个四位，范围从0-15；<br><img   src="https://dadeju.github.io/picx-images-hosting/image.26lnd4i6yb.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.26lnd4ikok.webp"  alt="image"><br>实际上还需要通过PRESCALE来计算SPI的分频，但是在配置SPI过程中你只需要写你预期的波率即可，底层驱动中会自动通过一个SPI_SetBaudRate的函数来计算出对应的分频值<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7i0jxumgmh.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.1zifhpj98d.webp"  alt="image"><br>全双工通信方式可以通过中断通信，DMA 通信，阻塞通信三种方式进行<br>云途的SPI传输有三个API（本文最关键的部分）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">SPI_DRV_MasterTransfer</span><br><span class="line">功能：执行非阻塞（异步）的 SPI 数据传输。</span><br><span class="line">函数发起传输后立即返回，不等待传输完成。</span><br><span class="line">用户需要通过调用 SPI_DRV_MasterGetTransferStatus 来检查传输状态。</span><br><span class="line">如果需要终止传输，可以调用 SPI_DRV_MasterAbortTransfer。</span><br><span class="line"></span><br><span class="line">SPI_DRV_MasterTransferBlocking</span><br><span class="line">执行阻塞（同步）的 SPI 数据传输。</span><br><span class="line">特点：</span><br><span class="line">函数会一直阻塞，直到传输完成或超时。</span><br><span class="line">如果传输在指定的超时时间内未完成，函数将返回 STATUS_TIMEOUT。</span><br><span class="line"></span><br><span class="line">SPI_DRV_MasterTransferPolling</span><br><span class="line">执行轮询（Polling）模式的 SPI 数据传输。</span><br><span class="line">特点：</span><br><span class="line">函数会主动轮询硬件状态寄存器，直到传输完成。</span><br><span class="line">不依赖中断或 DMA，完全由软件控制传输过程。</span><br><span class="line">函数会阻塞当前线程，直到传输完成。</span><br></pre></td></tr></table></figure>
+
+<p>SPI本身是支持一主多从时分复用的，这些SCK和SIN，SOUT线都是接在一起的，SPI从机设备的生产厂商各自不同，不能保证每家都有这个设计。临时凑在一起，总归会有比较大的风险（若当其中一个从机的发送数据信号线为高电平而另一个从机为低电平时，就会出现局部短路，进而损坏电路。）所以还是建议保守一点好，有几个从机，就配置几个SPI，这样能保证每个从机之间互不影响。<br>而多PCS设计的作用更多在于PCB布线的方便，从多个可选的PCS引脚中就近选择一个可用的PCS接到SPI从机设备上，对应在软件上，一旦确定下来某个SPI外设使用确定的PCS引脚，在整个程序的运行周期中就不再改动了。</p>
 
                     
                 </div>
@@ -252,6 +231,14 @@
 
                 <div class="post-bottom-tags-and-share border-box">
                     <div>
+                        
+                            <ul class="post-tags-box border-box">
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE/">通讯协议</a>
+                                    </li>
+                                
+                            </ul>
                         
                     </div>
                     <div>
@@ -264,31 +251,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/03/27/%E4%BA%91%E9%80%94HA-SPI%E5%A4%96%E8%AE%BE%E4%BB%8B%E7%BB%8D/"
-                                   title="云途HA SPI外设介绍"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">云途HA SPI外设介绍</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/03/22/PWM%E9%87%87%E9%9B%86%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/"
-                                   title="PWM采集方法介绍"
+                                   href="/2025/03/24/IIC%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/"
+                                   title="IIC协议介绍"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">PWM采集方法介绍</span>
+                                        <span class="post-nav-title-item text-ellipsis">IIC协议介绍</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
