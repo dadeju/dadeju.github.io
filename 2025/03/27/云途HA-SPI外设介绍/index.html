@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Mar 27 2025 21:47:39 GMT+0800">2025-03-27 21:47:39</span>
+                    <span class="datetime" data-updated="Fri Mar 28 2025 19:30:39 GMT+0800">2025-03-28 19:30:39</span>
                 </span>
             
         
@@ -224,6 +224,7 @@
 
 <p>SPI本身是支持一主多从时分复用的，这些SCK和SIN，SOUT线都是接在一起的，SPI从机设备的生产厂商各自不同，不能保证每家都有这个设计。临时凑在一起，总归会有比较大的风险（若当其中一个从机的发送数据信号线为高电平而另一个从机为低电平时，就会出现局部短路，进而损坏电路。）所以还是建议保守一点好，有几个从机，就配置几个SPI，这样能保证每个从机之间互不影响。</p>
 <p>而多PCS设计的作用更多在于PCB布线的方便，从多个可选的PCS引脚中就近选择一个可用的PCS接到SPI从机设备上，对应在软件上，一旦确定下来某个SPI外设使用确定的PCS引脚，在整个程序的运行周期中就不再改动了。</p>
+<p>CONT这个寄存器值得关注一下，置1后，PCS的状态将由SPI-&gt;TXCFG配置控制pcs结束，即需要软件去重新写SPI-&gt;TXCFG才会拉高pcs。具体表现为在传输完一帧后，是否需要重新拉高pcs。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.54xxhz54mz.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/3c6fa3f3d49e32c551955a69a184a73.9kgcn8jvcl.webp"  alt="3c6fa3f3d49e32c551955a69a184a73"><br>CONT置1：<img   src="https://dadeju.github.io/picx-images-hosting/9040e6fbd3f1a3a4f563662deec5495.8s3h5i5jhd.webp"  alt="9040e6fbd3f1a3a4f563662deec5495"><br>CONT置0：<img   src="https://dadeju.github.io/picx-images-hosting/acf91cda2189269f5e8953f8abd2678.m8spa2dt.webp"  alt="acf91cda2189269f5e8953f8abd2678"></p>
 <p><a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/cEGljK0pNDIvzAf7W_zqbQ" >https://mp.weixin.qq.com/s/cEGljK0pNDIvzAf7W_zqbQ<i class="fas fa-external-link-alt"></i></a><br>YTM32B1HA0xRM V1.2</p>
 
                     
