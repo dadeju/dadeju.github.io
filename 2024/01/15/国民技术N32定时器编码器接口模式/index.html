@@ -9,7 +9,7 @@
     
     <title>
         
-            嵌入式日志常用打印方式 |
+            国民技术N32定时器编码器接口模式 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        嵌入式日志常用打印方式
+                        国民技术N32定时器编码器接口模式
                     </div>
                 
 
@@ -177,28 +177,19 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-04-01 20:46:27</span>
+                <span class="datetime">2024-01-15 22:32:05</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Tue Apr 01 2025 21:31:15 GMT+0800">2025-04-01 21:31:15</span>
+                    <span class="datetime" data-updated="Wed Apr 02 2025 23:06:21 GMT+0800">2025-04-02 23:06:21</span>
                 </span>
             
         
 
         
 
-        
-            <span class="post-tag meta-info-item border-box">
-                <ul class="post-tag-ul">
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E9%80%9A%E8%AE%AF%E5%8E%9F%E7%90%86/">通讯原理</a></li>
-                        
-                    
-                </ul>
-            </span>
         
 
         
@@ -219,12 +210,22 @@
                     
 
                     
-                         <p>我想那些做纯软件开发的，比如java，python,html开发的，或许不会想到在嵌入式开发中，想要直接看调试信息，打印日志都需要通过别的手段，比如你开发一个电子称，调试过程中你明显不能把日志打印在电子称上面</p>
-<h3 id="通过串口打印"><a href="#通过串口打印" class="headerlink" title="通过串口打印"></a>通过串口打印</h3><p>在MCU里面复用一路串口，将printf重定向到串口，通过串口转USB设备，我是在淘宝上面用5块钱买了个便宜的，如果想要求稳可以买那种带隔离的，在电脑上面通过串口助手来查看日志，这是最简单直接也是最常用的。<br>其实如果使用的<mark>jlink, v9 v10</mark>及以上的仿真器驱动安装后会在设备管理器看到一个CDC串口,可以在Jlink commander 里面输入VCOM ENABLE命令来开启串口功能</p>
-<h3 id="RTT打印"><a href="#RTT打印" class="headerlink" title="RTT打印"></a>RTT打印</h3><p>需要用到jlnk，这种方式非常方便，只需要把RTT的源码添加到工程，然后用SEGGER_RTT_printf(0, “%s\n”, “test”);就能打印。是我比较喜欢的方式，<br>RTT的工作原理大致就是在<mark>内存里面创建一个RTT控制块</mark>RTT Control Block，即SEGGER_RTT_CB结构体。这个结构体里面存放了若干个上行通道和下行通道，每个通道都有一个数据buffer以及读写指针，构成了数据队列。向RTT控制块里面的任意一个上行通道的数据队列中写入log信息，然后JLINK能够通过读写RAM内容，获取到队列的数据buffer和写指针的内容，并更新读指针<br>如果你使用的云途的MCU，使用RTT只需要打开这个勾选就OK了<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9rjkoi9rgw.webp"  alt="image"></p>
-<h3 id="Event-Recoder调试组件打印"><a href="#Event-Recoder调试组件打印" class="headerlink" title="Event Recoder调试组件打印"></a>Event Recoder调试组件打印</h3><p>需要先安装一个EVR组件(其实这个组建非常强大，强烈推荐！我这里只介绍其中的打印功能)<br><img   src="https://dadeju.github.io/picx-images-hosting/16b3441b68ab21ccf3f27118eaf7787.4ub3un3gut.webp"  alt="16b3441b68ab21ccf3f27118eaf7787"><br>debug的trace页面也需要做对应的配置<br><img   src="https://dadeju.github.io/picx-images-hosting/0590c138e3e0c6f4ebef9620d02ecc5.54xxnsjk8r.webp"  alt="0590c138e3e0c6f4ebef9620d02ecc5"><br>需要注意要把自己其他的重定向给注释掉<br><img   src="https://dadeju.github.io/picx-images-hosting/cc469ad34853450e50f092d2028b93f.99tizwhkhd.webp"  alt="cc469ad34853450e50f092d2028b93f"><br>测试效果：<br><img   src="https://dadeju.github.io/picx-images-hosting/3c466415d888fafecfacdc2d68e6656.3nrsm1hevr.webp"  alt="3c466415d888fafecfacdc2d68e6656"></p>
-<h3 id="其他的日志库（EasyLogger）"><a href="#其他的日志库（EasyLogger）" class="headerlink" title="其他的日志库（EasyLogger）"></a>其他的日志库（EasyLogger）</h3><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/armink/EasyLogger" >https://github.com/armink/EasyLogger<i class="fas fa-external-link-alt"></i></a><br>超轻量级(ROM&lt;1.6K, RAM&lt;0.3K)、高性能的 C&#x2F;C++ 日志库，移植起来也非常方便，支持自定义输出方式（例如：终端、文件、数据库、串口、485、Flash…）功能非常丰富。<br><img   src="https://dadeju.github.io/picx-images-hosting/1b9cc52772b29fbde201f60a1613002.2h8hdfwn67.webp"  alt="1b9cc52772b29fbde201f60a1613002"></p>
-
+                         <h3 id="编码器接口简介"><a href="#编码器接口简介" class="headerlink" title="编码器接口简介"></a>编码器接口简介</h3><ul>
+<li>编码器接口模式基本上相当于使用了一个带有方向选择的外部时钟。这意味着计数器只在0到TIMx_ARR寄存器的自动装载值之间连续计数(根据方向，或是0到ARR计数，或是ARR到0计数)。</li>
+<li>编码器接口可接收增量（正交）编码器的信号，根据编码器旋转产生的正交信号脉冲，自动控制CNT自增或自减，从而指示编码器的位置、旋转方向和旋转速度</li>
+<li>每个高级定时器和通用定时器都拥有1个编码器接口</li>
+<li>两个输入引脚借用了输入捕获的通道1和通道2<br><img   src="https://dadeju.github.io/picx-images-hosting/image.1hse1t3uus.webp"  alt="image"></li>
+</ul>
+<h3 id="编码器接口工作模式"><a href="#编码器接口工作模式" class="headerlink" title="编码器接口工作模式"></a>编码器接口工作模式</h3><p><img   src="https://dadeju.github.io/picx-images-hosting/image.8ojvf52g3y.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.3nrsnkvo84.webp"  alt="image"></p>
+<ul>
+<li>仅在TI1计数：只计数TI1FP1的脉冲数量。在TI1FP1上升、TI2FP2为高电平和TI1FP1下降、TI2FP2为低电平时向下计数；在TI1FP1上升、TI2FP2为低电平和TI1FP1下降、TI2FP2为高电平时向上计数。</li>
+<li>仅在TI2计数：只计数TI1FP2的脉冲数量。在TI2FP2上升、TI1FP1为低电平和TI2FP2下降、TI1FP1为高电平时向下计数；在TI2FP2上升、TI1FP1为高电平和TI2FP2下降、TI1FP1为低电平时向上计数。</li>
+<li>在TI1和TI2上计数：计数TI1FP1和TI1FP2的脉冲数量。向上计数和向下计数将上面结合。<br>注：1、正转的状态都向上计数，反转的状态都向下计数<br>2、一般选择第三个模式（在TI1和TI2上计数）<br><img   src="https://dadeju.github.io/picx-images-hosting/image.32i51a1az2.webp"  alt="image"></li>
+</ul>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/image.7w6zxem2sd.webp"  alt="image"></p>
+<h3 id="具体步骤及代码实例"><a href="#具体步骤及代码实例" class="headerlink" title="具体步骤及代码实例"></a>具体步骤及代码实例</h3><p>这里以N32G401系列TIM3 CH1，CH2（PA6，PA7）为例<br>第一步：RCC开启时钟，开启GPIO和定时器的时钟<br>第二步：配置GPIO,PA6和PA7配置成输入模式<br>第三步：配置时基单元，预分频器选择不分频，自动重装，一般给最大65535，只需要给CNT执行计数即可<br>第四步：配置输入捕获单元（只有滤波器和极性两个参数）<br>第五步：配置编码器接口模式（调用库函数）</p>
+<p>具体代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">Encoder_Init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"> GPIO_InitType GPIO_InitStructure;</span><br><span class="line"> TIM_TimeBaseInitType TIM_TimeBaseStructure; </span><br><span class="line"> RCC_APB1_Peripheral_Clock_Enable(RCC_APB1_PERIPH_TIM3);</span><br><span class="line">       RCC_APB2_Peripheral_Clock_Enable(RCC_APB2_PERIPH_AFIO);</span><br><span class="line"> RCC_AHB_Peripheral_Clock_Enable(RCC_AHB_PERIPH_GPIOA);</span><br><span class="line"> <span class="comment">//空闲默认高电平，选择上拉输入，空闲默认低电平，选择下拉输入</span></span><br><span class="line"> <span class="comment">//浮空输入：没有上拉电阻和下拉电阻去影响外部信号，</span></span><br><span class="line"> <span class="comment">//缺点：当引脚浮空时，没有默认的电平，易受到噪声的影响，来回不断跳变</span></span><br><span class="line"> GPIO_Structure_Initialize(&amp;GPIO_InitStructure);</span><br><span class="line"> GPIO_InitStructure.Pin        = GPIO_PIN_6;</span><br><span class="line"> GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_INPUT;</span><br><span class="line"> GPIO_InitStructure.GPIO_Pull  = GPIO_PULL_UP;</span><br><span class="line"> GPIO_InitStructure.GPIO_Current = GPIO_DS_4MA;</span><br><span class="line"> GPIO_InitStructure.GPIO_Alternate = GPIO_AF3_TIM3;</span><br><span class="line"> GPIO_Peripheral_Initialize(GPIOA, &amp;GPIO_InitStructure);</span><br><span class="line"></span><br><span class="line"> GPIO_InitStructure.Pin        = GPIO_PIN_7;</span><br><span class="line"> GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_INPUT;</span><br><span class="line"> GPIO_InitStructure.GPIO_Pull  = GPIO_PULL_UP;</span><br><span class="line"> GPIO_InitStructure.GPIO_Alternate = GPIO_AF3_TIM3;</span><br><span class="line"> GPIO_Peripheral_Initialize(GPIOA, &amp;GPIO_InitStructure);</span><br><span class="line"></span><br><span class="line"> TIM_Base_Initialize(TIM8, &amp;TIM_TimeBaseStructure);</span><br><span class="line"> TIM_TimeBaseStructure.Period    = <span class="number">65536</span> - <span class="number">1</span>;  <span class="comment">//ARR</span></span><br><span class="line"> TIM_TimeBaseStructure.Prescaler = <span class="number">1</span> - <span class="number">1</span>;      <span class="comment">//PSC</span></span><br><span class="line"> TIM_TimeBaseStructure.ClkDiv    = <span class="number">0x0</span>;</span><br><span class="line"> TIM_TimeBaseStructure.CntMode   = TIM_CNT_MODE_UP;</span><br><span class="line"> TIM_Base_Initialize(TIM3, &amp;TIM_TimeBaseStructure);</span><br><span class="line">  </span><br><span class="line"> TIM_Input_Struct_Initialize(&amp;TIM_ICInitStructure);</span><br><span class="line"> TIM_ICInitStructure.Channel     = TIM_CH_1;</span><br><span class="line"> TIM_ICInitStructure.IcPolarity  = TIM_IC_POLARITY_RISING;</span><br><span class="line"> TIM_ICInitStructure.IcFilter    = <span class="number">0xF</span>;<span class="comment">//0xF;</span></span><br><span class="line"> TIM_Input_Channel_Initialize(TIM3, &amp;TIM_ICInitStructure);</span><br><span class="line"> TIM_Input_Struct_Initialize(&amp;TIM_ICInitStructure);</span><br><span class="line"> </span><br><span class="line"> TIM_ICInitStructure.Channel     = TIM_CH_2;</span><br><span class="line"> TIM_ICInitStructure.IcPolarity  = TIM_IC_POLARITY_RISING;</span><br><span class="line"> TIM_ICInitStructure.IcFilter    = <span class="number">0xF</span>;<span class="comment">//0xF;</span></span><br><span class="line"> TIM_Input_Channel_Initialize(TIM3, &amp;TIM_ICInitStructure); </span><br><span class="line"> TIM_Encoder_Interface_Set(TIM3, TIM_ENCODE_MODE_TI12, TIM_IC_POLARITY_RISING, TIM_IC_POLARITY_RISING);</span><br><span class="line"> <span class="comment">//编码器模式：TIM_EncoderMode_TI12，TI1和TI2都计数</span></span><br><span class="line"> <span class="comment">//后面两个参数为通道1和通道2的电平特性，上升沿：高低电平不反转（编码器上升沿和下降沿都有效） </span></span><br><span class="line"> TIM_On(TIM3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
                     
                 </div>
 
@@ -232,14 +233,6 @@
 
                 <div class="post-bottom-tags-and-share border-box">
                     <div>
-                        
-                            <ul class="post-tags-box border-box">
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E9%80%9A%E8%AE%AF%E5%8E%9F%E7%90%86/">通讯原理</a>
-                                    </li>
-                                
-                            </ul>
                         
                     </div>
                     <div>
@@ -255,14 +248,14 @@
                             <div class="prev-post">
                                 <a class="prev"
                                    rel="prev"
-                                   href="/2025/04/02/%E4%BA%91%E9%80%94MCU-FlexCAN-ID%E8%BF%87%E6%BB%A4%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/"
-                                   title="云途MCU FlexCAN ID过滤方法介绍"
+                                   href="/2024/04/15/%E5%85%88%E6%A5%AB68%E7%B3%BB%E5%88%97LVDS%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D/"
+                                   title="先楫68系列LVDS简单介绍"
                                 >
                                     <span class="left arrow-icon flex-center">
                                         <i class="fas fa-chevron-left"></i>
                                     </span>
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">云途MCU FlexCAN ID过滤方法介绍</span>
+                                        <span class="post-nav-title-item text-ellipsis">先楫68系列LVDS简单介绍</span>
                                         <span class="post-nav-item">上一篇</span>
                                     </span>
                                 </a>
@@ -272,11 +265,11 @@
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/03/31/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%A5%87%E7%89%B9%E7%9A%84debug%E7%BB%8F%E5%8E%86/"
-                                   title="记一次奇特的debug经历"
+                                   href="/2021/12/09/shell%E7%A0%81%E8%A1%A8%E7%88%AC%E8%99%AB/"
+                                   title="shell码表爬虫"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">记一次奇特的debug经历</span>
+                                        <span class="post-nav-title-item text-ellipsis">shell码表爬虫</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">

@@ -9,7 +9,7 @@
     
     <title>
         
-            嵌入式日志常用打印方式 |
+            先楫68系列LVDS指针常用旋转方法 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        嵌入式日志常用打印方式
+                        先楫68系列LVDS指针常用旋转方法
                     </div>
                 
 
@@ -177,28 +177,19 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-04-01 20:46:27</span>
+                <span class="datetime">2024-06-02 20:59:24</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Tue Apr 01 2025 21:31:15 GMT+0800">2025-04-01 21:31:15</span>
+                    <span class="datetime" data-updated="Wed Apr 02 2025 22:25:44 GMT+0800">2025-04-02 22:25:44</span>
                 </span>
             
         
 
         
 
-        
-            <span class="post-tag meta-info-item border-box">
-                <ul class="post-tag-ul">
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E9%80%9A%E8%AE%AF%E5%8E%9F%E7%90%86/">通讯原理</a></li>
-                        
-                    
-                </ul>
-            </span>
         
 
         
@@ -219,11 +210,22 @@
                     
 
                     
-                         <p>我想那些做纯软件开发的，比如java，python,html开发的，或许不会想到在嵌入式开发中，想要直接看调试信息，打印日志都需要通过别的手段，比如你开发一个电子称，调试过程中你明显不能把日志打印在电子称上面</p>
-<h3 id="通过串口打印"><a href="#通过串口打印" class="headerlink" title="通过串口打印"></a>通过串口打印</h3><p>在MCU里面复用一路串口，将printf重定向到串口，通过串口转USB设备，我是在淘宝上面用5块钱买了个便宜的，如果想要求稳可以买那种带隔离的，在电脑上面通过串口助手来查看日志，这是最简单直接也是最常用的。<br>其实如果使用的<mark>jlink, v9 v10</mark>及以上的仿真器驱动安装后会在设备管理器看到一个CDC串口,可以在Jlink commander 里面输入VCOM ENABLE命令来开启串口功能</p>
-<h3 id="RTT打印"><a href="#RTT打印" class="headerlink" title="RTT打印"></a>RTT打印</h3><p>需要用到jlnk，这种方式非常方便，只需要把RTT的源码添加到工程，然后用SEGGER_RTT_printf(0, “%s\n”, “test”);就能打印。是我比较喜欢的方式，<br>RTT的工作原理大致就是在<mark>内存里面创建一个RTT控制块</mark>RTT Control Block，即SEGGER_RTT_CB结构体。这个结构体里面存放了若干个上行通道和下行通道，每个通道都有一个数据buffer以及读写指针，构成了数据队列。向RTT控制块里面的任意一个上行通道的数据队列中写入log信息，然后JLINK能够通过读写RAM内容，获取到队列的数据buffer和写指针的内容，并更新读指针<br>如果你使用的云途的MCU，使用RTT只需要打开这个勾选就OK了<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9rjkoi9rgw.webp"  alt="image"></p>
-<h3 id="Event-Recoder调试组件打印"><a href="#Event-Recoder调试组件打印" class="headerlink" title="Event Recoder调试组件打印"></a>Event Recoder调试组件打印</h3><p>需要先安装一个EVR组件(其实这个组建非常强大，强烈推荐！我这里只介绍其中的打印功能)<br><img   src="https://dadeju.github.io/picx-images-hosting/16b3441b68ab21ccf3f27118eaf7787.4ub3un3gut.webp"  alt="16b3441b68ab21ccf3f27118eaf7787"><br>debug的trace页面也需要做对应的配置<br><img   src="https://dadeju.github.io/picx-images-hosting/0590c138e3e0c6f4ebef9620d02ecc5.54xxnsjk8r.webp"  alt="0590c138e3e0c6f4ebef9620d02ecc5"><br>需要注意要把自己其他的重定向给注释掉<br><img   src="https://dadeju.github.io/picx-images-hosting/cc469ad34853450e50f092d2028b93f.99tizwhkhd.webp"  alt="cc469ad34853450e50f092d2028b93f"><br>测试效果：<br><img   src="https://dadeju.github.io/picx-images-hosting/3c466415d888fafecfacdc2d68e6656.3nrsm1hevr.webp"  alt="3c466415d888fafecfacdc2d68e6656"></p>
-<h3 id="其他的日志库（EasyLogger）"><a href="#其他的日志库（EasyLogger）" class="headerlink" title="其他的日志库（EasyLogger）"></a>其他的日志库（EasyLogger）</h3><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/armink/EasyLogger" >https://github.com/armink/EasyLogger<i class="fas fa-external-link-alt"></i></a><br>超轻量级(ROM&lt;1.6K, RAM&lt;0.3K)、高性能的 C&#x2F;C++ 日志库，移植起来也非常方便，支持自定义输出方式（例如：终端、文件、数据库、串口、485、Flash…）功能非常丰富。<br><img   src="https://dadeju.github.io/picx-images-hosting/1b9cc52772b29fbde201f60a1613002.2h8hdfwn67.webp"  alt="1b9cc52772b29fbde201f60a1613002"></p>
+                         <p>在汽车液晶仪表中，指针旋转功能是一项重要需求。本文档主要介绍先楫使用6800系列通过LVDS协议驱动12.3英寸屏幕实现指针旋转的常用方法。<br>本文档测试使用的硬件平台有先楫HPM6800EVK开发板、屏幕为群创光电DJ123IA-01B。使用的SDK版本为sdk_env_v1.4.0。</p>
+<p>图片切换来实现指针旋转<br>生成指针图像：本方法需提前将旋转过程中各个角度图片储存,然后依次切换图片,来模拟图片旋转的效果,使用ImageMagick(<a class="link"   target="_blank" rel="noopener" href="https://imagemagick.org/index.php)%E7%94%9F%E6%88%90%E6%8C%87%E9%92%88%E5%9C%A8%E4%B8%8D%E5%90%8C%E8%A7%92%E5%BA%A6%E7%9A%84%E5%9B%BE%E5%83%8F" >https://imagemagick.org/index.php)生成指针在不同角度的图像<i class="fas fa-external-link-alt"></i></a><br><img   src="https://dadeju.github.io/picx-images-hosting/image.b92t3oxhr.webp"  alt="image"><br>不过这样一次只能生成一张旋转的图片，如果需要批量生成（每一度生成一张）需要使用脚本。在Window系统下保存文件为.ps1文件使用Powershell运行。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.45huc27206.webp"  alt="image"><br>但生成的图片不能直接使用还需要转换成C语言数组格式。可以通过NXP的GUI-Guider软件或者使用LVGL官方的图像格式转换网址（<a class="link"   target="_blank" rel="noopener" href="https://lvgl.io/tools/imageconverter%EF%BC%89%E7%94%9F%E6%88%90%E3%80%82" >https://lvgl.io/tools/imageconverter）生成。<i class="fas fa-external-link-alt"></i></a><br><img   src="https://dadeju.github.io/picx-images-hosting/image.102cd4d2gu.webp"  alt="image"><br>不过这种方法对存储空间要求较大，把PNG&#x2F;JPG的二进制文件转换成C语言数组格式后文件大小会比之前更大（每个字节会额外多出“0x”、“,”字符）。所以更适合那种只有几种变化形式的滑块动画。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.4g4o57msqt.webp"  alt="image"><br>b.更新图片缓冲区，刷新图片<br>将旋转后的图像数据复制到指针缓冲区<br><img   src="https://dadeju.github.io/picx-images-hosting/image.sz4hor39s.webp"  alt="image"><br>设置LCD的下一帧显示缓冲区：使用lcdc_layer_set_next_buffer函数，指定层2的下一个显示缓冲区地址为Pointerbuffer的地址。通过core_local_mem_to_sys_address函数将本地地址转换为系统地址，以确保LCD控制器能够正确访问该缓冲区。<br>刷新图层：<br><img   src="https://dadeju.github.io/picx-images-hosting/image.73u4fkfzqu.webp"  alt="image"></p>
+<h3 id="直接对图像中的像素点进行旋转计算"><a href="#直接对图像中的像素点进行旋转计算" class="headerlink" title="直接对图像中的像素点进行旋转计算"></a>直接对图像中的像素点进行旋转计算</h3><p>本方法是直接将旋转后的像素坐标计算出来,旋转矩阵计算的方法精度高，不会失真。但计算量大对于主频要求较高。<br>首先需要找到图像中心点，将旋转角度从度数转换为弧度，然后计算该角度的正弦值和余弦值。然后<mark>逐行逐列</mark>地遍历图像中的每个像素。<br>同时需要满足两个条件：1.旋转后在原图像范围外的部分不能影响其他图层。2.旋转后原图像空缺的部分要保持透明<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9rjkpx93yn.webp"  alt="image"><br>将旋转后的图像数据复制到图层的缓冲区，然后刷新图层就能达到图片旋转的效果。这种方法对存储空间要求不高，只需要一张初始的角度的指针图片，但对于主频要求较高。<br>以旋转一张1920x720分辨率的图像为例，每一个像素坐标分为四部分（RGBA）。三原色占比和透明度。每个计算后的坐标都要检查是否在原图像范围内，然后将旋转后的图像数据复制到新的位置。</p>
+<h3 id="LVGL-图形库旋转指针"><a href="#LVGL-图形库旋转指针" class="headerlink" title="LVGL 图形库旋转指针"></a>LVGL 图形库旋转指针</h3><p>LVGL是一个免费开源嵌入式图形库，先楫有官方移植的LVGL工程模板。通过 lvgl.img_set_angle 可以对图片进行旋转，使用的单位是 角度值*10，方向是顺时针， 100 就表示 10 度。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.2yyj3glrb7.webp"  alt="image"><br>使用lv_anim_set_values(&amp;img, 0, 2800);可以将图片从0度旋转到280度.并达到动画效果。使用LVGL显示图片需要注意，转换图片为C语言数组必须用官方的图像格式转换网址（<a class="link"   target="_blank" rel="noopener" href="https://lvgl.io/tools/imageconverter%EF%BC%89" >https://lvgl.io/tools/imageconverter）<i class="fas fa-external-link-alt"></i></a></p>
+<ol>
+<li>声明并初始化动画对象。</li>
+<li>绑定动画到图像对象 fg_img。</li>
+<li>设置回调函数 set_angle，在动画执行过程中更新图像的角度。</li>
+<li>设置动画值范围为从 0 到 2500。</li>
+<li>设置动画持续时间为 25 秒。</li>
+<li>设置动画为无限重复。</li>
+<li>启动动画。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7i0k6frbvg.webp"  alt="image"><br>使用LVGL的img_set_angle来旋转图片效率要比直接计算图片像素效率稍高。以本文使用的指针的图片为例，旋转564x564的图片，直接计算像素坐标来旋转280度需要27秒，如果使用img_set_angle旋转差不多只需要23秒左右。<br>使用LVGL旋转图片相对来说比较简单，只需要调用API就能实现。减少了手动处理边界检查和处理超出范围像素的工作量，并且LVGL 利用内部优化算法使图片旋转效率更高。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9kgcuhpzv8.webp"  alt="image"><br>先楫68系列有支持2D图形加速PDMA，支持两个图层的独立旋转，不过只能按固定角度旋转，所以不太适用于指针旋转的场景。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.8z6p86vlut.webp"  alt="image"></li>
+</ol>
+<h3 id="硬件VG-lite旋转指针"><a href="#硬件VG-lite旋转指针" class="headerlink" title="硬件VG_lite旋转指针"></a>硬件VG_lite旋转指针</h3><p>先楫68系列支持Open VG GPU，可实现两个图层的处理，支持任意角度的旋转。这个方法从原理上能够实现指针旋转，不过本文方法在有些细节上没有处理好，旋转后屏幕会花屏。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.39lcwm1azb.webp"  alt="image"><br>首先需要调用vg_lite_translate对矩阵进行平移变换，确定旋转中心。VG_LITE_NORMAL_IMAGE_MODE<br><img   src="https://dadeju.github.io/picx-images-hosting/image.73u4fkjbc7.webp"  alt="image"><br>VG_LITE_NORMAL_IMAGE_MODE使用普通渲染模式，除此之外还有混合模式，禁用模式等。<br>VG_lite旋转指针最关键的函数是vg_lite_rotate(rAngle, &amp;matrix);这个函数并不会直接旋转图片，而是计算旋转角度得到了一个旋转矩阵。由于是导入外部的图片而不是直接绘制，所以需要额外通过vg_lite_blit函数用于将一个缓冲区上的内容应用matrix矩阵绘制到另一个缓冲区上。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.2rvb81026e.webp"  alt="image"><br>NXP的i.MX RT 系列的图形编程应用文档(<a class="link"   target="_blank" rel="noopener" href="https://www.nxp.com/docs/zh/application-note/AN14210.pdf)%E4%B8%AD%E4%B9%9F%E6%9C%89%E8%AE%B2%E8%BF%B0VG_lite%E5%9B%BE%E7%89%87%E6%97%8B%E8%BD%AC%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%8C%E8%99%BD%E7%84%B6%E9%82%A3%E7%AF%87%E6%95%99%E7%A8%8B%E4%BD%BF%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0%E6%98%AFNXP%E8%87%AA%E5%B7%B1%E5%B0%81%E8%A3%85%E7%9A%84%EF%BC%8C%E4%B8%8D%E6%98%AFVGLite%E5%AE%98%E6%96%B9%E7%9A%84API%EF%BC%8C%E4%BD%86%E6%98%AF%E4%B9%9F%E6%9C%89%E5%BE%88%E9%AB%98%E7%9A%84%E5%8F%82%E8%80%83%E4%BB%B7%E5%80%BC%E3%80%82" >https://www.nxp.com/docs/zh/application-note/AN14210.pdf)中也有讲述VG_lite图片旋转的方法，虽然那篇教程使用的函数是NXP自己封装的，不是VGLite官方的API，但是也有很高的参考价值。<i class="fas fa-external-link-alt"></i></a></p>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/image.5j4dg3nqdn.webp"  alt="image">
+　	　	　</p>
 
                     
                 </div>
@@ -232,14 +234,6 @@
 
                 <div class="post-bottom-tags-and-share border-box">
                     <div>
-                        
-                            <ul class="post-tags-box border-box">
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E9%80%9A%E8%AE%AF%E5%8E%9F%E7%90%86/">通讯原理</a>
-                                    </li>
-                                
-                            </ul>
                         
                     </div>
                     <div>
@@ -255,14 +249,14 @@
                             <div class="prev-post">
                                 <a class="prev"
                                    rel="prev"
-                                   href="/2025/04/02/%E4%BA%91%E9%80%94MCU-FlexCAN-ID%E8%BF%87%E6%BB%A4%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/"
-                                   title="云途MCU FlexCAN ID过滤方法介绍"
+                                   href="/2024/07/22/%E5%9B%BD%E6%B0%91%E6%8A%80%E6%9C%AFN32A455-R-sram%E5%9C%A8stop2%E6%A8%A1%E5%BC%8F%E4%B8%8B%E4%BF%9D%E6%8C%81%E6%95%B0%E6%8D%AE%E7%9A%84%E9%AA%8C%E8%AF%81/"
+                                   title="国民技术N32A455 R-sram在stop2模式下保持数据的验证"
                                 >
                                     <span class="left arrow-icon flex-center">
                                         <i class="fas fa-chevron-left"></i>
                                     </span>
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">云途MCU FlexCAN ID过滤方法介绍</span>
+                                        <span class="post-nav-title-item text-ellipsis">国民技术N32A455 R-sram在stop2模式下保持数据的验证</span>
                                         <span class="post-nav-item">上一篇</span>
                                     </span>
                                 </a>
@@ -272,11 +266,11 @@
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/03/31/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%A5%87%E7%89%B9%E7%9A%84debug%E7%BB%8F%E5%8E%86/"
-                                   title="记一次奇特的debug经历"
+                                   href="/2024/04/15/%E5%85%88%E6%A5%AB68%E7%B3%BB%E5%88%97LVDS%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D/"
+                                   title="先楫68系列LVDS简单介绍"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">记一次奇特的debug经历</span>
+                                        <span class="post-nav-title-item text-ellipsis">先楫68系列LVDS简单介绍</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">

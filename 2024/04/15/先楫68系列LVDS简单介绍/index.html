@@ -9,7 +9,7 @@
     
     <title>
         
-            嵌入式日志常用打印方式 |
+            先楫68系列LVDS简单介绍 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        嵌入式日志常用打印方式
+                        先楫68系列LVDS简单介绍
                     </div>
                 
 
@@ -177,28 +177,19 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-04-01 20:46:27</span>
+                <span class="datetime">2024-04-15 20:26:08</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Tue Apr 01 2025 21:31:15 GMT+0800">2025-04-01 21:31:15</span>
+                    <span class="datetime" data-updated="Wed Apr 02 2025 20:46:52 GMT+0800">2025-04-02 20:46:52</span>
                 </span>
             
         
 
         
 
-        
-            <span class="post-tag meta-info-item border-box">
-                <ul class="post-tag-ul">
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E9%80%9A%E8%AE%AF%E5%8E%9F%E7%90%86/">通讯原理</a></li>
-                        
-                    
-                </ul>
-            </span>
         
 
         
@@ -219,11 +210,30 @@
                     
 
                     
-                         <p>我想那些做纯软件开发的，比如java，python,html开发的，或许不会想到在嵌入式开发中，想要直接看调试信息，打印日志都需要通过别的手段，比如你开发一个电子称，调试过程中你明显不能把日志打印在电子称上面</p>
-<h3 id="通过串口打印"><a href="#通过串口打印" class="headerlink" title="通过串口打印"></a>通过串口打印</h3><p>在MCU里面复用一路串口，将printf重定向到串口，通过串口转USB设备，我是在淘宝上面用5块钱买了个便宜的，如果想要求稳可以买那种带隔离的，在电脑上面通过串口助手来查看日志，这是最简单直接也是最常用的。<br>其实如果使用的<mark>jlink, v9 v10</mark>及以上的仿真器驱动安装后会在设备管理器看到一个CDC串口,可以在Jlink commander 里面输入VCOM ENABLE命令来开启串口功能</p>
-<h3 id="RTT打印"><a href="#RTT打印" class="headerlink" title="RTT打印"></a>RTT打印</h3><p>需要用到jlnk，这种方式非常方便，只需要把RTT的源码添加到工程，然后用SEGGER_RTT_printf(0, “%s\n”, “test”);就能打印。是我比较喜欢的方式，<br>RTT的工作原理大致就是在<mark>内存里面创建一个RTT控制块</mark>RTT Control Block，即SEGGER_RTT_CB结构体。这个结构体里面存放了若干个上行通道和下行通道，每个通道都有一个数据buffer以及读写指针，构成了数据队列。向RTT控制块里面的任意一个上行通道的数据队列中写入log信息，然后JLINK能够通过读写RAM内容，获取到队列的数据buffer和写指针的内容，并更新读指针<br>如果你使用的云途的MCU，使用RTT只需要打开这个勾选就OK了<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9rjkoi9rgw.webp"  alt="image"></p>
-<h3 id="Event-Recoder调试组件打印"><a href="#Event-Recoder调试组件打印" class="headerlink" title="Event Recoder调试组件打印"></a>Event Recoder调试组件打印</h3><p>需要先安装一个EVR组件(其实这个组建非常强大，强烈推荐！我这里只介绍其中的打印功能)<br><img   src="https://dadeju.github.io/picx-images-hosting/16b3441b68ab21ccf3f27118eaf7787.4ub3un3gut.webp"  alt="16b3441b68ab21ccf3f27118eaf7787"><br>debug的trace页面也需要做对应的配置<br><img   src="https://dadeju.github.io/picx-images-hosting/0590c138e3e0c6f4ebef9620d02ecc5.54xxnsjk8r.webp"  alt="0590c138e3e0c6f4ebef9620d02ecc5"><br>需要注意要把自己其他的重定向给注释掉<br><img   src="https://dadeju.github.io/picx-images-hosting/cc469ad34853450e50f092d2028b93f.99tizwhkhd.webp"  alt="cc469ad34853450e50f092d2028b93f"><br>测试效果：<br><img   src="https://dadeju.github.io/picx-images-hosting/3c466415d888fafecfacdc2d68e6656.3nrsm1hevr.webp"  alt="3c466415d888fafecfacdc2d68e6656"></p>
-<h3 id="其他的日志库（EasyLogger）"><a href="#其他的日志库（EasyLogger）" class="headerlink" title="其他的日志库（EasyLogger）"></a>其他的日志库（EasyLogger）</h3><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/armink/EasyLogger" >https://github.com/armink/EasyLogger<i class="fas fa-external-link-alt"></i></a><br>超轻量级(ROM&lt;1.6K, RAM&lt;0.3K)、高性能的 C&#x2F;C++ 日志库，移植起来也非常方便，支持自定义输出方式（例如：终端、文件、数据库、串口、485、Flash…）功能非常丰富。<br><img   src="https://dadeju.github.io/picx-images-hosting/1b9cc52772b29fbde201f60a1613002.2h8hdfwn67.webp"  alt="1b9cc52772b29fbde201f60a1613002"></p>
+                         <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>本文档主要介绍先楫使用6800系列通过LVDS协议驱动12.3英寸屏幕的步骤。<br>测试使用的硬件平台有先楫HPM6800EVK开发板、屏幕为群创光电DJ123IA-01B。使用的SDK版本为sdk_env_v1.4.0。</p>
+<h3 id="LVDS-接口协议驱动原理说明"><a href="#LVDS-接口协议驱动原理说明" class="headerlink" title="LVDS 接口协议驱动原理说明"></a>LVDS 接口协议驱动原理说明</h3><p>LVDS 显示接口协议功能需要LVB 和 MIPI_DSI_PHY 相互配合。LVB 接收来自两个 LCDC 的输出数据，并将其转化为 LVDS 显示接口协议数据，在 PHY 中完成并串转换。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.icaohs4hk.webp"  alt="image"></p>
+<p>一般来说，LVDS有四种接口模式：<br><mark>单路6bit LVDS：</mark>单路方式传输，每个基色信号采用6位数据，共18位RGB数据，因此，也称18位或18bit LVDS接口。也称18位或18bit  LVDS接口。   <br><mark><br>双路6bit LVDS：</mark>双路方式传输，每个基色信号采用6位数据，其中奇路数据为18位，偶路数据为18位，共36位RGB数据，也称36位或36bit  LVDS接口。<br><mark><br>单路8bit LVDS：</mark>单路方式传输，每个基色信号采用8位数据，共24位RGB数据，也称24位或24bit LVDS接口。<br><mark><br>双路8bit LVDS：</mark>双路方式传输，每个基色信号采用8位数据，其中奇路数据为24位，偶路数据为24位，共48位RGB数据，也称48位或48bit LVDS接口</p>
+<p>就算是同一种输出格式不同屏幕的接口线序也可能也不一样。本文使用的群创屏接口为双八格式。50PIN，也就是3组一共6根信号线，2组一共4根时钟线。对应的LVDS应该选用split 模式（LVB 的两个通道共同传输同一像素源，一个通道传输奇数像素点，一个通道传输偶数像素点）。此时lcdc_pixel_clk应该为pixel_clock_khz即屏幕速率的两倍。通过查阅DJ123IA的datasheet我们可以知道屏幕的时钟频率为44.1MHz，也就是说LCDC的频率应为88.2MHz。</p>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/image.7axcayiivo.webp"  alt="image"></p>
+<p>在先楫例程sdk_env_v1.4.0\hpm_sdk\boards\hpm6800evk路径下有一个CMakeLists脚本，里面有提到SDK中原本就包含了四块屏幕的配置文件。将第四个屏幕选项的参数改为1（TM103XDGP01也是双八接口，与本文使用的屏幕只有参数上的差异）。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7i0k6e4qwg.webp"  alt="image"><br>然后打开在sdk_env_v1.4.0\hpm_sdk\samples\drivers\lcdc目录下CMakeLists脚本。将CONFIG_HPM_PANEL参数改成4，即选用第四个屏幕的参数，最后使用SDK主目录下start_cmd工具重新生成例程。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.1e8s3y25og.webp"  alt="image"></p>
+<h3 id="部分驱动代码及说明"><a href="#部分驱动代码及说明" class="headerlink" title="部分驱动代码及说明"></a>部分驱动代码及说明</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">board_init_lcd_lvds</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    init_lcd_lvds_double_ctl_pins();</span><br><span class="line">    init_mipi_lvds_tx_phy0_pin();</span><br><span class="line">    init_mipi_lvds_tx_phy1_pin();</span><br><span class="line">    <span class="type">hpm_panel_hw_interface_t</span> hw_if = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="type">hpm_panel_t</span> *panel = hpm_panel_find_device_default();</span><br><span class="line">    <span class="type">const</span> <span class="type">hpm_panel_timing_t</span> *timing = hpm_panel_get_timing(panel);</span><br><span class="line">    <span class="type">uint32_t</span> lcdc_pixel_clk_khz = board_lcdc_clock_init(clock_lcd0, timing-&gt;pixel_clock_khz * <span class="number">2</span>);</span><br><span class="line">    hw_if.set_reset_pin_level = set_reset_pin_level_tm103xdgp01;</span><br><span class="line">    hw_if.set_video_router = set_video_router_tm103xdgp01;</span><br><span class="line">    hw_if.lcdc_pixel_clk_khz = lcdc_pixel_clk_khz;</span><br><span class="line">    hw_if.video.lvds.channel_di_index = <span class="number">0</span>;</span><br><span class="line">    hw_if.video.lvds.lvb_base = HPM_LVB;</span><br><span class="line">    hpm_panel_register_interface(panel, &amp;hw_if);</span><br><span class="line">    hpm_panel_reset(panel);</span><br><span class="line">    hpm_panel_init(panel);</span><br><span class="line">    hpm_panel_power_on(panel);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>LVB 的使用初始化流程如下：</p>
+<ol>
+<li>配置 LVB 的 CTRL 寄存器，设置所需模式<br><img   src="https://dadeju.github.io/picx-images-hosting/image.b92t26flr.webp"  alt="image"></li>
+<li>配置 PIXEL_MUX 的 PIXMUX 寄存器，搭建所需 path</li>
+<li>配置 MIPI DSI PHY 寄存器，对 PHY 的工作模式和时钟进行配置</li>
+<li>配置 LVB 寄存器 PHY_POW_CTRL[lvds0] 和 PHY_POW_CTRL[lvds1]，配置各 lane 的 tx*_pd 为 0x0，pd_txck 为 0x0，使 PHY 退出复位状态<br><img   src="https://dadeju.github.io/picx-images-hosting/image.2h8hety6dp.webp"  alt="image"></li>
+<li>读取 LVB 寄存器 PHY_STAT 寄存器，等待 PHY 的 PLL_LOCK 为 1，表示 PHY 进入了正常工作模式历史记录</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (lvb_lvds_phy_split_pll_is_lock(lvb_base) == <span class="literal">false</span>) &#123; &#125;</span><br></pre></td></tr></table></figure>
+<p>完成LVDS初始化后，DSI 控制器可以产生水平的或垂直的颜色条带，用来测试显示接口是否可以正常工作。<br>可以通过如下的步骤生成测试图像：</p>
+<ol>
+<li>配置 MODE_CFG 寄存器，使能 Video 模式；<br><img   src="https://dadeju.github.io/picx-images-hosting/image.5fkric6onl.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.m8zwrlw4.webp"  alt="image"></li>
+<li>配置寄存器 DPI_COLOR_CODING，选择测试图案及格式；<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7lk643yi8i.webp"  alt="image"></li>
+<li>配置测试图像的尺寸、图像行和帧的时序参数<br><img   src="https://dadeju.github.io/picx-images-hosting/image.41y8eavv33.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.7sndzjktzu.webp"  alt="image"></li>
+<li>配置 VID_MODE_CFG[20]、 VID_MODE_CFG[24] 和 VID_MODE_CFG[16]，使能测试图案的生成；<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7lk643yr8q.webp"  alt="image"></li>
+</ol>
+<p>测试图像：<br> <img   src="https://dadeju.github.io/picx-images-hosting/image.1zifq8xmt4.webp"  alt="image"><br> <img   src="https://dadeju.github.io/picx-images-hosting/image.51ebrgz1qs.webp"  alt="image"></p>
 
                     
                 </div>
@@ -232,14 +242,6 @@
 
                 <div class="post-bottom-tags-and-share border-box">
                     <div>
-                        
-                            <ul class="post-tags-box border-box">
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E9%80%9A%E8%AE%AF%E5%8E%9F%E7%90%86/">通讯原理</a>
-                                    </li>
-                                
-                            </ul>
                         
                     </div>
                     <div>
@@ -255,14 +257,14 @@
                             <div class="prev-post">
                                 <a class="prev"
                                    rel="prev"
-                                   href="/2025/04/02/%E4%BA%91%E9%80%94MCU-FlexCAN-ID%E8%BF%87%E6%BB%A4%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/"
-                                   title="云途MCU FlexCAN ID过滤方法介绍"
+                                   href="/2024/06/02/%E5%85%88%E6%A5%AB68%E7%B3%BB%E5%88%97LVDS%E6%8C%87%E9%92%88%E5%B8%B8%E7%94%A8%E6%97%8B%E8%BD%AC%E6%96%B9%E6%B3%95/"
+                                   title="先楫68系列LVDS指针常用旋转方法"
                                 >
                                     <span class="left arrow-icon flex-center">
                                         <i class="fas fa-chevron-left"></i>
                                     </span>
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">云途MCU FlexCAN ID过滤方法介绍</span>
+                                        <span class="post-nav-title-item text-ellipsis">先楫68系列LVDS指针常用旋转方法</span>
                                         <span class="post-nav-item">上一篇</span>
                                     </span>
                                 </a>
@@ -272,11 +274,11 @@
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/03/31/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%A5%87%E7%89%B9%E7%9A%84debug%E7%BB%8F%E5%8E%86/"
-                                   title="记一次奇特的debug经历"
+                                   href="/2024/01/15/%E5%9B%BD%E6%B0%91%E6%8A%80%E6%9C%AFN32%E5%AE%9A%E6%97%B6%E5%99%A8%E7%BC%96%E7%A0%81%E5%99%A8%E6%8E%A5%E5%8F%A3%E6%A8%A1%E5%BC%8F/"
+                                   title="国民技术N32定时器编码器接口模式"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">记一次奇特的debug经历</span>
+                                        <span class="post-nav-title-item text-ellipsis">国民技术N32定时器编码器接口模式</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
