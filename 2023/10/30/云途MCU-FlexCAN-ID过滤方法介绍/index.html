@@ -9,7 +9,7 @@
     
     <title>
         
-            shell码表爬虫 |
+            云途MCU FlexCAN ID过滤方法介绍 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        shell码表爬虫
+                        云途MCU FlexCAN ID过滤方法介绍
                     </div>
                 
 
@@ -177,13 +177,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2021-12-09 14:09:34</span>
+                <span class="datetime">2023-10-30 23:09:17</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Dec 09 2021 14:09:34 GMT+0800">2021-12-09 14:09:34</span>
+                    <span class="datetime" data-updated="Thu Apr 03 2025 22:29:47 GMT+0800">2025-04-03 22:29:47</span>
                 </span>
             
         
@@ -210,15 +210,76 @@
                     
 
                     
-                         <p>先说思路，将码表中的单字提出来，作为参数传给wget下载</p>
-<p>1.整理码表,首先剔除原码所有的词，只留下单字<br><img   src="https://dadeju.github.io/picx-images-hosting/186353896817003.4nk491evo8w0.2obobv495y.webp"  alt="186353896817003"><br>vim的批量删除行 :8008,$d</p>
-<p>$是文末的意思，d是删除，这里的意思是删除从8008到文末的所有行</p>
-<p>剪切第一个值 cut -f1 smzmuke.txt &gt; 1</p>
-<p>用 -f 来设置我要提取的第一个域,然后重定向的1这个文件</p>
-<p><img   src="https://dadeju.github.io/picx-images-hosting/83906692880250.8re9til8xq8.102beoesma.webp"  alt="83906692880250"><br>输出第一行 sed -n ‘1p’ 1<br><img   src="https://dadeju.github.io/picx-images-hosting/131896428931846.244nvpf1i8qo.8vn2c11kgr.webp"  alt="131896428931846"><br>-n选项经常和 p 配合使用，其含义就是，输出那些匹配的行,输出“1”文件中的第一行</p>
-<p>到这里前期工作就已经完成了，接下来写爬虫吧<br>2.爬虫源码</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">temp=1</span><br><span class="line"><span class="keyword">for</span> ((i=<span class="number">1</span>;i&lt;=<span class="number">8007</span>;i++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">url=http://asset.jsxiaoshi.com/src/images/smzm/`sed -n <span class="string">&quot;<span class="variable">$&#123;temp&#125;</span>p&quot;</span> 1`.png</span><br><span class="line"><span class="comment">#拼接我们要爬取的目标url</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$url</span></span><br><span class="line"><span class="built_in">let</span> temp=<span class="variable">$temp</span>+1</span><br><span class="line"><span class="built_in">sleep</span> 0.3</span><br><span class="line"><span class="comment">#因为我们没有用ip代理池，避免过于频繁的访问，加点延时</span></span><br><span class="line">wget -P ./img <span class="variable">$url</span></span><br><span class="line"><span class="comment">#用wget 下载到本地 -P指定下载到的目录</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-<p><img   src="https://dadeju.github.io/picx-images-hosting/406995421566892.43tsr6xb9za0.77dpeucbv5.webp"  alt="406995421566892"><br>看来正常的跑起来了</p>
+                         <h1 id="YTM32系列MCU-FlexCAN-ID过滤应用指南"><a href="#YTM32系列MCU-FlexCAN-ID过滤应用指南" class="headerlink" title="YTM32系列MCU FlexCAN ID过滤应用指南"></a>YTM32系列MCU FlexCAN ID过滤应用指南</h1><h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>YTM32系列MCU集成的CAN控制器支持标准帧和扩展帧。并提供了多个邮件箱和接收FIFO,以及ID过滤功能。本文以YTM32B1ME0为例从应用的角度简明介绍如何使用YTM32的CAN外设进行ID过滤。</p>
+<h2 id="2-ID过滤原理"><a href="#2-ID过滤原理" class="headerlink" title="2. ID过滤原理"></a>2. ID过滤原理</h2><p>接收滤波器由滤波器掩码（Mask Code）和接受码（Acceptance Code）组成，当 FlexCAN 在不同的配置情况下接收滤波器的掩码和接受码组合是不同的。</p>
+<ul>
+<li>acceptedId：接收邮箱滤波器接受码  </li>
+<li>– 当被用作标准帧 (Standard Frame) 接收邮箱时，<mark>范围为 0-0x7FF；</mark><br>– 当被用作扩展帧 (Extended Frame) 接收邮箱时，<mark>范围为 0-0x1FFFFFFF；</mark></li>
+</ul>
+<p>通过滤波器，节点可以对接收的报文进行过滤，如果报文相关就进行接收</p>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/1743690559258.45hudk9mrt.webp"  alt="1743690559258"></p>
+<h2 id="3-代码示例"><a href="#3-代码示例" class="headerlink" title="3. 代码示例"></a>3. 代码示例</h2><p>下面是一个CAN ID过滤代码示例:</p>
+<ol>
+<li>初始化CAN 使能 FIFO</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">can_instance_t</span> can_pal_instance = &#123;</span><br><span class="line">    .instType = CAN_INST_TYPE_FLEXCAN,<span class="comment">//CAN逻辑实例类型为Flexcan</span></span><br><span class="line">    .instIdx = <span class="number">0UL</span>, <span class="comment">//使用CAN0</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>instType             识别具体是哪种CAN外设</p>
+</li>
+<li><p>instIdx                定位到设备树中的外设实例地址</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">extension_flexcan_rx_fifo_t</span> enhanceFifoCfg = &#123;</span><br><span class="line">    <span class="comment">// .numIdFilters = FLEXCAN_RX_FIFO_ID_FILTERS_16,</span></span><br><span class="line">    .isEnhanceRxFifoEnable = <span class="literal">true</span>,</span><br><span class="line">    .minNumOfRxMessages = <span class="number">10U</span>,</span><br><span class="line">    .numEnhanceRxFifoStandardIdFilters = <span class="number">2U</span>,<span class="comment">//标准ID过滤器数量</span></span><br><span class="line">    .numEnhanceRxFifoExtendedIdFilters = <span class="number">3U</span>,<span class="comment">//扩展ID过滤器数量</span></span><br><span class="line">    .enhanceRxFifoIdfilterTable = </span><br><span class="line"> (<span class="type">flexcan_enhance_rx_fifo_filter_table_t</span> *)&amp;enhanceFifoFilterTable[<span class="number">0</span>],</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>numIdFilters                                               过滤器规则数量</p>
+</li>
+<li><p>isEnhanceRxFifoEnable                            是否接收FIFO增强模式</p>
+</li>
+<li><p>minNumOfRxMessages                            FIFO中最小接收消息数量</p>
+</li>
+<li><p>numEnhanceRxFifoStandardIdFilters    标准ID过滤器数量</p>
+</li>
+<li><p>numEnhanceRxFifoExtendedIdFilters    扩展ID过滤器数量</p>
+</li>
+<li><p>enhanceRxFifoIdfilterTable                      指向ID过滤器表首地址</p>
+</li>
+</ul>
+<ol start="2">
+<li>具体的过滤器表的配置，标准帧和扩展帧的过滤规则可以写在一个表里</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">flexcan_enhance_rx_fifo_filter_table_t</span> enhanceFifoFilterTable[] =</span><br><span class="line"> &#123;</span><br><span class="line">    &#123;</span><br><span class="line">        .isRemoteFrame = <span class="literal">false</span>,</span><br><span class="line">        .isExtendedFrame = <span class="literal">true</span>,</span><br><span class="line">        .filterScheme = FLEXCAN_ENAHNCE_RXFIFO_FSCH_FILTER_MASK,</span><br><span class="line">        .filter_table.scheme_filter_mask =</span><br><span class="line">            &#123;</span><br><span class="line">                .filter = <span class="number">0x0CF004FEU</span>,</span><br><span class="line">                .mask = <span class="number">0x1FFFFFFEU</span>,</span><br><span class="line">            &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        .isRemoteFrame = <span class="literal">false</span>,</span><br><span class="line">        .isExtendedFrame = <span class="literal">false</span>,</span><br><span class="line">        .filterScheme = FLEXCAN_ENAHNCE_RXFIFO_FSCH_FILTER_MASK,</span><br><span class="line">        .filter_table.scheme_filter_mask =</span><br><span class="line">            &#123;</span><br><span class="line">                .filter = <span class="number">0x4FEU</span>,</span><br><span class="line">                .mask = <span class="number">0x7FFU</span>,</span><br><span class="line">            &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>以第一个过滤规则为例</p>
+<p>掩码值mask为0x1FFFFFFE，所以除最后一位，其余位必须与0x0CF004FE相同</p>
+<p>即只能接收0x0CF004FE和0x0CF004FF，最后一个可为0可为1。</p>
+<p>这样,只有ID落在配置范围内的CAN消息才能进入接收FIFO。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CAN_Receive(&amp;can_pal_instance, (<span class="type">uint32_t</span>)FLEXCAN_MB_HANDLE_ENHANCE_RXFIFO, &amp;rxMsg);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>如只想接收ID为0x02的CAN消息，可以通过如下配置</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> RX_STD_MSG_ID (0x02UL)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RX_STD_MAILBOX (0x00UL)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RX_EXTMSG_ID (0x70012UL)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RX_EXT_MAILBOX (0x02UL)</span></span><br></pre></td></tr></table></figure>
+
+<p>这几个宏定义规定了CAN消息的接收设置:</p>
+<p>#define RX_STD_MSG_ID (0x02UL)</p>
+<ul>
+<li>RX_STD_MSG_ID 定义了标准ID值为0x02的消息</li>
+</ul>
+<p>#define RX_STD_MAILBOX (0x00UL) </p>
+<ul>
+<li>RX_STD_MAILBOX 定义mailbox 0作为标准ID消息的接收缓冲区</li>
+</ul>
+<p>#define RX_EXTMSG_ID (0x70012UL)</p>
+<ul>
+<li>RX_EXTMSG_ID 定义扩展ID值为0x70012的消息</li>
+</ul>
+<p>#define RX_EXT_MAILBOX (0x02UL)</p>
+<ul>
+<li>RX_EXT_MAILBOX 定义mailbox 2作为扩展ID消息的接收缓冲区</li>
+</ul>
+<p>之后在配置接收时就可以直接使用这些符号来设置消息ID和mailbox:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FLEXCAN_DRV_Receive(CAN_INST, RX_STD_MAILBOX, &amp;rxStdMsg);</span><br><span class="line">FLEXCAN_DRV_Receive(CAN_INST, RX_EXT_MAILBOX, &amp;rxExtMsg);</span><br></pre></td></tr></table></figure>
 
                     
                 </div>
@@ -242,14 +303,14 @@
                             <div class="prev-post">
                                 <a class="prev"
                                    rel="prev"
-                                   href="/2023/10/30/%E4%BA%91%E9%80%94MCU-FlexCAN-ID%E8%BF%87%E6%BB%A4%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/"
-                                   title="云途MCU FlexCAN ID过滤方法介绍"
+                                   href="/2023/12/15/%E5%9B%BD%E6%B0%91%E6%8A%80%E6%9C%AFN32G45X%E7%B3%BB%E5%88%97freertos%E7%A7%BB%E6%A4%8D/"
+                                   title="国民技术N32G45X系列freertos移植"
                                 >
                                     <span class="left arrow-icon flex-center">
                                         <i class="fas fa-chevron-left"></i>
                                     </span>
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">云途MCU FlexCAN ID过滤方法介绍</span>
+                                        <span class="post-nav-title-item text-ellipsis">国民技术N32G45X系列freertos移植</span>
                                         <span class="post-nav-item">上一篇</span>
                                     </span>
                                 </a>
@@ -259,11 +320,11 @@
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2021/12/06/%E6%88%91%E6%98%AF%E6%80%8E%E4%B9%88%E4%BF%9D%E5%AD%98%E7%AC%94%E8%AE%B0%E7%9A%84/"
-                                   title="我是怎么保存笔记的"
+                                   href="/2021/12/09/shell%E7%A0%81%E8%A1%A8%E7%88%AC%E8%99%AB/"
+                                   title="shell码表爬虫"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">我是怎么保存笔记的</span>
+                                        <span class="post-nav-title-item text-ellipsis">shell码表爬虫</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
