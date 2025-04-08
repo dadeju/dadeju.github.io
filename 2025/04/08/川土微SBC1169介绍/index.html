@@ -9,7 +9,7 @@
     
     <title>
         
-            嵌入式日志常用打印方式 |
+            川土微SBC1169介绍 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        嵌入式日志常用打印方式
+                        川土微SBC1169介绍
                     </div>
                 
 
@@ -177,28 +177,19 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-04-01 20:46:27</span>
+                <span class="datetime">2025-04-08 20:56:36</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Tue Apr 01 2025 21:31:15 GMT+0800">2025-04-01 21:31:15</span>
+                    <span class="datetime" data-updated="Tue Apr 08 2025 22:00:02 GMT+0800">2025-04-08 22:00:02</span>
                 </span>
             
         
 
         
 
-        
-            <span class="post-tag meta-info-item border-box">
-                <ul class="post-tag-ul">
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E9%80%9A%E8%AE%AF%E5%8E%9F%E7%90%86/">通讯原理</a></li>
-                        
-                    
-                </ul>
-            </span>
         
 
         
@@ -219,11 +210,12 @@
                     
 
                     
-                         <p>我想那些做纯软件开发的，比如java，python,html开发的，或许不会想到在嵌入式开发中，想要直接看调试信息，打印日志都需要通过别的手段，比如你开发一个电子称，调试过程中你明显不能把日志打印在电子称上面</p>
-<h3 id="通过串口打印"><a href="#通过串口打印" class="headerlink" title="通过串口打印"></a>通过串口打印</h3><p>在MCU里面复用一路串口，将printf重定向到串口，通过串口转USB设备，我是在淘宝上面用5块钱买了个便宜的，如果想要求稳可以买那种带隔离的，在电脑上面通过串口助手来查看日志，这是最简单直接也是最常用的。<br>其实如果使用的<mark>jlink, v9 v10</mark>及以上的仿真器驱动安装后会在设备管理器看到一个CDC串口,可以在Jlink commander 里面输入VCOM ENABLE命令来开启串口功能</p>
-<h3 id="RTT打印"><a href="#RTT打印" class="headerlink" title="RTT打印"></a>RTT打印</h3><p>需要用到jlnk，这种方式非常方便，只需要把RTT的源码添加到工程，然后用SEGGER_RTT_printf(0, “%s\n”, “test”);就能打印。是我比较喜欢的方式，<br>RTT的工作原理大致就是在<mark>内存里面创建一个RTT控制块</mark>RTT Control Block，即SEGGER_RTT_CB结构体。这个结构体里面存放了若干个上行通道和下行通道，每个通道都有一个数据buffer以及读写指针，构成了数据队列。向RTT控制块里面的任意一个上行通道的数据队列中写入log信息，然后JLINK能够通过读写RAM内容，获取到队列的数据buffer和写指针的内容，并更新读指针<br>如果你使用的云途的MCU，使用RTT只需要打开这个勾选就OK了<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9rjkoi9rgw.webp"  alt="image"></p>
-<h3 id="Event-Recoder调试组件打印"><a href="#Event-Recoder调试组件打印" class="headerlink" title="Event Recoder调试组件打印"></a>Event Recoder调试组件打印</h3><p>需要先安装一个EVR组件(其实这个组建非常强大，强烈推荐！我这里只介绍其中的打印功能)<br><img   src="https://dadeju.github.io/picx-images-hosting/16b3441b68ab21ccf3f27118eaf7787.4ub3un3gut.webp"  alt="16b3441b68ab21ccf3f27118eaf7787"><br>debug的trace页面也需要做对应的配置<br><img   src="https://dadeju.github.io/picx-images-hosting/0590c138e3e0c6f4ebef9620d02ecc5.54xxnsjk8r.webp"  alt="0590c138e3e0c6f4ebef9620d02ecc5"><br>需要注意要把自己其他的重定向给注释掉<br><img   src="https://dadeju.github.io/picx-images-hosting/cc469ad34853450e50f092d2028b93f.99tizwhkhd.webp"  alt="cc469ad34853450e50f092d2028b93f"><br>测试效果：<br><img   src="https://dadeju.github.io/picx-images-hosting/3c466415d888fafecfacdc2d68e6656.3nrsm1hevr.webp"  alt="3c466415d888fafecfacdc2d68e6656"></p>
-<h3 id="其他的日志库（EasyLogger）"><a href="#其他的日志库（EasyLogger）" class="headerlink" title="其他的日志库（EasyLogger）"></a>其他的日志库（EasyLogger）</h3><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/armink/EasyLogger" >https://github.com/armink/EasyLogger<i class="fas fa-external-link-alt"></i></a><br>超轻量级(ROM&lt;1.6K, RAM&lt;0.3K)、高性能的 C&#x2F;C++ 日志库，移植起来也非常方便，支持自定义输出方式（例如：终端、文件、数据库、串口、485、Flash…）功能非常丰富。<br><img   src="https://dadeju.github.io/picx-images-hosting/1b9cc52772b29fbde201f60a1613002.2h8hdfwn67.webp"  alt="1b9cc52772b29fbde201f60a1613002"></p>
+                         <p>CA-IF1169 是集成 LDO 和 Watchdog 的高速 CAN 系统基础芯片，这个芯片并不是简单的把一个CAN收发器和LDO合在一起。内置的两路LDO，通常来说一路给MCU供电，另一路给CAN收发器或者板上的其他负载供电。MCU可以通过SPI与1169来进行通讯，进行诊断功能和一些寄存器的配置。还集成了看门狗功能。</p>
+<p>其中V1有250mA的电流输出能力，可以通过外置PNP的方式来进行电流扩展<br><img   src="https://dadeju.github.io/picx-images-hosting/image.pfisj58ef.png"  alt="image"><br>一般来说电流限制开启阈值电压取380mV,如果想要输出1.5A的电流<br>即 380mv&#x2F;1.5A &#x3D; 253m欧，VEXCC与V1之前的电阻取250m欧<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9kgd31vupp.webp"  alt="image"></p>
+<p>1169的烧录与常规意义的芯片也有些差异<br><img   src="https://dadeju.github.io/picx-images-hosting/image.77dqluqc8n.webp"  alt="image"><br>从图中可以看到有默认是出厂模式，这个模式下默认LDO输出，CAN能够正常收发，但是看门狗不工作，这个模式下非常适合做一些前期简单的测试。<br>在线仿真模式可以理解为MCU的debug模式，这个模式下可以任意擦写寄存器，但是掉电后会恢复出厂模式。<br>离线模式只能保证至少两次的烧录<br><img   src="https://dadeju.github.io/picx-images-hosting/image.99tj9x2ucc.webp"  alt="image"><br>配置完0x73和0x74后，需要计算这两个寄存器的CRC，通过将正确的 CRC 值写入非易失性存储器CRCC 控制寄存器来确认重新编程。 CRC 值一经验证，SBC 就开始对非易失性存储器单元重新编程。<br>如果 CRC 值不正确，则重新编程将中止。完成后，会生成系统复位，表明非易失性存储器单元已成功重新编程<br><img   src="https://dadeju.github.io/picx-images-hosting/image.6f0v452qk9.webp"  alt="image"><br>下面是具体的配置流程：<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7egyhbc12c.webp"  alt="image"></p>
+<p>通过选择模式控制寄存器下的 MC 位可以进入不同的模式，模式控制寄存器可通过 SPI 访问地址 0x01.<br><img   src="https://dadeju.github.io/picx-images-hosting/image.86ttz1zkbu.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.83a81c5cnb.webp"  alt="image"><br>喂狗的API函数其实就是重新设置了00h看门狗控制寄存器的值</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">SBC_FeedWatchdog</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    (<span class="type">void</span>)SBC_SetWatchdog(&amp;g_drvConfig.watchdogCtr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实还有一些功能安全相关的配置，后面有机会再做补充</p>
 
                     
                 </div>
@@ -232,14 +224,6 @@
 
                 <div class="post-bottom-tags-and-share border-box">
                     <div>
-                        
-                            <ul class="post-tags-box border-box">
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E9%80%9A%E8%AE%AF%E5%8E%9F%E7%90%86/">通讯原理</a>
-                                    </li>
-                                
-                            </ul>
                         
                     </div>
                     <div>
@@ -252,31 +236,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/04/08/%E5%B7%9D%E5%9C%9F%E5%BE%AESBC1169%E4%BB%8B%E7%BB%8D/"
-                                   title="川土微SBC1169介绍"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">川土微SBC1169介绍</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/03/31/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%A5%87%E7%89%B9%E7%9A%84debug%E7%BB%8F%E5%8E%86/"
-                                   title="记一次奇特的debug经历"
+                                   href="/2025/04/01/%E5%B5%8C%E5%85%A5%E5%BC%8F%E6%97%A5%E5%BF%97%E5%B8%B8%E7%94%A8%E6%89%93%E5%8D%B0%E6%96%B9%E5%BC%8F/"
+                                   title="嵌入式日志常用打印方式"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">记一次奇特的debug经历</span>
+                                        <span class="post-nav-title-item text-ellipsis">嵌入式日志常用打印方式</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
