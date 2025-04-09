@@ -9,6 +9,8 @@
     
     <title>
         
+            云途IIC外设介绍 |
+        
         GaoSheng
     </title>
     
@@ -45,10 +47,10 @@
     
 
     <!-- page content -->
-    <div class="page-main-content border-box is-home">
+    <div class="page-main-content border-box">
         <div class="page-main-content-top">
             
-<header class="header-wrapper transparent-1">
+<header class="header-wrapper">
 
     <div class="border-box header-content">
         <div class="left flex-start border-box">
@@ -142,42 +144,48 @@
             <div class="main-content border-box">
                 
 
-                    <div class="home-content-container fade-in-down-animation">
-    
-    <ul class="home-post-list border-box">
-        
-            <li class="home-post-item">
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
 
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        云途IIC外设介绍
+                    </div>
                 
 
-                <div class="home-post-item-bottom border-box">
-                    
-                    <h3 class="home-post-title border-box">
-                        <a href="/2021/12/06/%E6%88%91%E6%98%AF%E6%80%8E%E4%B9%88%E4%BF%9D%E5%AD%98%E7%AC%94%E8%AE%B0%E7%9A%84/">
-                            我是怎么保存笔记的
-                        </a>
-                    </h3>
-
-                    <div class="home-post-content keep-markdown-body">
+                
+                    <div class="post-header border-box">
                         
-                            首先说结论：markdown编写（vnote）+git同步（gitee）
-为什么不用主流的笔记软件：有道云笔记,印象笔记,为知笔记，onenote,notion,flomo
-这些云上笔记总是给人一种不安全的感觉，我喜欢数据在自己的手里。在一段比较长的...
-                        
-                    </div>
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">GaoSheng</span>
+                                
+                                    <span class="author-badge">Lv3</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
 
-                    
-
-<div class="post-meta-info-container border-box home">
+<div class="post-meta-info-container border-box post">
     <div class="post-meta-info border-box">
         
-            <span class="meta-info-item border-box">
-                <i class="icon fa-solid fa-history"></i>&nbsp;<span class="home-post-history"
-                                                                                data-updated="Mon Dec 06 2021 23:13:22 GMT+0800"
-                >2021-12-06 23:13:22</span>
-            </span>
-        
 
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-04-09 20:21:28</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Wed Apr 09 2025 20:28:30 GMT+0800">2025-04-09 20:28:30</span>
+                </span>
+            
         
 
         
@@ -190,258 +198,83 @@
         
     </div>
 
-    
-        <a class="home-read-more" href="/2021/12/06/%E6%88%91%E6%98%AF%E6%80%8E%E4%B9%88%E4%BF%9D%E5%AD%98%E7%AC%94%E8%AE%B0%E7%9A%84/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
     
 </div>
 
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <p>简单介绍一下云途的IIC外设，以MD系列为例：<br><img   src="https://dadeju.github.io/picx-images-hosting/image.icayhcr4c.webp"  alt="image"></p>
+<p>对上图可能不是那么常用的功能做一个简单的介绍：<br><mark>SMBus</mark>：由 Intel 提出的系统管理总线协议，基于 I²C 设计，但针对电源管理、硬件监控等场景增加了特定规范（如超时、数据包格式、CRC 校验等）。<br><mark>时钟拉伸</mark>（Clock Stretching） ：允许从机（或主机）通过主动控制 SCL（时钟线） 的时序来暂停总线通信的机制。其核心目的是让设备在需要更多时间处理数据时，能够主动“暂停”总线时钟，避免通信超时或数据丢失。</p>
+<p>外部时钟是指做从机时，使用外部的SCL时钟；从表可知，IIC竟然能够在睡眠模式下工作<br><img   src="https://dadeju.github.io/picx-images-hosting/image.51ec1gid2k.webp"  alt="image"><br><mark>其中FF: 全部功能（Full Function）</mark><br><img   src="https://dadeju.github.io/picx-images-hosting/image.1vyu2io2yg.webp"  alt="image"></p>
+<p>从下图可知MD总线时钟为SLOW_BUS，Peripheral Functional Clock -&gt; Yes，则说明该模块的外设时钟支持配置可选<br>补充：其中的“其他时钟Additional Clock” 对于这些模块，应用中除了 IPC 中进行合适的功能时钟选择之外，还可以根据需要在模块内部进行进一步的时钟选择。<br>以FlexCAN模块为例，FlexCAN 模块的时钟可以选择 FAST_BUS_CLK 或者 FXOSC_CLK，这部分的选择是在 FlexCAN 模块内部实现的。这部分是在 CAN 模块的配置结构体中实现的，外设功能时钟栏是“ - ”，即不能在YCT功能的时钟页面配置时钟<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7sne9j4ox9.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.4cl2hfv4zc.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.60ufemli05.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.4qri8b3l1l.webp"  alt="image"></p>
+<p>使用云途的YCT工具进行外设的时钟配置还是挺方便的，所见即所得<br><img   src="https://dadeju.github.io/picx-images-hosting/image.2ks3mjc0o6.webp"  alt="image"></p>
+<p>下面是YCT配置IIC外设介绍，需要注意的是因为i2c的接受和发送在SDK内部处理是一样的，所有只需要选择TX或者RX一个就行。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9gwr6pvedq.webp"  alt="image"></p>
+<p>云途IIC发送数据有两套API：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">status_t</span> <span class="title function_">I2C_DRV_MasterSendData</span><span class="params">(<span class="type">uint32_t</span> instance,</span></span><br><span class="line"><span class="params">                                <span class="type">const</span> <span class="type">uint8_t</span> *txBuff,</span></span><br><span class="line"><span class="params">                                <span class="type">uint32_t</span> txSize,</span></span><br><span class="line"><span class="params">                                <span class="type">bool</span> sendStop)</span></span><br><span class="line"><span class="type">status_t</span> <span class="title function_">I2C_DRV_MasterSendDataBlocking</span><span class="params">(<span class="type">uint32_t</span> instance,</span></span><br><span class="line"><span class="params">                                        <span class="type">const</span> <span class="type">uint8_t</span> *txBuff,</span></span><br><span class="line"><span class="params">                                        <span class="type">uint32_t</span> txSize,</span></span><br><span class="line"><span class="params">                                        <span class="type">bool</span> sendStop,</span></span><br><span class="line"><span class="params">                                        <span class="type">uint32_t</span> timeout)</span></span><br></pre></td></tr></table></figure>
+<p>主要区别在于 阻塞模式 和 非阻塞模式 的实现方式：<br>带blocking的API使用一个 超时机制（通过 OSIF_SemaWait 等待信号量）来等待传输完成。<br>如果传输在指定的超时时间内未完成，则返回超时错误。<br>在传输完成后，释放阻塞状态并返回结果。</p>
+<p>不带blocking的API，会立即返回，不会等待数据传输完成。用户可以通过轮询 I2C_DRV_MasterGetTransferStatus 或使用回调函数来检查传输状态</p>
+<p>当部分器件对CLK高低点评持续时间要求较高时，可通过MCLKCFG寄存器的HIGH&#x2F;LOW寄存器位(6bit)进行调整<br><img   src="https://dadeju.github.io/picx-images-hosting/image.6wqwu2vjvk.webp"  alt="image"></p>
+
+                    
                 </div>
-            </li>
-        
-            <li class="home-post-item">
 
                 
 
-                <div class="home-post-item-bottom border-box">
-                    
-                    <h3 class="home-post-title border-box">
-                        <a href="/2021/11/08/ubuntu%E4%B8%8B%E9%85%8D%E7%BD%AE51%E5%8D%95%E7%89%87%E6%9C%BA%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
-                            ubuntu下配置51单片机开发环境
-                        </a>
-                    </h3>
-
-                    <div class="home-post-content keep-markdown-body">
-                        
-                            编译工具 SDCC http://sdcc.sourceforge.net/sudo apt install adcc值得注意的是SDCC语法与keil C有些许不同例：
-&#x2F;&#x2F; keil c :sbit LED1&#x3D;P1^...
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
                         
                     </div>
-
-                    
-
-<div class="post-meta-info-container border-box home">
-    <div class="post-meta-info border-box">
-        
-            <span class="meta-info-item border-box">
-                <i class="icon fa-solid fa-history"></i>&nbsp;<span class="home-post-history"
-                                                                                data-updated="Mon Nov 08 2021 23:22:28 GMT+0800"
-                >2021-11-08 23:22:28</span>
-            </span>
-        
-
-        
-
-        
-
-        
-
-        
-        
-        
-        
-    </div>
-
-    
-        <a class="home-read-more" href="/2021/11/08/ubuntu%E4%B8%8B%E9%85%8D%E7%BD%AE51%E5%8D%95%E7%89%87%E6%9C%BA%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
-    
-</div>
-
+                    <div>
+                        
+                    </div>
                 </div>
-            </li>
-        
-            <li class="home-post-item">
 
                 
 
-                <div class="home-post-item-bottom border-box">
-                    
-                    <h3 class="home-post-title border-box">
-                        <a href="/2021/08/09/linux%E4%B8%8B%E4%BD%BF%E7%94%A8QQ%E7%9A%84%E5%9B%9B%E7%A7%8D%E5%A7%BF%E5%8A%BF/">
-                            linux下使用QQ的四种姿势
-                        </a>
-                    </h3>
-
-                    <div class="home-post-content keep-markdown-body">
+                
+                    <div class="post-nav border-box">
                         
-                            排名分先后
-
-electron-qqhttps://github.com/Clansty/Icalingua优点：界面好看；可以使用本地收藏表情包，可同步漫游表情包；可发送、接收文件；头像、图片显示正常；缺点：没有群文件；绝对是Linux上使用QQ的...
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/04/08/%E5%B7%9D%E5%9C%9F%E5%BE%AESBC1169%E4%BB%8B%E7%BB%8D/"
+                                   title="川土微SBC1169介绍"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">川土微SBC1169介绍</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
                         
                     </div>
-
-                    
-
-<div class="post-meta-info-container border-box home">
-    <div class="post-meta-info border-box">
-        
-            <span class="meta-info-item border-box">
-                <i class="icon fa-solid fa-history"></i>&nbsp;<span class="home-post-history"
-                                                                                data-updated="Mon Aug 09 2021 18:04:37 GMT+0800"
-                >2021-08-09 18:04:37</span>
-            </span>
-        
-
-        
-
-        
-
-        
-
-        
-        
-        
-        
-    </div>
-
-    
-        <a class="home-read-more" href="/2021/08/09/linux%E4%B8%8B%E4%BD%BF%E7%94%A8QQ%E7%9A%84%E5%9B%9B%E7%A7%8D%E5%A7%BF%E5%8A%BF/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
-    
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-post-item">
-
                 
 
-                <div class="home-post-item-bottom border-box">
-                    
-                    <h3 class="home-post-title border-box">
-                        <a href="/2020/05/07/%E5%8D%81%E5%88%86%E9%92%9F%E5%AD%A6%E4%BC%9Amarkdown/">
-                            十分钟学会markdown
-                        </a>
-                    </h3>
-
-                    <div class="home-post-content keep-markdown-body">
-                        
-                            什么是markdown？
-一种轻量级标记语言，本文就是用markdown编辑。
-markdown有优点？
-方便。回想一下你写文章的时候在做什么，首先输入文字，然后排版。如果你使用makedown就会为你节约掉排版的时间。且会使你的板书十分工整且优美。...
-                        
-                    </div>
-
+                
                     
 
-<div class="post-meta-info-container border-box home">
-    <div class="post-meta-info border-box">
-        
-            <span class="meta-info-item border-box">
-                <i class="icon fa-solid fa-history"></i>&nbsp;<span class="home-post-history"
-                                                                                data-updated="Thu May 07 2020 14:09:00 GMT+0800"
-                >2020-05-07 14:09:00</span>
-            </span>
-        
 
-        
 
-        
 
-        
 
-        
-        
-        
-        
-    </div>
-
-    
-        <a class="home-read-more" href="/2020/05/07/%E5%8D%81%E5%88%86%E9%92%9F%E5%AD%A6%E4%BC%9Amarkdown/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
-    
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-post-item">
 
                 
+            </div>
+        </div>
 
-                <div class="home-post-item-bottom border-box">
-                    
-                    <h3 class="home-post-title border-box">
-                        <a href="/2019/10/10/hello-world/">
-                            Hello World
-                        </a>
-                    </h3>
-
-                    <div class="home-post-content keep-markdown-body">
-                        
-                            Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, yo...
-                        
-                    </div>
-
-                    
-
-<div class="post-meta-info-container border-box home">
-    <div class="post-meta-info border-box">
-        
-            <span class="meta-info-item border-box">
-                <i class="icon fa-solid fa-history"></i>&nbsp;<span class="home-post-history"
-                                                                                data-updated="Sat Oct 12 2019 10:00:00 GMT+0800"
-                >2019-10-12 10:00:00</span>
-            </span>
-        
-
-        
-
-        
-
-        
-
-        
-        
-        
         
     </div>
-
-    
-        <a class="home-read-more" href="/2019/10/10/hello-world/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
-    
-</div>
-
-                </div>
-            </li>
-        
-    </ul>
-    
-    <div class="paginator border-box flex-center">
-        <div class="border-box first-page paginator-btn allowed">
-            <a class="border-box"><i class="fa-solid fa-angle-double-left"></i></a>
-        </div>
-
-        <div class="border-box paginator-btn allowed">
-            <a class="border-box"
-               href="/page/2/"
-            ><i class="fa-solid fa-chevron-left"></i></a>
-        </div>
-
-
-        <div class="page-number-box border-box flex-center">
-            <input class="page-number-input border-box base-style"
-                   type="number"
-                   value="3"
-                   min="1"
-                   max="3"
-            /><span class="delimiter base-style">/</span><span class="base-style">3</span>
-        </div>
-
-
-        <div class="border-box paginator-btn">
-            <a class="border-box"
-               href="/"
-            ><i class="fa-solid fa-chevron-right"></i></a>
-        </div>
-
-        <div class="border-box last-page paginator-btn not-allow">
-            <a class="border-box"><i class="fa-solid fa-angle-double-right"></i></a>
-        </div>
-    </div>
-
-
-
-
 </div>
 
 
@@ -482,10 +315,31 @@ markdown有优点？
 
     <!-- post tools -->
     
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+
+        <!-- PC go comment -->
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
 
     <!-- side tools -->
     <div class="side-tools">
-        <div class="side-tools-container border-box side-tools-show-handle">
+        <div class="side-tools-container border-box ">
     <ul class="side-tools-list side-tools-show-handle border-box">
         <li class="tools-item tool-font-adjust-plus flex-center">
             <i class="fas fa-search-plus"></i>
@@ -575,7 +429,6 @@ markdown有优点？
 
 
 
-
 <!-- common js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
 
@@ -590,10 +443,20 @@ markdown有优点？
 <div class="">
     <!-- home page -->
     
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/page/home-page.min.js"></script>
-    
 
     <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
     
 
     <!-- categories page -->
