@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Tue Apr 08 2025 22:00:02 GMT+0800">2025-04-08 22:00:02</span>
+                    <span class="datetime" data-updated="Wed Apr 09 2025 20:55:13 GMT+0800">2025-04-09 20:55:13</span>
                 </span>
             
         
@@ -212,8 +212,8 @@
                     
                          <p>CA-IF1169 是集成 LDO 和 Watchdog 的高速 CAN 系统基础芯片，这个芯片并不是简单的把一个CAN收发器和LDO合在一起。内置的两路LDO，通常来说一路给MCU供电，另一路给CAN收发器或者板上的其他负载供电。MCU可以通过SPI与1169来进行通讯，进行诊断功能和一些寄存器的配置。还集成了看门狗功能。</p>
 <p>其中V1有250mA的电流输出能力，可以通过外置PNP的方式来进行电流扩展<br><img   src="https://dadeju.github.io/picx-images-hosting/image.pfisj58ef.png"  alt="image"><br>一般来说电流限制开启阈值电压取380mV,如果想要输出1.5A的电流<br>即 380mv&#x2F;1.5A &#x3D; 253m欧，VEXCC与V1之前的电阻取250m欧<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9kgd31vupp.webp"  alt="image"></p>
-<p>1169的烧录与常规意义的芯片也有些差异<br><img   src="https://dadeju.github.io/picx-images-hosting/image.77dqluqc8n.webp"  alt="image"><br>从图中可以看到有默认是出厂模式，这个模式下默认LDO输出，CAN能够正常收发，但是看门狗不工作，这个模式下非常适合做一些前期简单的测试。<br>在线仿真模式可以理解为MCU的debug模式，这个模式下可以任意擦写寄存器，但是掉电后会恢复出厂模式。<br>离线模式只能保证至少两次的烧录<br><img   src="https://dadeju.github.io/picx-images-hosting/image.99tj9x2ucc.webp"  alt="image"><br>配置完0x73和0x74后，需要计算这两个寄存器的CRC，通过将正确的 CRC 值写入非易失性存储器CRCC 控制寄存器来确认重新编程。 CRC 值一经验证，SBC 就开始对非易失性存储器单元重新编程。<br>如果 CRC 值不正确，则重新编程将中止。完成后，会生成系统复位，表明非易失性存储器单元已成功重新编程<br><img   src="https://dadeju.github.io/picx-images-hosting/image.6f0v452qk9.webp"  alt="image"><br>下面是具体的配置流程：<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7egyhbc12c.webp"  alt="image"></p>
-<p>通过选择模式控制寄存器下的 MC 位可以进入不同的模式，模式控制寄存器可通过 SPI 访问地址 0x01.<br><img   src="https://dadeju.github.io/picx-images-hosting/image.86ttz1zkbu.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.83a81c5cnb.webp"  alt="image"><br>喂狗的API函数其实就是重新设置了00h看门狗控制寄存器的值</p>
+<p>1169的烧录与常规意义的芯片也有些差异<br><img   src="https://dadeju.github.io/picx-images-hosting/image.77dqluqc8n.webp"  alt="image"><br>从图中可以看到有默认是出厂模式，这个模式下默认LDO输出，CAN能够正常收发，但是看门狗不工作，这个模式下非常适合做一些前期简单的测试。<br>在线仿真模式可以理解为MCU的debug模式，这个模式下可以任意擦写寄存器，但是掉电后会恢复出厂模式。<br>离线模式只能保证至少两次的烧录<br><img   src="https://dadeju.github.io/picx-images-hosting/image.99tj9x2ucc.webp"  alt="image"><br>配置完0x73和0x74后，需要计算这两个寄存器的CRC，通过将正确的 CRC 值写入非易失性存储器CRCC 控制寄存器来确认重新编程。 CRC 值一经验证，SBC 就开始对非易失性存储器单元重新编程。<br>如果 CRC 值不正确，则重新编程将中止。完成后，会生成系统复位，表明非易失性存储器单元已成功重新编程<br><img   src="https://dadeju.github.io/picx-images-hosting/image.6f0v452qk9.webp"  alt="image"><br>下面是具体的配置流程：<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7sne9kcuj5.png"  alt="image"></p>
+<p>通过选择模式控制寄存器下的 MC 位可以进入不同的模式，模式控制寄存器可通过 SPI 访问地址 0x01.<br><img   src="https://dadeju.github.io/picx-images-hosting/image.86ttz1zkbu.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.4qri8cdjg4.png"  alt="image"><br>喂狗的API函数其实就是重新设置了00h看门狗控制寄存器的值</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">SBC_FeedWatchdog</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    (<span class="type">void</span>)SBC_SetWatchdog(&amp;g_drvConfig.watchdogCtr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>其实还有一些功能安全相关的配置，后面有机会再做补充</p>
 
