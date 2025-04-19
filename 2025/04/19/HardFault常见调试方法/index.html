@@ -9,7 +9,7 @@
     
     <title>
         
-            归档: 2025 |
+            HardFault常见调试方法 |
         
         GaoSheng
     </title>
@@ -75,7 +75,7 @@
                         </li>
                     
                         
-                        <li class="menu-item flex-start border-box active">
+                        <li class="menu-item flex-start border-box">
                             <a class="menu-text-color border-box" href="/archives">
                                 
                                 归档
@@ -118,7 +118,7 @@
                 </li>
             
                 
-                <li class="drawer-menu-item border-box not-sub-menu active">
+                <li class="drawer-menu-item border-box not-sub-menu">
                     <label class="drawer-menu-label border-box">
                         <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
                             
@@ -144,102 +144,156 @@
             <div class="main-content border-box">
                 
 
-                    <div class="fade-in-down-animation">
-    <div class="archives-container">
-        <div class="archives-timeline border-box">
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
             
-<div class="archive-list-container border-box">
-    
-        <section class="archive-item border-box">
-            <div class="archive-item-header border-box">
-                <span class="archive-year">2025</span>
-            </div>
-            <ul class="archive-item-body border-box">
+
+            <div class="post-content-bottom border-box">
                 
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">03-22</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2025/03/22/SPI%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/"
-                        >SPI通讯协议介绍</a>
-                    </li>
+                    <div class="post-title">
+                        HardFault常见调试方法
+                    </div>
                 
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">03-17</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2025/03/17/%E4%BA%91%E9%80%94-%E4%B8%B2%E5%8F%A3%E5%8F%91%E9%80%81%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9EAPI/"
-                        >云途 串口发送阻塞与非阻塞API</a>
-                    </li>
+
                 
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">03-14</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2025/03/14/SPI-%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE-%E9%94%99%E4%BD%8D/"
-                        >SPI 读取数据&#39;错位&#39;</a>
-                    </li>
-                
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">03-13</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2025/03/13/freertos-PendSV-%E4%BB%BB%E5%8A%A1%E5%88%87%E6%8D%A2%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90/"
-                        >freertos PendSV 任务切换函数解析</a>
-                    </li>
-                
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">03-11</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2025/03/11/%E4%BA%91%E9%80%94HA-%E4%BB%8EPower-down%E6%A8%A1%E5%BC%8F%E5%94%A4%E9%86%92%E5%90%8E%EF%BC%8C%E4%BF%9D%E6%8C%81RTC%E6%97%B6%E9%92%9F%E7%9A%84%E6%96%B9%E6%B3%95%E5%88%86%E4%BA%AB/"
-                        >云途HA 从Power down模式唤醒后，保持RTC时钟的方法分享</a>
-                    </li>
-                
-            </ul>
-        </section>
+                    <div class="post-header border-box">
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">GaoSheng</span>
+                                
+                                    <span class="author-badge">Lv3</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-04-19 22:52:28</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Sun Apr 20 2025 00:13:20 GMT+0800">2025-04-20 00:13:20</span>
+                </span>
+            
+        
+
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
     
 </div>
 
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <p>Cortex-M处理器中，所有的错误异常<mark>默认都会触发HardFault异常</mark><br><img   src="https://dadeju.github.io/picx-images-hosting/image.4n7wp18mub.png"  alt="image"><br>HardFault 无需使能，它有固定的异常优先级-1，Bus Fault&#x2F;Memory Management Fault&#x2F;Usage Fault在默认状态都是关闭状态，所以发生异常时都会进入 HardFault 中断服务程序。使能前三种异常需要要在初始化时配置：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SCB-&gt;SHCSR |= <span class="number">0x00007000</span>;</span><br></pre></td></tr></table></figure>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/image.7p3sq9ir6v.png"  alt="image"><br><mark>Bus Fault</mark>：总线异常是指CPU在进行总线读写操作过程中，总线上返回一个错误状态，比如总线地址不可访问或者有ECC错误等。总线异常可以能产生在CPU取指，数据读写，中断向量表读取，出入栈和中断进出等阶段。<br><mark>Memory Management Fault</mark>：MPU保护异常，产生原因是系统检测到违反MPU区域配置属性的区域访问操作，比如在一个只是读写的区域执行了代码。<br><mark>Usage Fault</mark>：这种异常包含CPU取到一个未定义指令，非对齐的数据访问，除零异常等等<br><mark>Hard Fault</mark>：因为上面几种错误默认是可以关闭，并且可以设定优先级的，如果相应的异常在系统中未使能，或者系统在执行更高优先级的中断中产生了上述异常，该异常就会直接上访成HardFault。另外在CM0内核中并没有上述的单独异常，所以前述的异常都会直接进入Hard Fault。</p>
+<h3 id="栈区空间"><a href="#栈区空间" class="headerlink" title="栈区空间"></a>栈区空间</h3><p>栈是一种受限的数据结构模型，其数据总是只能在顶部追加，利用一个指针进行索引，顶端叫栈顶，相对的一端底部称为栈底。栈是一种 LIFO 后入先出的数据结构栈的两种操作: </p>
+<ul>
+<li>PUSH，压栈，向栈内写入环境变量 </li>
+<li>POP，出栈，恢复环境变量<br><img   src="https://dadeju.github.io/picx-images-hosting/image.175kwyvoda.png"  alt="image"><br>首先将栈与堆区分，这是两个不同的独立空间！（堆本文不深入讨论） </li>
+<li>栈：由编译器分配，存放函数的参数值，局部变量，寄存器组（不同的单片机&#x2F;处理器各有不同）、函数调用参数传递、中断异常产生时须保存处理器状态的寄存器值等 </li>
+<li>堆：由程序员分配释放，对于 C 而言，malloc、realloc&#x2F;free 进行分配&#x2F;释放，对 C++而言，由 new&#x2F;delete分配&#x2F;释放。</li>
+</ul>
+<h3 id="栈空间与运行环境"><a href="#栈空间与运行环境" class="headerlink" title="栈空间与运行环境"></a>栈空间与运行环境</h3><p>如果因为某些错误导致了芯片硬件错误，处理器会调用Hardfault异常中断处理函数，它自动将下面的8个寄存器（栈帧）按以下顺序压栈：</p>
+<ul>
+<li>xPSR :状态寄存器</li>
+<li>PC ：异常返回的地址</li>
+<li>LR ：反馈函数指针</li>
+<li>R12 ：通用寄存器R12</li>
+<li>R0-R3 ：通用寄存器R0-R3<br>在完成压栈之后，SP减小8个字。下图显示了异常抢占当前的程序之后栈中的内容<br><img   src="https://dadeju.github.io/picx-images-hosting/image.8s3i16cw6c.png"  alt="image"></li>
+</ul>
+<p>我们需要重点关注的是<mark>PC和LR两个寄存器</mark>。根据得到的两个地址，配合代码编译后得到的.map 文件，找到出错的函数，进一步分析代码，可以大大缩小排查范围，找到最终引起错误的代码位置。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.5q7lzyxj7y.png"  alt="image"></p>
+<p>下面是两个具体的例子： </p>
+<p>案例1 通过SCB相关寄存器定位问题：<br><img   src="https://dadeju.github.io/picx-images-hosting/1745077846717.1vyuh0n5be.png"  alt="1745077846717"><br>注意到其中的PRECISERR位被置1，即为精确的总线 fault,BFAR中有记录BusFault的异常地址即0x2008 8000<br><img   src="https://dadeju.github.io/picx-images-hosting/image.1zigeqkafe.png"  alt="image"></p>
+<p>案例2 通过PC寄存器定位<br>1.仿真时，停止程序全速运行。可以看到停在HardFault中<br>2.查看左边的各个寄存器值，LR是0xFFFFFFF9，则需要查看MSP的值，也就是0x20006CB0<br><img   src="https://dadeju.github.io/picx-images-hosting/image.5fks6u840g.png"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.1vyuh1666t.png"  alt="image"><br>根据我们上文提到的压栈顺序，LR的值为0x08001FCF，PC值为0x08001F24<br><img   src="https://dadeju.github.io/picx-images-hosting/image.8hgo82azla.png"  alt="image"></p>
+<h3 id="引起芯片异常错误的常见的原因"><a href="#引起芯片异常错误的常见的原因" class="headerlink" title="引起芯片异常错误的常见的原因"></a>引起芯片异常错误的常见的原因</h3><ul>
+<li>数组越界操作 </li>
+<li>内存溢出&#x2F;非法访问 </li>
+<li>堆栈溢出&#x2F;执行非法代码 </li>
+<li>触发芯片硬件错误处理:超频&#x2F;Flash擦写不规范&#x2F;外设初始化不规范&#x2F;除数为0…</li>
+</ul>
+<hr>
+<p>AN_N32_CortexM4系列系统异常分析应用笔记_V1.0<br>Cortex-M3权威指南<br><a class="link"   target="_blank" rel="noopener" href="https://linmingjie.cn/index.php/archives/368/" >https://linmingjie.cn/index.php/archives/368/<i class="fas fa-external-link-alt"></i></a><br><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq446252221/article/details/111359807" >https://blog.csdn.net/qq446252221/article/details/111359807<i class="fas fa-external-link-alt"></i></a><br><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37202877/article/details/142914089" >https://blog.csdn.net/m0_37202877/article/details/142914089<i class="fas fa-external-link-alt"></i></a><br><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/tilblackout/article/details/128185998" >https://blog.csdn.net/tilblackout/article/details/128185998<i class="fas fa-external-link-alt"></i></a></p>
+
+                    
+                </div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                    </div>
+                    <div>
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/04/11/%E4%BA%91%E9%80%94EFM%E5%A4%96%E8%AE%BE%E4%BB%8B%E7%BB%8D/"
+                                   title="云途EFM外设介绍"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">云途EFM外设介绍</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+
+
+
+
+                
+            </div>
         </div>
+
+        
     </div>
-    
-    <div class="paginator border-box flex-center">
-        <div class="border-box first-page paginator-btn allowed">
-            <a class="border-box"><i class="fa-solid fa-angle-double-left"></i></a>
-        </div>
-
-        <div class="border-box paginator-btn allowed">
-            <a class="border-box"
-               href="/archives/2025/"
-            ><i class="fa-solid fa-chevron-left"></i></a>
-        </div>
-
-
-        <div class="page-number-box border-box flex-center">
-            <input class="page-number-input border-box base-style"
-                   type="number"
-                   value="2"
-                   min="1"
-                   max="2"
-            /><span class="delimiter base-style">/</span><span class="base-style">2</span>
-        </div>
-
-
-        <div class="border-box paginator-btn">
-            <a class="border-box"
-               href="/"
-            ><i class="fa-solid fa-chevron-right"></i></a>
-        </div>
-
-        <div class="border-box last-page paginator-btn not-allow">
-            <a class="border-box"><i class="fa-solid fa-angle-double-right"></i></a>
-        </div>
-    </div>
-
-
-
-
 </div>
 
 
@@ -279,6 +333,27 @@
     </div>
 
     <!-- post tools -->
+    
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+
+        <!-- PC go comment -->
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
     
 
     <!-- side tools -->
@@ -373,7 +448,6 @@
 
 
 
-
 <!-- common js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
 
@@ -390,6 +464,18 @@
     
 
     <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
     
 
     <!-- categories page -->
