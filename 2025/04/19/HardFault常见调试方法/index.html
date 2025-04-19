@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Sun Apr 20 2025 00:16:07 GMT+0800">2025-04-20 00:16:07</span>
+                    <span class="datetime" data-updated="Sun Apr 20 2025 00:23:50 GMT+0800">2025-04-20 00:23:50</span>
                 </span>
             
         
@@ -229,6 +229,106 @@
 <li>R0-R3 ：通用寄存器R0-R3<br>在完成压栈之后，SP减小8个字。下图显示了异常抢占当前的程序之后栈中的内容<br><img   src="https://dadeju.github.io/picx-images-hosting/image.8s3i16cw6c.png"  alt="image"></li>
 </ul>
 <p>我们需要重点关注的是<mark>PC和LR两个寄存器</mark>。根据得到的两个地址，配合代码编译后得到的.map 文件，找到出错的函数，进一步分析代码，可以大大缩小排查范围，找到最终引起错误的代码位置。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.5q7lzyxj7y.png"  alt="image"></p>
+<p>SCB（System Control Block）包含系统的配置信息，系统控制等相关信息，SCB包含多个寄存器，通过这些寄存器我们可以查看系统当前等运行状态和异常的具体信息，熟悉SCB中寄存器的含义对于异常的分析有很大帮助</p>
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0xE000E008</td>
+<td>ACTLR</td>
+<td>和系统性能相关的详细配置，开启 DISDEFWBUF 可以禁用系统 buffer，捕获更精确的异常地址（一般无需更改）</td>
+</tr>
+<tr>
+<td>0xE000ED00</td>
+<td>CPUID</td>
+<td>只读的 CPUID，ARM 的版本信息</td>
+</tr>
+<tr>
+<td>0xE000ED04</td>
+<td>ICSR</td>
+<td>中断控制和状态寄存器，查看当前系统悬起的中断&#x2F;正在执行的中断号信息</td>
+</tr>
+<tr>
+<td>0xE000ED08</td>
+<td>VTOR</td>
+<td>中断向量表偏移地址</td>
+</tr>
+<tr>
+<td>0xE000ED0C</td>
+<td>AIRCR</td>
+<td>应用中断和复位控制寄存器，写入特定值可产生软件复位</td>
+</tr>
+<tr>
+<td>0xE000ED10</td>
+<td>SCR</td>
+<td>系统控制寄存器，控制 CPU 的低功耗行为</td>
+</tr>
+<tr>
+<td>0xE000ED14</td>
+<td>CCR</td>
+<td>查看非对齐访问&#x2F;除零异常标志，控制系统异常行为</td>
+</tr>
+<tr>
+<td>0xE000ED18</td>
+<td>SHPR1</td>
+<td>定义 Usage Fault&#x2F;Bus Fault&#x2F;MemManage Fault 异常的优先级</td>
+</tr>
+<tr>
+<td>0xE000ED1C</td>
+<td>SHPR2</td>
+<td>定义 SVCall 异常优先级</td>
+</tr>
+<tr>
+<td>0xE000ED20</td>
+<td>SHPR3</td>
+<td>定义 SysTick 和 PendSV 异常优先级</td>
+</tr>
+<tr>
+<td>0xE000ED24</td>
+<td>SHCRS</td>
+<td>查看已触发的系统异常，控制开启哪些系统异常（对异常分析重要）</td>
+</tr>
+<tr>
+<td>0xE000ED28</td>
+<td>MMSR</td>
+<td>MemManage 异常状态的具体信息</td>
+</tr>
+<tr>
+<td>0xE000ED29</td>
+<td>BFSR</td>
+<td>BusFault 异常的具体信息</td>
+</tr>
+<tr>
+<td>0xE000ED2A</td>
+<td>UFSR</td>
+<td>UsageFault 异常的具体信息</td>
+</tr>
+<tr>
+<td>0xE000ED2C</td>
+<td>HFSR</td>
+<td>HardFault 异常的具体信息</td>
+</tr>
+<tr>
+<td>0xE000ED34</td>
+<td>MMFAR</td>
+<td>MemManage 异常地址（CM0 没有）</td>
+</tr>
+<tr>
+<td>0xE000ED38</td>
+<td>BFAR</td>
+<td>BusFault 异常地址（CM0 没有）</td>
+</tr>
+<tr>
+<td>0xE000ED3C</td>
+<td>AFSR</td>
+<td>额外异常状态</td>
+</tr>
+</tbody></table>
 <p>下面是两个具体的例子： </p>
 <p>案例1 通过SCB相关寄存器定位问题：<br><img   src="https://dadeju.github.io/picx-images-hosting/1745077846717.1vyuh0n5be.png"  alt="1745077846717"><br>注意到其中的PRECISERR位被置1，即为精确的总线 fault,BFAR中有记录BusFault的异常地址即0x2008 8000<br><img   src="https://dadeju.github.io/picx-images-hosting/image.1zigeqkafe.png"  alt="image"></p>
 <p>案例2 通过PC寄存器定位<br>1.仿真时，停止程序全速运行。可以看到停在HardFault中<br>2.查看左边的各个寄存器值，LR是0xFFFFFFF9，则需要查看MSP的值，也就是0x20006CB0<br><img   src="https://dadeju.github.io/picx-images-hosting/image.5fks6u840g.png"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.1vyuh1666t.png"  alt="image"><br>根据我们上文提到的压栈顺序，LR的值为0x08001FCF，PC值为0x08001F24<br><img   src="https://dadeju.github.io/picx-images-hosting/image.8hgo82azla.png"  alt="image"></p>
