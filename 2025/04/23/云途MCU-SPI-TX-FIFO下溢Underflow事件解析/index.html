@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Wed Apr 23 2025 20:50:02 GMT+0800">2025-04-23 20:50:02</span>
+                    <span class="datetime" data-updated="Wed Apr 23 2025 20:52:04 GMT+0800">2025-04-23 20:52:04</span>
                 </span>
             
         
@@ -213,10 +213,14 @@
                          <p>书接4月21号的文章：<br><a class="link"   target="_blank" rel="noopener" href="https://dadeju.github.io/2025/04/21/FIFO-%E4%B8%8B%E6%BA%A2%E8%A7%A3%E6%9E%90/" >https://dadeju.github.io/2025/04/21/FIFO-%E4%B8%8B%E6%BA%A2%E8%A7%A3%E6%9E%90/<i class="fas fa-external-link-alt"></i></a></p>
 <p>在阅读大佬的公众号文章后深有启发<br><a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ARiez-cyVypm1ncWNGpYkw" >https://mp.weixin.qq.com/s/ARiez-cyVypm1ncWNGpYkw<i class="fas fa-external-link-alt"></i></a></p>
 <p>做了如下验证：<br>SPI主机端使用连续传输模式时（master在连续发数过程中保持PCS拉低），波特率6.5M，使用DMA传输。主机端buff长度设为100字节，从机buff设为80字节。这样会因TX FIFO下溢导致触发中断。将从机buff设为100字节后则能正常传输。<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.3nrthgblm3.png"  alt="图片1"><br>下图为主机端buff长度设为100字节，从机buff设为80字节的情况：<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.2dowb4tmaz.png"  alt="图片2"></p>
-<p>但如果将SPI主机端的传输模式改成非连续传输，主机端buff长度设为100字节，从机设为80字节也能正常工作<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.32i5v5h5be.png"  alt="图片3"></p>
-<p><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%874.5q7m5ia6nd.png"  alt="图片4"><br>当发送移位器（负责将数据逐位移到总线）需要发送数据时，发送FIFO（先进先出缓冲区）中却没有数据可用，导致发送移位器“空转”，从而造成Underflow事件。</p>
+<p>但如果将SPI主机端的传输模式改成<mark>非连续传输</mark>，主机端buff长度设为100字节，从机设为80字节也能正常工作<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.32i5v5h5be.png"  alt="图片3"></p>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%874.5q7m5ia6nd.png"  alt="图片4"><br>当发送移位器（负责将数据逐位移到总线）需要发送数据时，发送FIFO（先进先出缓冲区）中却没有数据可用，导致发送移位器“空转”，从而造成<mark>Underflow事件</mark>。</p>
 <p>在寻找解决方法的过程中还发现了NXP的勘误手册中有这样的记录：<br><a class="link"   target="_blank" rel="noopener" href="https://www.nxp.com/docs/en/errata/MCXNx4x_1P02G.pdf" >https://www.nxp.com/docs/en/errata/MCXNx4x_1P02G.pdf<i class="fas fa-external-link-alt"></i></a></p>
-<p><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%875.8l0abapdew.png"  alt="图片5"><br>在NXP的MCXNX4X_1P02G芯片中，当LPSPI（低功耗串行外设接口）工作在从模式（Slave Mode）时，如果发生发送FIFO下溢（Transmit FIFO Underrun），即发送FIFO为空但主设备（Master）仍在请求数据，会导致以下问题：<br>发送FIFO指针损坏：FIFO的读写指针（用于跟踪数据位置）可能进入错误状态，导致后续数据传输异常。<br>触发条件：<br>状态寄存器（SR）的TEF位（Transmit Error Flag）被置位（SR[TEF] &#x3D; 0b1），标志下溢事件发生。</p>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%875.8l0abapdew.png"  alt="图片5"><br>在NXP的MCXNX4X_1P02G芯片中，当LPSPI（低功耗串行外设接口）工作在从模式（Slave Mode）时，如果发生发送FIFO下溢（Transmit FIFO Underrun），即发送FIFO为空但主设备（Master）仍在请求数据，会导致以下问题：</p>
+<ul>
+<li>发送FIFO指针损坏：FIFO的读写指针（用于跟踪数据位置）可能进入错误状态，导致后续数据传输异常。<br>触发条件：</li>
+<li>状态寄存器（SR）的TEF位（Transmit Error Flag）被置位（SR[TEF] &#x3D; 0b1），标志下溢事件发生。</li>
+</ul>
 <p>临时规避方法：<br>1.清除发送错误标志：将状态寄存器（SR）的TEF位清零（SR[TEF] &#x3D; 0b1）。<br>2.重置发送FIFO：在写入新数据前，通过控制寄存器（CR）的RTF位（Reset Transmit FIFO）复位发送FIFO（CR[RTF] &#x3D; 0b1），使指针回到初始位置。<br>3.写入新数据：确保FIFO指针复位后，再向发送FIFO填充数据。</p>
 
                     
