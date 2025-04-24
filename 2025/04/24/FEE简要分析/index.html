@@ -9,7 +9,7 @@
     
     <title>
         
-            川土微SBC1169介绍 |
+            FEE简要分析 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        川土微SBC1169介绍
+                        FEE简要分析
                     </div>
                 
 
@@ -177,13 +177,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-04-08 20:56:36</span>
+                <span class="datetime">2025-04-24 19:45:11</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Wed Apr 09 2025 20:55:13 GMT+0800">2025-04-09 20:55:13</span>
+                    <span class="datetime" data-updated="Thu Apr 24 2025 20:04:28 GMT+0800">2025-04-24 20:04:28</span>
                 </span>
             
         
@@ -210,12 +210,25 @@
                     
 
                     
-                         <p>CA-IF1169 是集成 LDO 和 Watchdog 的高速 CAN 系统基础芯片，这个芯片并不是简单的把一个CAN收发器和LDO合在一起。内置的两路LDO，通常来说一路给MCU供电，另一路给CAN收发器或者板上的其他负载供电。MCU可以通过SPI与1169来进行通讯，进行诊断功能和一些寄存器的配置。还集成了看门狗功能。</p>
-<p>其中V1有250mA的电流输出能力，可以通过外置PNP的方式来进行电流扩展<br><img   src="https://dadeju.github.io/picx-images-hosting/image.pfisj58ef.png"  alt="image"><br>一般来说电流限制开启阈值电压取380mV,如果想要输出1.5A的电流<br>即 380mv&#x2F;1.5A &#x3D; 253m欧，VEXCC与V1之前的电阻取250m欧<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9kgd31vupp.webp"  alt="image"></p>
-<p>1169的烧录与常规意义的芯片也有些差异<br><img   src="https://dadeju.github.io/picx-images-hosting/image.77dqluqc8n.webp"  alt="image"><br>从图中可以看到有默认是出厂模式，这个模式下默认LDO输出，CAN能够正常收发，但是看门狗不工作，这个模式下非常适合做一些前期简单的测试。<br>在线仿真模式可以理解为MCU的debug模式，这个模式下可以任意擦写寄存器，但是掉电后会恢复出厂模式。<br>离线模式只能保证至少两次的烧录<br><img   src="https://dadeju.github.io/picx-images-hosting/image.99tj9x2ucc.webp"  alt="image"><br>配置完0x73和0x74后，需要计算这两个寄存器的CRC，通过将正确的 CRC 值写入非易失性存储器CRCC 控制寄存器来确认重新编程。 CRC 值一经验证，SBC 就开始对非易失性存储器单元重新编程。<br>如果 CRC 值不正确，则重新编程将中止。完成后，会生成系统复位，表明非易失性存储器单元已成功重新编程<br><img   src="https://dadeju.github.io/picx-images-hosting/image.6f0v452qk9.webp"  alt="image"><br>下面是具体的配置流程：<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7sne9kcuj5.png"  alt="image"></p>
-<p>通过选择模式控制寄存器下的 MC 位可以进入不同的模式，模式控制寄存器可通过 SPI 访问地址 0x01.<br><img   src="https://dadeju.github.io/picx-images-hosting/image.86ttz1zkbu.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.4qri8cdjg4.png"  alt="image"><br>喂狗的API函数其实就是重新设置了00h看门狗控制寄存器的值</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">SBC_FeedWatchdog</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    (<span class="type">void</span>)SBC_SetWatchdog(&amp;g_drvConfig.watchdogCtr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其实还有一些功能安全相关的配置，后面有机会再做补充</p>
+                         <p>FEE简单来说就是Flash模拟EEPROM功能，本文对FEE做一个简要介绍。首先介绍一下FEE里面会出现的几个概念：<br><mark>[Cluster]</mark>:Cluster为Fee中使⽤的虚拟存储器段，Cluster建⽴Fee与物理存储间的虚拟连接。它与DFlash物理Sector对应，⼀个Cluster应对应⼀个物理DFlash Sector，Fee中设置的Cluster⻓度应⼩于或等于DFlash物理Sector。<br><mark>[Block]</mark>:Block为Fee基本存储单元，是Fee数据写⼊的最⼩结构，Block⻓度可根据应⽤需求自行定义<br><mark>[ClusterGroup]</mark>:ClusterGroup为Fee中虚拟概念，⽤于关联Block及Cluster。ClusterGroup为Block的容器，⼀个或多个Block组成⼀个ClusterGroup。Fee代码以ClusterGroup为单位分配存储空间，同属⼀个ClusterGroup的所有Block共享⼀⽚存储空间。ClusterGroup中包含的Block数量需根据实际情况确定，但是<mark>⼀个ClusterGroup需分配⾄少两个Cluster</mark>。<br><mark>[换页]</mark>：ClrID：簇的ID号，从1开始，数字越高表示当前簇有效，第一个有效簇所在的扇区写完后，簇的有效活动区再换到第二个簇，ID号变为2，这个换活动区的动作就叫做换页。<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.41y99ordz3.png"  alt="图片1"><br>这⾥可以简单的评估⼀下各空间的寿命情况：<br>擦写次数&#x3D;flash擦写次数×Cluster数量<br>MEFlash擦写次数为10w次、DflashSectorSize为1KB<br>ClusterGroup0：20个cluster 200w次<br>ClusterGroup1：10个cluster 100w次<br>ClusterGroup2：5个cluster 50w次<br>这⾥只是粗略的计算，实际上擦写次数还与BlockSize和Block数量有关系（同一个cluster里面可能会有多个block），Group中Block占⽤空间越⼩，擦写次数自然越多。<br>这里我终于也算是解决了我长久以来的一个疑问，flash的擦写寿命是10W次是flash自身的性质决定的，为什么说FEE的磨损均衡算法可以增加寿命呢，其实也是一种用空间换时间的妥协。</p>
+<p>Fee模块记录的数据由<mark>两部分</mark>构成，分别为:<br>• Cluster信息：该信息描述当前该ClusterGroup当前所在Cluster(Sector)的信息，共计32Byte，固定写⼊在每个Cluster的前32Byte，Cluster擦除后第⼀次使⽤该Cluster时被写⼊。Cluster信息包括FeeCluster写⼊ID(4Byte)、Cluster起始地址（相对地址、4Byte）、Cluster⻓度(4Byte)、GroupHdr校验和（4Byte）以及Cluster有效标志(16Byte)。其中Cluster写⼊ID每次写⼊前递增1，因此当前ClusterGroup中，ID最⼤且标志有效的Cluster为当前活跃的Cluster(可执⾏Fee读、写等操作)。</p>
+<p>• Block信息及数据：该部分数据为用户定义的Block数据及相关信息，Block数据及信息由2部分组成，包括：①用户EEPBlock数据信息(BlockHdr)，共计32Byte，其中Block编号(2Byte)、Block数据⻓度(2Byte)、BlockData(4Byte)存储地址、Hdr校验和（4Byte）、Block数据ValidFlag(16Byte)以及预留4byte。②用户FeeBlock数据。</p>
+<p>下图是一个cluster在flash中的实际情况：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    &#123;</span><br><span class="line">        .sectorId=<span class="number">0</span>,</span><br><span class="line">        .sectorStartAddress=<span class="number">0x0</span>,</span><br><span class="line">        .sectorSize=<span class="number">0x200</span>,</span><br><span class="line">        .pageSize=<span class="number">4</span>,</span><br><span class="line">        .sectorHwStartAddress=<span class="number">0x1f000</span>,</span><br><span class="line">        .asyncAccess=<span class="number">0</span>,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>前4个字节是ClrID：“05 00 00 00”由于是小端存储，即ClrID为5<br>Start address 起始地址的相对地址：“00 00 00 00”<br>Cluster⻓度(4Byte) “00 02 00 00”，即0x200,也就是上面配置的 .sectorSize&#x3D;0x200<br>校验和（4Byte） “05 02 00 00”<br>后面16个字节都是Cluster有效标志</p>
+<p>从0x0001 F020、0x0001 F040、0x0001 F060、0x0001 F080、0x0001 F0A0开始的32个字节都是Block信息<br>可以看到其中ID为1的Block只有1份，ID为2的Block则有4份，这部分我暂时没有做深入研究。<br>以其中的0x0001 F020为例：<br>Block编号(2Byte)：1<br>Block数据⻓度(2Byte)：4字节<br>BlockData(4Byte)存储地址：F8 01 00 00 即0x000001F8(相对地址)<br>Hdr校验和（4Byte）：FD 01 00 00<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.1ap71m59xa.png"  alt="图片2"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.9nzznjsosd.png"  alt="图片3"></p>
+<p>下图是使用YCT工具中的FEE_demo的测试结果：<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%875.86tulsok1n.png"  alt="图片5"></p>
+<p>下面是一个典型设计案例：</p>
+<ul>
+<li>需求：2K空间存储DTC<br>BLOCK：需要2K</li>
+<li>CLUSTER：一个BLOCK空间，加上CLUSTER的Header标记等消耗空间，2K+，按2.5K考虑；</li>
+<li>CLUSTER需要至少存储一份预留一份换页用，那么一个CLUSTER最小配置5K；</li>
+<li>CLUSTER需要至少两倍空间做循环平衡磨损增加寿命，则至少需要10K空间；</li>
+<li>SECTOR：根据BLOCK和CLUSTER分配确定需要的物理空间，再按照在PFLASH或者DFLASH空间上进行物理分配，如上需要10K空间，ME芯片方案可以全部放到Dflash空间上；</li>
+</ul>
+<p>下面补充一个在flash里面的概念：<br><mark>RWW （read-while-write）</mark>特性的意思是在 Flash 执行擦写命令进入 Busy 状态期间（STS 寄存器 IDLE 位变状态 0）还能否继续响应非操作区域的读访问。<br>如果芯片不支持 RWW，擦写操作时需要关闭全局中断。<br>原理：支持 RWW 的芯片 Flash 物理存储中存在多个 Block 物理块。在擦写其中一个 Block 时，可以同时读取其他的Block 数据。<br>同理 NRWW（No Read-While-Write）的芯片，其 Flash 物理存储中只有一个 Block，因此不能边写边读。<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%876.1lc0urki2i.png"  alt="图片6"></p>
+<hr>
+<p><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/a571338923/article/details/144507127" >https://blog.csdn.net/a571338923/article/details/144507127<i class="fas fa-external-link-alt"></i></a><br><a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/CmBhcX2y8RT-3zIi2o-4ZQ" >https://mp.weixin.qq.com/s/CmBhcX2y8RT-3zIi2o-4ZQ<i class="fas fa-external-link-alt"></i></a><br>《YTM32B1HA0x_RM_v1.2》<br>《RTD_FEE_UM》<br>《Fee应用笔记 V0.1》<br>《AN_0062_EFM_ApplicationNote_zh_review》</p>
 
                     
                 </div>
@@ -236,31 +249,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/04/09/%E4%BA%91%E9%80%94IIC%E5%A4%96%E8%AE%BE%E4%BB%8B%E7%BB%8D/"
-                                   title="云途IIC外设介绍"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">云途IIC外设介绍</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/04/01/%E5%B5%8C%E5%85%A5%E5%BC%8F%E6%97%A5%E5%BF%97%E5%B8%B8%E7%94%A8%E6%89%93%E5%8D%B0%E6%96%B9%E5%BC%8F/"
-                                   title="嵌入式日志常用打印方式"
+                                   href="/2025/04/23/%E4%BA%91%E9%80%94MCU-SPI-TX-FIFO%E4%B8%8B%E6%BA%A2Underflow%E4%BA%8B%E4%BB%B6%E8%A7%A3%E6%9E%90/"
+                                   title="云途MCU SPI TX FIFO下溢Underflow事件解析"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">嵌入式日志常用打印方式</span>
+                                        <span class="post-nav-title-item text-ellipsis">云途MCU SPI TX FIFO下溢Underflow事件解析</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
