@@ -9,7 +9,7 @@
     
     <title>
         
-            FEE简要分析 |
+            MCU跑分 dhrystone/coremark |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        FEE简要分析
+                        MCU跑分 dhrystone/coremark
                     </div>
                 
 
@@ -177,13 +177,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-04-24 19:45:11</span>
+                <span class="datetime">2025-04-26 19:57:12</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Apr 24 2025 20:04:28 GMT+0800">2025-04-24 20:04:28</span>
+                    <span class="datetime" data-updated="Sat Apr 26 2025 20:27:48 GMT+0800">2025-04-26 20:27:48</span>
                 </span>
             
         
@@ -210,25 +210,8 @@
                     
 
                     
-                         <p>FEE简单来说就是Flash模拟EEPROM功能，本文对FEE做一个简要介绍。首先介绍一下FEE里面会出现的几个概念：<br><mark>[Cluster]</mark>:Cluster为Fee中使⽤的虚拟存储器段，Cluster建⽴Fee与物理存储间的虚拟连接。它与DFlash物理Sector对应，⼀个Cluster应对应⼀个物理DFlash Sector，Fee中设置的Cluster⻓度应⼩于或等于DFlash物理Sector。<br><mark>[Block]</mark>:Block为Fee基本存储单元，是Fee数据写⼊的最⼩结构，Block⻓度可根据应⽤需求自行定义<br><mark>[ClusterGroup]</mark>:ClusterGroup为Fee中虚拟概念，⽤于关联Block及Cluster。ClusterGroup为Block的容器，⼀个或多个Block组成⼀个ClusterGroup。Fee代码以ClusterGroup为单位分配存储空间，同属⼀个ClusterGroup的所有Block共享⼀⽚存储空间。ClusterGroup中包含的Block数量需根据实际情况确定，但是<mark>⼀个ClusterGroup需分配⾄少两个Cluster</mark>。<br><mark>[换页]</mark>：ClrID：簇的ID号，从1开始，数字越高表示当前簇有效，第一个有效簇所在的扇区写完后，簇的有效活动区再换到第二个簇，ID号变为2，这个换活动区的动作就叫做换页。<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.41y99ordz3.png"  alt="图片1"><br>这⾥可以简单的评估⼀下各空间的寿命情况：<br>擦写次数&#x3D;flash擦写次数×Cluster数量<br>MEFlash擦写次数为10w次、DflashSectorSize为1KB<br>ClusterGroup0：20个cluster 200w次<br>ClusterGroup1：10个cluster 100w次<br>ClusterGroup2：5个cluster 50w次<br>这⾥只是粗略的计算，实际上擦写次数还与BlockSize和Block数量有关系（同一个cluster里面可能会有多个block），Group中Block占⽤空间越⼩，擦写次数自然越多。<br>这里我终于也算是解决了我长久以来的一个疑问，flash的擦写寿命是10W次是flash自身的性质决定的，为什么说FEE的磨损均衡算法可以增加寿命呢，其实也是一种用空间换时间的妥协。</p>
-<p>Fee模块记录的数据由<mark>两部分</mark>构成，分别为:<br>• Cluster信息：该信息描述当前该ClusterGroup当前所在Cluster(Sector)的信息，共计32Byte，固定写⼊在每个Cluster的前32Byte，Cluster擦除后第⼀次使⽤该Cluster时被写⼊。Cluster信息包括FeeCluster写⼊ID(4Byte)、Cluster起始地址（相对地址、4Byte）、Cluster⻓度(4Byte)、GroupHdr校验和（4Byte）以及Cluster有效标志(16Byte)。其中Cluster写⼊ID每次写⼊前递增1，因此当前ClusterGroup中，ID最⼤且标志有效的Cluster为当前活跃的Cluster(可执⾏Fee读、写等操作)。</p>
-<p>• Block信息及数据：该部分数据为用户定义的Block数据及相关信息，Block数据及信息由2部分组成，包括：①用户EEPBlock数据信息(BlockHdr)，共计32Byte，其中Block编号(2Byte)、Block数据⻓度(2Byte)、BlockData(4Byte)存储地址、Hdr校验和（4Byte）、Block数据ValidFlag(16Byte)以及预留4byte。②用户FeeBlock数据。</p>
-<p>下图是一个cluster在flash中的实际情况：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    &#123;</span><br><span class="line">        .sectorId=<span class="number">0</span>,</span><br><span class="line">        .sectorStartAddress=<span class="number">0x0</span>,</span><br><span class="line">        .sectorSize=<span class="number">0x200</span>,</span><br><span class="line">        .pageSize=<span class="number">4</span>,</span><br><span class="line">        .sectorHwStartAddress=<span class="number">0x1f000</span>,</span><br><span class="line">        .asyncAccess=<span class="number">0</span>,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-<p>前4个字节是ClrID：“05 00 00 00”由于是小端存储，即ClrID为5<br>Start address 起始地址的相对地址：“00 00 00 00”<br>Cluster⻓度(4Byte) “00 02 00 00”，即0x200,也就是上面配置的 .sectorSize&#x3D;0x200<br>校验和（4Byte） “05 02 00 00”<br>后面16个字节都是Cluster有效标志</p>
-<p>从0x0001 F020、0x0001 F040、0x0001 F060、0x0001 F080、0x0001 F0A0开始的32个字节都是Block信息<br>可以看到其中ID为1的Block只有1份，ID为2的Block则有4份，这部分我暂时没有做深入研究。<br>以其中的0x0001 F020为例：<br>Block编号(2Byte)：1<br>Block数据⻓度(2Byte)：4字节<br>BlockData(4Byte)存储地址：F8 01 00 00 即0x000001F8(相对地址)<br>Hdr校验和（4Byte）：FD 01 00 00<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.1ap71m59xa.png"  alt="图片2"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.9nzznjsosd.png"  alt="图片3"></p>
-<p>下图是使用YCT工具中的FEE_demo的测试结果：<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%875.86tulsok1n.png"  alt="图片5"></p>
-<p>下面是一个典型设计案例：</p>
-<ul>
-<li>需求：2K空间存储DTC<br>BLOCK：需要2K</li>
-<li>CLUSTER：一个BLOCK空间，加上CLUSTER的Header标记等消耗空间，2K+，按2.5K考虑；</li>
-<li>CLUSTER需要至少存储一份预留一份换页用，那么一个CLUSTER最小配置5K；</li>
-<li>CLUSTER需要至少两倍空间做循环平衡磨损增加寿命，则至少需要10K空间；</li>
-<li>SECTOR：根据BLOCK和CLUSTER分配确定需要的物理空间，再按照在PFLASH或者DFLASH空间上进行物理分配，如上需要10K空间，ME芯片方案可以全部放到Dflash空间上；</li>
-</ul>
-<p>下面补充一个在flash里面的概念：<br><mark>RWW （read-while-write）</mark>特性的意思是在 Flash 执行擦写命令进入 Busy 状态期间（STS 寄存器 IDLE 位变状态 0）还能否继续响应非操作区域的读访问。<br>如果芯片不支持 RWW，擦写操作时需要关闭全局中断。<br>原理：支持 RWW 的芯片 Flash 物理存储中存在多个 Block 物理块。在擦写其中一个 Block 时，可以同时读取其他的Block 数据。<br>同理 NRWW（No Read-While-Write）的芯片，其 Flash 物理存储中只有一个 Block，因此不能边写边读。<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%876.1lc0urki2i.png"  alt="图片6"></p>
-<hr>
-<p><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/a571338923/article/details/144507127" >https://blog.csdn.net/a571338923/article/details/144507127<i class="fas fa-external-link-alt"></i></a><br><a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/CmBhcX2y8RT-3zIi2o-4ZQ" >https://mp.weixin.qq.com/s/CmBhcX2y8RT-3zIi2o-4ZQ<i class="fas fa-external-link-alt"></i></a><br>《YTM32B1HA0x_RM_v1.2》<br>《RTD_FEE_UM》<br>《Fee应用笔记 V0.1》<br>《AN_0062_EFM_ApplicationNote_zh_review》</p>
+                         <p>MCU性能测试有两个常见的工具：CoreMark与Dhrystone<br><a class="link"   target="_blank" rel="noopener" href="https://www.eembc.org/coremark/" >https://www.eembc.org/coremark/<i class="fas fa-external-link-alt"></i></a><br>Dhrystone是1984年发布的，用来测试处理器的整数运算性能和编译器的代码优化能力。结果以 DMIPS（Dhrystone MIPS） 表示，即<mark>每秒执行 Dhrystone 的次数除以 1757</mark>（1757 是 VAX 11&#x2F;780 的基准值，代表 1 MIPS）<br>CoreMark是2009年由EEMBC组织的Shay Gla-On提出，并且试图将其发展成为工业标准，从而<mark>代替陈旧的Dhrystone标准</mark>。<br>两者的移植方式都类似，相比较而言Dhrystone更加容易（可能是因为更加古老）。<br>都是需要设定一个定时器来获取时间基准，重定向打印printf<br>下面是在云途HA（m7,200Mhz）上面的测试结果：<br>CoreMark:268.552<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9nzzqg1zm6.png"  alt="image"></p>
+<p>Dhrystone:814.332 DMIPS<br><img   src="https://dadeju.github.io/picx-images-hosting/image.1sf8t3g69e.png"  alt="image"></p>
 
                     
                 </div>
@@ -249,31 +232,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/04/26/MCU%E8%B7%91%E5%88%86-dhrystone-coremark/"
-                                   title="MCU跑分 dhrystone/coremark"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">MCU跑分 dhrystone/coremark</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/04/23/%E4%BA%91%E9%80%94MCU-SPI-TX-FIFO%E4%B8%8B%E6%BA%A2Underflow%E4%BA%8B%E4%BB%B6%E8%A7%A3%E6%9E%90/"
-                                   title="云途MCU SPI TX FIFO下溢Underflow事件解析"
+                                   href="/2025/04/24/FEE%E7%AE%80%E8%A6%81%E5%88%86%E6%9E%90/"
+                                   title="FEE简要分析"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">云途MCU SPI TX FIFO下溢Underflow事件解析</span>
+                                        <span class="post-nav-title-item text-ellipsis">FEE简要分析</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
