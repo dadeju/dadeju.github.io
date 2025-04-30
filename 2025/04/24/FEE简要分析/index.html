@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Apr 24 2025 20:04:28 GMT+0800">2025-04-24 20:04:28</span>
+                    <span class="datetime" data-updated="Wed Apr 30 2025 23:22:56 GMT+0800">2025-04-30 23:22:56</span>
                 </span>
             
         
@@ -210,7 +210,7 @@
                     
 
                     
-                         <p>FEE简单来说就是Flash模拟EEPROM功能，本文对FEE做一个简要介绍。首先介绍一下FEE里面会出现的几个概念：<br><mark>[Cluster]</mark>:Cluster为Fee中使⽤的虚拟存储器段，Cluster建⽴Fee与物理存储间的虚拟连接。它与DFlash物理Sector对应，⼀个Cluster应对应⼀个物理DFlash Sector，Fee中设置的Cluster⻓度应⼩于或等于DFlash物理Sector。<br><mark>[Block]</mark>:Block为Fee基本存储单元，是Fee数据写⼊的最⼩结构，Block⻓度可根据应⽤需求自行定义<br><mark>[ClusterGroup]</mark>:ClusterGroup为Fee中虚拟概念，⽤于关联Block及Cluster。ClusterGroup为Block的容器，⼀个或多个Block组成⼀个ClusterGroup。Fee代码以ClusterGroup为单位分配存储空间，同属⼀个ClusterGroup的所有Block共享⼀⽚存储空间。ClusterGroup中包含的Block数量需根据实际情况确定，但是<mark>⼀个ClusterGroup需分配⾄少两个Cluster</mark>。<br><mark>[换页]</mark>：ClrID：簇的ID号，从1开始，数字越高表示当前簇有效，第一个有效簇所在的扇区写完后，簇的有效活动区再换到第二个簇，ID号变为2，这个换活动区的动作就叫做换页。<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.41y99ordz3.png"  alt="图片1"><br>这⾥可以简单的评估⼀下各空间的寿命情况：<br>擦写次数&#x3D;flash擦写次数×Cluster数量<br>MEFlash擦写次数为10w次、DflashSectorSize为1KB<br>ClusterGroup0：20个cluster 200w次<br>ClusterGroup1：10个cluster 100w次<br>ClusterGroup2：5个cluster 50w次<br>这⾥只是粗略的计算，实际上擦写次数还与BlockSize和Block数量有关系（同一个cluster里面可能会有多个block），Group中Block占⽤空间越⼩，擦写次数自然越多。<br>这里我终于也算是解决了我长久以来的一个疑问，flash的擦写寿命是10W次是flash自身的性质决定的，为什么说FEE的磨损均衡算法可以增加寿命呢，其实也是一种用空间换时间的妥协。</p>
+                         <p>FEE简单来说就是Flash模拟EEPROM功能，本文对FEE做一个简要介绍。首先介绍一下FEE里面会出现的几个概念：<br><mark>[Cluster]</mark>:Cluster为Fee中使⽤的虚拟存储器段，Cluster建⽴Fee与物理存储间的虚拟连接。它与DFlash物理Sector对应，⼀个Cluster应对应⼀个物理DFlash Sector，Fee中设置的Cluster长度应小于或等于DFlash物理Sector。<br><mark>[Block]</mark>:Block为Fee基本存储单元，是Fee数据写⼊的最⼩结构，Block⻓度可根据应⽤需求自行定义<br><mark>[ClusterGroup]</mark>:ClusterGroup为Fee中虚拟概念，⽤于关联Block及Cluster。ClusterGroup为Block的容器，⼀个或多个Block组成⼀个ClusterGroup。Fee代码以ClusterGroup为单位分配存储空间，同属⼀个ClusterGroup的所有Block共享一片存储空间。ClusterGroup中包含的Block数量需根据实际情况确定，但是<mark>⼀个ClusterGroup需分配⾄少两个Cluster</mark>。<br><mark>[换页]</mark>：ClrID：簇的ID号，从1开始，数字越高表示当前簇有效，第一个有效簇所在的扇区写完后，簇的有效活动区再换到第二个簇，ID号变为2，这个换活动区的动作就叫做换页。<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.41y99ordz3.png"  alt="图片1"><br>这⾥可以简单的评估⼀下各空间的寿命情况：<br>擦写次数&#x3D;flash擦写次数×Cluster数量<br>MEFlash擦写次数为10w次、DflashSectorSize为1KB<br>ClusterGroup0：20个cluster 200w次<br>ClusterGroup1：10个cluster 100w次<br>ClusterGroup2：5个cluster 50w次<br>这⾥只是粗略的计算，实际上擦写次数还与BlockSize和Block数量有关系（同一个cluster里面可能会有多个block），Group中Block占⽤空间越⼩，擦写次数自然越多。<br>这里我终于也算是解决了我长久以来的一个疑问，flash的擦写寿命是10W次是flash自身的性质决定的，为什么说FEE的磨损均衡算法可以增加寿命呢，其实也是一种用空间换时间的妥协。</p>
 <p>Fee模块记录的数据由<mark>两部分</mark>构成，分别为:<br>• Cluster信息：该信息描述当前该ClusterGroup当前所在Cluster(Sector)的信息，共计32Byte，固定写⼊在每个Cluster的前32Byte，Cluster擦除后第⼀次使⽤该Cluster时被写⼊。Cluster信息包括FeeCluster写⼊ID(4Byte)、Cluster起始地址（相对地址、4Byte）、Cluster⻓度(4Byte)、GroupHdr校验和（4Byte）以及Cluster有效标志(16Byte)。其中Cluster写⼊ID每次写⼊前递增1，因此当前ClusterGroup中，ID最⼤且标志有效的Cluster为当前活跃的Cluster(可执⾏Fee读、写等操作)。</p>
 <p>• Block信息及数据：该部分数据为用户定义的Block数据及相关信息，Block数据及信息由2部分组成，包括：①用户EEPBlock数据信息(BlockHdr)，共计32Byte，其中Block编号(2Byte)、Block数据⻓度(2Byte)、BlockData(4Byte)存储地址、Hdr校验和（4Byte）、Block数据ValidFlag(16Byte)以及预留4byte。②用户FeeBlock数据。</p>
 <p>下图是一个cluster在flash中的实际情况：</p>
