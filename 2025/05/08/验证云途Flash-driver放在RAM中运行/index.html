@@ -9,7 +9,7 @@
     
     <title>
         
-            归档: 2025 |
+            验证云途Flash driver放在RAM中运行 |
         
         GaoSheng
     </title>
@@ -75,7 +75,7 @@
                         </li>
                     
                         
-                        <li class="menu-item flex-start border-box active">
+                        <li class="menu-item flex-start border-box">
                             <a class="menu-text-color border-box" href="/archives">
                                 
                                 归档
@@ -118,7 +118,7 @@
                 </li>
             
                 
-                <li class="drawer-menu-item border-box not-sub-menu active">
+                <li class="drawer-menu-item border-box not-sub-menu">
                     <label class="drawer-menu-label border-box">
                         <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
                             
@@ -144,86 +144,130 @@
             <div class="main-content border-box">
                 
 
-                    <div class="fade-in-down-animation">
-    <div class="archives-container">
-        <div class="archives-timeline border-box">
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
             
-<div class="archive-list-container border-box">
-    
-        <section class="archive-item border-box">
-            <div class="archive-item-header border-box">
-                <span class="archive-year">2025</span>
-            </div>
-            <ul class="archive-item-body border-box">
+
+            <div class="post-content-bottom border-box">
                 
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">03-14</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2025/03/14/SPI-%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE-%E9%94%99%E4%BD%8D/"
-                        >SPI 读取数据&#39;错位&#39;</a>
-                    </li>
+                    <div class="post-title">
+                        验证云途Flash driver放在RAM中运行
+                    </div>
                 
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">03-13</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2025/03/13/freertos-PendSV-%E4%BB%BB%E5%8A%A1%E5%88%87%E6%8D%A2%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90/"
-                        >freertos PendSV 任务切换函数解析</a>
-                    </li>
+
                 
-                    <li class="post-item border-box">
-                        <span class="starting-point border-box flex-center"></span>
-                        <span class="post-date border-box">03-11</span>
-                        <a class="post-title border-box text-ellipsis"
-                           href="/2025/03/11/%E4%BA%91%E9%80%94HA-%E4%BB%8EPower-down%E6%A8%A1%E5%BC%8F%E5%94%A4%E9%86%92%E5%90%8E%EF%BC%8C%E4%BF%9D%E6%8C%81RTC%E6%97%B6%E9%92%9F%E7%9A%84%E6%96%B9%E6%B3%95%E5%88%86%E4%BA%AB/"
-                        >云途HA 从Power down模式唤醒后，保持RTC时钟的方法分享</a>
-                    </li>
-                
-            </ul>
-        </section>
+                    <div class="post-header border-box">
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">GaoSheng</span>
+                                
+                                    <span class="author-badge">Lv4</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-05-08 21:55:32</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Thu May 08 2025 22:38:31 GMT+0800">2025-05-08 22:38:31</span>
+                </span>
+            
+        
+
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
     
 </div>
 
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <p>缘起：之前阅读这位大佬的写的《如何提取与执行位置无关的Flash Driver》。总感觉模模糊糊，不得要领。今天又使劲读了几遍，加上在开发板验证，终于算是有所心得。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.3rbg0oigwz.png"  alt="image"></p>
+<p>本文不做原理上面的讲解，上面大佬的文章已经足够详细，只介绍验证流程<br>首先在下面的链接获取flash driver bin的工程文件<br><a class="link"   target="_blank" rel="noopener" href="https://forum.ytmicro.com/topic/164/ytm32mc03-%E6%9C%89%E6%B2%A1%E6%9C%89ram-flashdriver%E7%9A%84%E6%A1%88%E4%BE%8B-%E5%81%9Aboot%E7%94%A8%E7%9A%84?_=1746697545202" >https://forum.ytmicro.com/topic/164/ytm32mc03-%E6%9C%89%E6%B2%A1%E6%9C%89ram-flashdriver%E7%9A%84%E6%A1%88%E4%BE%8B-%E5%81%9Aboot%E7%94%A8%E7%9A%84?_=1746697545202<i class="fas fa-external-link-alt"></i></a><br>下载后解压，目录是这样的结构：<br><img   src="https://dadeju.github.io/picx-images-hosting/image.4qrjduqpz3.png"  alt="image"><br>bin_project是vs code的工程文件，下面两个是HA系列和MC系列的。由于我是用的YTM32ME系列，所以需要手动编译<br><img   src="https://dadeju.github.io/picx-images-hosting/image.3yenw4ek0s.png"  alt="image"><br>编译后可以在bin_project\build\YTM32B1ME0看到FlashDriver.hex文件<br><img   src="https://dadeju.github.io/picx-images-hosting/image.1hsfh78q9u.png"  alt="image"><br>先使⽤JFlash打开包含Flash driver编译结果的Hex⽂件；然后菜单选择File -&gt; “Save data file as..；选择保存类型为:ANSI“C”file(*.c)<br><img   src="https://dadeju.github.io/picx-images-hosting/image.969yj4cb3t.png"  alt="image"><br>这样你就会得到Flash driver的bin文件<br><img   src="https://dadeju.github.io/picx-images-hosting/image.361see5cjf.png"  alt="image"><br>将存放Flash Driver的FLS_DRV_TEXT地址的内容Copy到⼀个code_ram数组中，直接使⽤该数组，需要注意要这段数据放在code_ram中<br><img   src="https://dadeju.github.io/picx-images-hosting/image.8s3is9aa56.png"  alt="image"></p>
+<p>至于如何把这些bin文件转换成我们想要的flash操作函数（Flash Driver函数调⽤地址&#x3D;基地址+offset。使⽤时需要先计算出函数的调⽤地址，然后再进⾏常 规的函数调⽤），不用担心，这部分代码demo中已经已经写好了，将bin_project&#x2F;fls_drv_bin.h到 Flash Demo的APP目录下即可<br>Flash Driver Bin的API和SDK中Flash API几乎一样，只是去掉了instance参数</p>
+<p>验证flash demo<br><img   src="https://dadeju.github.io/picx-images-hosting/image.5fksxwd16y.png"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.32i6goy2bk.png"  alt="image"><br>成功通过flash demo的测试，测试结果与预期相符！这样我们就成功做到了Flash Driver放在在RAM中运行。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.6wqxzn4s0a.png"  alt="image"></p>
+
+                    
+                </div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                    </div>
+                    <div>
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/05/08/%E4%BA%91%E9%80%94lptmr%E5%A4%96%E8%AE%BE%E4%BB%8B%E7%BB%8D/"
+                                   title="云途lptmr外设介绍"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">云途lptmr外设介绍</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+
+
+
+
+                
+            </div>
         </div>
+
+        
     </div>
-    
-    <div class="paginator border-box flex-center">
-        <div class="border-box first-page paginator-btn allowed">
-            <a class="border-box"><i class="fa-solid fa-angle-double-left"></i></a>
-        </div>
-
-        <div class="border-box paginator-btn allowed">
-            <a class="border-box"
-               href="/archives/2025/page/2/"
-            ><i class="fa-solid fa-chevron-left"></i></a>
-        </div>
-
-
-        <div class="page-number-box border-box flex-center">
-            <input class="page-number-input border-box base-style"
-                   type="number"
-                   value="3"
-                   min="1"
-                   max="3"
-            /><span class="delimiter base-style">/</span><span class="base-style">3</span>
-        </div>
-
-
-        <div class="border-box paginator-btn">
-            <a class="border-box"
-               href="/"
-            ><i class="fa-solid fa-chevron-right"></i></a>
-        </div>
-
-        <div class="border-box last-page paginator-btn not-allow">
-            <a class="border-box"><i class="fa-solid fa-angle-double-right"></i></a>
-        </div>
-    </div>
-
-
-
-
 </div>
 
 
@@ -263,6 +307,27 @@
     </div>
 
     <!-- post tools -->
+    
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+
+        <!-- PC go comment -->
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
     
 
     <!-- side tools -->
@@ -357,7 +422,6 @@
 
 
 
-
 <!-- common js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
 
@@ -374,6 +438,18 @@
     
 
     <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
     
 
     <!-- categories page -->
