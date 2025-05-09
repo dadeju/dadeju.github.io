@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Mar 27 2025 20:28:17 GMT+0800">2025-03-27 20:28:17</span>
+                    <span class="datetime" data-updated="Fri May 09 2025 19:16:38 GMT+0800">2025-05-09 19:16:38</span>
                 </span>
             
         
@@ -243,7 +243,7 @@
 <p>同样，当IIC进行读操作时，从机应答后输出数据，如果在这个时刻主机异常复位而此时从机输出的数据刚好为0，SCL会变成高电平，但是从机一直等待主机拿数据，也会导致IIC总线进入死锁状态</p>
 <p>SCK的占空比可以低一点，因为只能在时钟线低的时候变化SDA</p>
 <p><strong>I2C从地址要左移1位？</strong></p>
-<p>这是i2c协议决定的，i2c地址实际为7位。剩下的一位用来判断是读还是写。需要注意在有些MCU的底层驱动中，这个左移的动作已经帮我们实现了</p>
+<p>这是i2c协议决定的，i2c地址实际为7位。剩下的一位用来判断是读还是写。</p>
 
                     
                 </div>
