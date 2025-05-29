@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="GaoSheng">
+    
+    <title>
+        
+            云途LE_etmr输入捕获介绍 |
+        
+        GaoSheng
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/brands.min.css">
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#0066cc","title":"GaoSheng","author":"GaoSheng","avatar":null,"logo":null,"favicon":null},"menu":{"home":"/","archives":"/archives"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"我也许不知道答案，但我知道怎么找到答案","hitokoto":false},"social_contact":{"enable":true,"links":{"weixin":"img | ./images/wxcode.png","email":null}},"scroll":{"progress_bar":false,"percent":false,"hide_header":true},"home":{"announcement":null,"category":false,"tag":false,"post_datetime":"updated"},"post":{"author_badge":{"enable":true,"level_badge":true,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":false,"min2read":false},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":false,"share":false,"reward":{"enable":false,"img_link":null,"text":null,"icon":null}},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"toc":{"enable":false,"number":false,"expand_all":false,"init_open":true,"layout":"right"},"website_count":{"busuanzi_count":{"enable":false,"site_uv":false,"site_pv":false,"page_pv":false}},"local_search":{"enable":true,"preload":false},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.39"},"waline":{"server_url":null,"reaction":false,"version":"3.3.2"},"giscus":{"repo":null,"repo_id":null,"category":"Announcements","category_id":null,"reactions_enabled":false},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":false},"lazyload":{"enable":false},"cdn":{"enable":true,"provider":"cdnjs"},"pjax":{"enable":false},"footer":{"since":2020,"word_count":false,"site_deploy":{"enable":true,"provider":"github","url":null},"record":{"enable":false,"list":[{"code":null,"link":null}]}},"inject":{"enable":false,"css":[null],"js":[null]},"root":"","source_data":{},"version":"4.2.5"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+
+<main class="page-container border-box">
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left flex-start border-box">
+            
+            <a class="site-name border-box" href="/">
+               GaoSheng
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc border-box">
+                <ul class="menu-list border-box">
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/">
+                                
+                                首页
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/archives">
+                                
+                                归档
+                                
+                            </a>
+                            
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="menu-text-color fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile border-box flex-start">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list border-box">
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/">
+                            
+                            首页
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
+                            
+                            归档
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        云途LE_etmr输入捕获介绍
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">GaoSheng</span>
+                                
+                                    <span class="author-badge">Lv4</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-05-29 19:33:57</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Thu May 29 2025 20:55:43 GMT+0800">2025-05-29 20:55:43</span>
+                </span>
+            
+        
+
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <p>云途LE系列MCU，只需要单通道就可以实现信号的周期和占空比的捕获。其中有三个etmr模块，都是16位，通道个数8+8+2.每个etmr模块均可以用作输入捕获<br><img   src="https://dadeju.github.io/picx-images-hosting/image.6m450bx5y4.png"  alt="image"><br>当捕获事件发生时，需记录边沿处的etmr计数器值，在整个捕获过程完成后，将相应的计数器的值做<mark>减法</mark>，就可以得到捕获的<mark>周期和占空比</mark></p>
+<ol>
+<li>根据pinMux表选择pin脚，将期配置成输入捕获模式</li>
+<li>使能etmr IPC时钟</li>
+<li>配置etmr 时钟频率，选择时钟源和分频，eTmr默认使用fast bus clock</li>
+<li>配置输入捕获的边沿以及数字滤波器，边沿有上升沿，下降沿和双边沿，当捕获信号的宽度小于滤波器的带宽时，就被忽略</li>
+<li>配置捕获使用的eTmr计数器的最大值。<mark>建议：对于16位eTmr,最大值是0xffff</mark></li>
+</ol>
+<p>举例说明：如果使用 eTMR0 通道 1 来捕获，快速总线时钟 48MHz，<mark>分频选 48</mark>，则捕获时钟频率为 1MHz。假如捕获所得的计数器值是 1000，那么捕获到的信号周期就是 1 毫秒。因为 eTMR0 计数器是 16 位，<mark>最大值 0xFFFF</mark>，意味着通道1 有能力去捕获 65ms 宽度的 PWM 波。</p>
+<p>使用云途的YCT工具可以生成eTmr捕获demo-&gt;Etmr_Input_Capture_Demo<br><img   src="https://dadeju.github.io/picx-images-hosting/image.8hgpt10fl5.png"  alt="image"><br>etmr时基配置：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">etmr_user_config_t</span> ETMR_CM_Config1=&#123;</span><br><span class="line">    .etmrClockSource=eTMR_CLOCK_SOURCE_INTERNALCLK,<span class="comment">//使用内部时钟（快速总线时钟）</span></span><br><span class="line">    .etmrPrescaler=<span class="number">24</span>,<span class="comment">//设置分频器</span></span><br><span class="line">    .debugMode=<span class="literal">false</span>,<span class="comment">//调试模式下暂停，计数器停止计数</span></span><br><span class="line">    .syncMethod=&amp;ETMR_CM_Config1PwmSync,</span><br><span class="line">    .outputTrigConfig=&amp;ETMR_CM_Config1TrigConf,<span class="comment">//输入捕获不需要触发器配置，此处可填 NULL</span></span><br><span class="line">    .isTofIntEnabled=<span class="literal">false</span>， <span class="comment">//禁止计数器溢出中断</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>输入捕获通用配置结构体</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">etmr_ic_param_t</span> ETMR_IC_Config0=&#123;</span><br><span class="line">    .numChannels=<span class="number">2</span>,<span class="comment">//捕获所用总通道数</span></span><br><span class="line">    .countValue=<span class="number">65535</span>,<span class="comment">//捕获计数最大值</span></span><br><span class="line">    .inputChConfig=ETMR_IC_Config0InputCh,<span class="comment">//捕获通道具体参数</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>捕获通道参数结构体 ：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">etmr_ic_ch_param_t</span> ETMR_IC_Config0InputCh[<span class="number">2</span>]=&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        .hwChannelId=<span class="number">0</span>,<span class="comment">//输入通道编号   </span></span><br><span class="line">        .edge=eTMR_DUAL_EDGES, <span class="comment">///捕获边沿类型</span></span><br><span class="line">        .measurementType=eTMR_PERIOD_MEASUREMENT,</span><br><span class="line">        .filterSampleCounter=<span class="number">0</span>,</span><br><span class="line">        .filterSamplePeriod=<span class="number">0</span>,</span><br><span class="line">        .interruptEnable=<span class="literal">true</span>,</span><br><span class="line">        .dmaEnable=<span class="literal">false</span>,</span><br><span class="line">        .enableNotification=<span class="literal">false</span>,</span><br><span class="line">        .channelsCallbacks=<span class="literal">NULL</span>,</span><br><span class="line">        .channelsCallbacksParams=<span class="literal">NULL</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        .hwChannelId=<span class="number">1</span>,<span class="comment">//输入通道编号</span></span><br><span class="line">        .edge=eTMR_DUAL_EDGES,<span class="comment">//捕获边沿类型    </span></span><br><span class="line">        .measurementType=eTMR_PERIOD_MEASUREMENT,</span><br><span class="line">        .filterSampleCounter=<span class="number">0</span>,</span><br><span class="line">        .filterSamplePeriod=<span class="number">0</span>,</span><br><span class="line">        .interruptEnable=<span class="literal">true</span>,</span><br><span class="line">        .dmaEnable=<span class="literal">false</span>,</span><br><span class="line">        .enableNotification=<span class="literal">false</span>,</span><br><span class="line">        .channelsCallbacks=<span class="literal">NULL</span>,</span><br><span class="line">        .channelsCallbacksParams=<span class="literal">NULL</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>获取eTmr的状态结构体中获取捕获结果：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">etmr_clock_source_t</span> etmrClockSource;                              <span class="comment">/*!&lt; Clock source used by eTMR counter 使用的时钟源 */</span></span><br><span class="line">    <span class="type">uint32_t</span> etmrSourceClockFrequency;                                <span class="comment">/*!&lt; The clock frequency is used for counting  时钟频率 */</span></span><br><span class="line">    <span class="type">etmr_channel_state_t</span> etmrChnMode[FEATURE_eTMR_CHANNEL_MAX_COUNT]; <span class="comment">/*!&lt; Mode of operation for eTMR 使用的操作模式*/</span></span><br><span class="line">    <span class="type">uint32_t</span> etmrPeriod;   <span class="comment">/*!&lt; This field is used only in PWM mode to store signal period PWM周期值，仅在PWM模式下有效 */</span></span><br><span class="line">    <span class="type">uint32_t</span> etmrModValue; <span class="comment">/*!&lt; This field is used only in input capture mode to store MOD value */</span></span><br><span class="line">    <span class="type">etmr_pwm_update_option_t</span> typeOfUpdate[FEATURE_eTMR_CHANNEL_MAX_COUNT]; <span class="comment">/*!&lt; Type of update for PWM update */</span></span><br><span class="line">    <span class="type">etmr_pwm_align_mode_t</span> alignMode[FEATURE_eTMR_CHANNEL_MAX_COUNT];       <span class="comment">/*!&lt; Align mode of PWM update */</span></span><br><span class="line">    <span class="type">uint32_t</span> dutyCycle[FEATURE_eTMR_CHANNEL_MAX_COUNT];                    <span class="comment">/*!&lt; Duty cycle of PWM update */</span></span><br><span class="line">    <span class="type">uint32_t</span> offset[FEATURE_eTMR_CHANNEL_MAX_COUNT];                       <span class="comment">/*!&lt; Offset of pulse for asymmetric mode */</span></span><br><span class="line">    <span class="type">etmr_ic_measurement_type_t</span> measurementType[FEATURE_eTMR_CHANNEL_MAX_COUNT]; <span class="comment">/*!&lt; Measurement type */</span></span><br><span class="line">    <span class="type">etmr_ic_capture_edge_t</span> captureEdge[FEATURE_eTMR_CHANNEL_MAX_COUNT];         <span class="comment">/*!&lt; Input capture edge */</span></span><br><span class="line">    <span class="type">uint8_t</span> icOvfCnt[FEATURE_eTMR_CHANNEL_MAX_COUNT][CAPTURE_COUNT];       <span class="comment">/*!&lt; eTMR channel capture overflow count */</span></span><br><span class="line">    <span class="type">uint8_t</span> icOvfCntTemp;                                                  <span class="comment">/*!&lt; eTMR overflow count */</span></span><br><span class="line">    <span class="type">uint8_t</span> icCnt[FEATURE_eTMR_CHANNEL_MAX_COUNT];            <span class="comment">/*!&lt; Count of enter into input capture interrupt */</span></span><br><span class="line">    <span class="type">uint8_t</span> icCapPol[FEATURE_eTMR_CHANNEL_MAX_COUNT][CAPTURE_COUNT];       <span class="comment">/*!&lt; eTMR channel capture polarity */</span></span><br><span class="line">    <span class="type">uint32_t</span> icCntVal[FEATURE_eTMR_CHANNEL_MAX_COUNT][CAPTURE_COUNT];      <span class="comment">/*!&lt; eTMR channel capture value */</span></span><br><span class="line">    <span class="type">uint32_t</span> measurementPeriod[FEATURE_eTMR_CHANNEL_MAX_COUNT];      <span class="comment">/*!&lt; Store period */</span></span><br><span class="line">    <span class="type">uint32_t</span> measurementPosPulseCnt[FEATURE_eTMR_CHANNEL_MAX_COUNT];            <span class="comment">/*!&lt; Positive pulse count value */</span></span><br><span class="line">    <span class="type">uint32_t</span> measurementNegPulseCnt[FEATURE_eTMR_CHANNEL_MAX_COUNT];            <span class="comment">/*!&lt; Negative pulse count value */</span></span><br><span class="line">    <span class="type">uint32_t</span> measurementCapCnt[FEATURE_eTMR_CHANNEL_MAX_COUNT];                 <span class="comment">/*!&lt; Store capture value */</span></span><br><span class="line">    <span class="type">bool</span> measurementComplete[FEATURE_eTMR_CHANNEL_MAX_COUNT]; <span class="comment">/*!&lt; eTMR input capture measurement complete signal */</span></span><br><span class="line">    <span class="type">void</span> *channelsCallbacksParams[FEATURE_eTMR_CHANNEL_MAX_COUNT];   <span class="comment">/*!&lt; The parameters of callback function 回调函数参数*/</span></span><br><span class="line">    <span class="type">ic_callback_t</span> channelsCallbacks[FEATURE_eTMR_CHANNEL_MAX_COUNT]; <span class="comment">/*!&lt; The callback function 回调函数*/</span></span><br><span class="line">    <span class="type">bool</span> enableNotification[FEATURE_eTMR_CHANNEL_MAX_COUNT]; <span class="comment">/*!&lt; The notification on the callback application  回调通知标志*/</span></span><br><span class="line">&#125; <span class="type">etmr_state_t</span>;</span><br></pre></td></tr></table></figure>
+<p>SDK 捕获相关函数可以在etmr_ic_driver.c找到<br><img   src="https://dadeju.github.io/picx-images-hosting/image.b952iaqhj.png"  alt="image"></p>
+<p>下面的 ECU_InCapGetValAndPol() 函数是使用示例，它调用了上面的某些函数，可以实现对<mark>输入信号周期和占空比的捕获</mark>，描述如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">ECU_InCapGetValAndPol</span><span class="params">(<span class="type">uint32_t</span> InCapNo, <span class="type">uint32_t</span> *duty, <span class="type">uint32_t</span> *period, <span class="type">uint8_t</span> *firstcap_polarity)</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="type">uint8_t</span> inputed_num;</span><br><span class="line"><span class="type">uint8_t</span> etmr_num, channel_sn;</span><br><span class="line"><span class="type">uint8_t</span> *firstcap_polarity_temp;</span><br><span class="line"><span class="type">uint32_t</span> *duty_temp, *period_temp;</span><br><span class="line">duty_temp = duty;</span><br><span class="line">period_temp = period;</span><br><span class="line">firstcap_polarity_temp = firstcap_polarity;</span><br><span class="line"><span class="comment">/* 将 InCapNo 转换成 eTMR instance 号和捕获通道 ID */</span></span><br><span class="line">inputed_num = InCapNo;</span><br><span class="line">etmr_num = inputed_num / <span class="number">8</span>;</span><br><span class="line">channel_sn = inputed_num % <span class="number">8</span>;</span><br><span class="line"><span class="comment">/* 检查整个信号的捕获过程有没有完成 */</span></span><br><span class="line"><span class="keyword">if</span>(etmrStatePtr[etmr_num]-&gt;measurementComplete)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* 清捕获完成标志 */</span></span><br><span class="line">    etmrStatePtr[etmr_num]-&gt;measurementComplete = <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">/* 读取捕获的信号占空比 */</span></span><br><span class="line">    *duty_temp = eTMR_DRV_GetInputCaptureMeasurementDuty(etmr_num, channel_sn);</span><br><span class="line">    <span class="comment">/* 读取捕获的信号周期 */</span></span><br><span class="line">    *period_temp = eTMR_DRV_GetInputCaptureMeasurementPeriod(etmr_num, channel_sn);</span><br><span class="line">    <span class="comment">/* 读取第一次捕获的信号极性 */</span></span><br><span class="line">    *firstcap_polarity_temp = eTMR_DRV_GetInputCaptureFirstDutyLevelPol(etmr_num);</span><br><span class="line">    <span class="comment">/* 清捕获中断进入次数，为下一次整个信号的捕获做准备 */</span></span><br><span class="line">    eTMR_DRV_ClearInputCaptureCount(etmr_num);</span><br><span class="line">&#125; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>补充一个YTM中的<mark>同步机制</mark>：<br>eTMR为一些同计数相关的寄存器设计了缓冲寄存器（Buffered Registers），或者被称为“影子寄存器”（Shadow Registers）。影子寄存器对用户来说是不可见的。当启用影子模式后（eTMR_SYNC[REGLD] !&#x3D; 0），用户通过APB总线向拥有影子寄存器的真实寄存器中写数时，实际由硬件控制先写到影子寄存器中，当预设的同步触发信号到来之时，硬件自动将影子寄存器中的数值写入到实际的寄存器中生效。如下图所示。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.39lf61362g.png"  alt="image"></p>
+<hr>
+<p><a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/b4z5IHIf_Wt7YAfEf8CmWQ" >https://mp.weixin.qq.com/s/b4z5IHIf_Wt7YAfEf8CmWQ<i class="fas fa-external-link-alt"></i></a><br>《AN0048_LE0_etmr_input_capture_zh_review》</p>
+
+                    
+                </div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                    </div>
+                    <div>
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/05/28/%E6%B2%81%E6%81%92CH343%E4%BE%9B%E7%94%B5%E6%96%B9%E6%A1%88%E4%BB%8B%E7%BB%8D/"
+                                   title="沁恒CH343供电方案介绍"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">沁恒CH343供电方案介绍</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="copyright-info info-item">
+    &copy;&nbsp;<span>2020</span>&nbsp;-&nbsp;2025
+    
+            &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">GaoSheng</a>
+        
+    </div>
+
+    <!-- <div class="theme-info info-item">
+        由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+    </div> -->
+
+    
+        
+        <div class="deploy-info info-item">
+            
+            本站由 <span class="tooltip" data-tooltip-content="GitHub Pages"><img src="/images/brands/github.png"></span> 提供部署服务
+            
+        </div>
+    
+
+    
+
+    
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+
+        <!-- PC go comment -->
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <!-- toggle mode -->
+        
+            <li class="tools-item tool-toggle-theme-mode flex-center">
+                <i class="fas fa-moon"></i>
+            </li>
+        
+
+        <!-- rss -->
+        
+
+        <!-- to bottom -->
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+</main>
+
+
+
+
+
+<!-- common js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
+
+<!-- local search -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/local-search.min.js"></script>
+
+
+<!-- lazyload -->
+
+
+<div class="">
+    <!-- home page -->
+    
+
+    <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
+    
+
+    <!-- categories page -->
+    
+
+    <!-- links page -->
+    
+
+    <!-- photos page -->
+    
+
+    <!-- tools page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+
+
+</body>
+</html>
