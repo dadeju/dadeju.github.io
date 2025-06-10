@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Tue Jun 10 2025 20:36:35 GMT+0800">2025-06-10 20:36:35</span>
+                    <span class="datetime" data-updated="Tue Jun 10 2025 21:03:12 GMT+0800">2025-06-10 21:03:12</span>
                 </span>
             
         
@@ -210,7 +210,7 @@
                     
 
                     
-                         <p>刚在调试时遇到一个让人费解的现象，在keil的debug点单步调试直接给我全速运行了.<br>由于是电脑的环境，keil版本和使用的link都不是我常用的，一时也找不出原因。<br>在一番折腾后发现，使用云途YCT工具生成的keil工程的优化等级竟然默认是 -O1.<br><mark>改成-O0后，问题解决。</mark>   </p>
+                         <p>刚在调试时遇到一个让人费解的现象，在keil的debug点单步调试直接给我全速运行了.<br>由于是新的电脑环境，keil版本和使用的link都不是我常用的，一时也找不出原因。<br>在一番折腾后发现，使用云途YCT工具生成的keil工程的优化等级竟然默认是 -O1.<br><mark>改成-O0后，问题解决。</mark>   </p>
 <p>编译器优化是“以机器为中心”的，它会破坏源码的线性结构,此时程序可能不是按你预想的方式来执行的；而调试是“以人为中心”的，需要严格保持源码顺序。Level 0 本质是让编译器牺牲效率，换取调试信息的完整性</p>
 <p>一般都建议产品在开发阶段使用 -O0，在发布阶段可以尝试使用 -O1 或 -O2。   </p>
 
