@@ -9,7 +9,7 @@
     
     <title>
         
-            keil优化等级与调试 |
+            map(映射文件)解析 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        keil优化等级与调试
+                        map(映射文件)解析
                     </div>
                 
 
@@ -177,13 +177,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-06-10 20:17:43</span>
+                <span class="datetime">2025-06-14 20:38:27</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Tue Jun 10 2025 21:03:12 GMT+0800">2025-06-10 21:03:12</span>
+                    <span class="datetime" data-updated="Sun Jun 15 2025 00:07:20 GMT+0800">2025-06-15 00:07:20</span>
                 </span>
             
         
@@ -210,9 +210,24 @@
                     
 
                     
-                         <p>刚在调试时遇到一个让人费解的现象，在keil的debug点单步调试直接给我全速运行了.<br>由于是新的电脑环境，keil版本和使用的link都不是我常用的，一时也找不出原因。<br>在一番折腾后发现，使用云途YCT工具生成的keil工程的优化等级竟然默认是 -O1.<br><mark>改成-O0后，问题解决。</mark>   </p>
-<p>编译器优化是“以机器为中心”的，它会破坏源码的线性结构,此时程序可能不是按你预想的方式来执行的；而调试是“以人为中心”的，需要严格保持源码顺序。Level 0 本质是让编译器牺牲效率，换取调试信息的完整性</p>
-<p>一般都建议产品在开发阶段使用 -O0，在发布阶段可以尝试使用 -O1 或 -O2。   </p>
+                         <p>本文简单介绍一下map文件，该文件提供了不少重要信息，在调试过程中能提供不少帮助</p>
+<h2 id="map文件是什么？"><a href="#map文件是什么？" class="headerlink" title="map文件是什么？"></a>map文件是什么？</h2><p>.map 文件对应的中文名应该是映射文件，用来展示（映射）项目构建的链接阶段的细节。通常包含程序的全局符号、交叉引用和内存映射等</p>
+<h2 id="map文件如何打开？"><a href="#map文件如何打开？" class="headerlink" title="map文件如何打开？"></a>map文件如何打开？</h2><p>一般情况下，双击工程名就能打开map文件<br><img   src="https://dadeju.github.io/picx-images-hosting/image.5mo2a5nerl.png"  alt="image"><br>若无法打开map，部分Keil的配置项可能做了修改，需要手动打开下面的选项<br><img   src="https://dadeju.github.io/picx-images-hosting/image.4qrkuphbv9.png"  alt="image"><br>也可以在KEIL工程的MDK-ARM\Listings路径下面找到map文件</p>
+<h2 id="什么场景下面需要用到map文件来辅助调试呢？"><a href="#什么场景下面需要用到map文件来辅助调试呢？" class="headerlink" title="什么场景下面需要用到map文件来辅助调试呢？"></a>什么场景下面需要用到map文件来辅助调试呢？</h2><p><img   src="https://dadeju.github.io/picx-images-hosting/1749909825221.1e8v0cfs6r.png"  alt="1749909825221"><br><img   src="https://dadeju.github.io/picx-images-hosting/1749909887201.4n7yx04khn.png"  alt="1749909887201"><br><img   src="https://dadeju.github.io/picx-images-hosting/1749909912789.86twmt7ttr.png"  alt="1749909912789"><br><img   src="https://dadeju.github.io/picx-images-hosting/1749909974821.3gonoehjgv.png"  alt="1749909974821"><br>大致总结一下，可以看着在查看内存布局，优化程序空间占用，甚至是HardFault硬件错误中断时，Map文件都能用做辅助调试</p>
+<h2 id="map-基本概念解释"><a href="#map-基本概念解释" class="headerlink" title="map 基本概念解释"></a>map 基本概念解释</h2><p>段(section):描述映像文件的代码和数据块。<br>RO:Read-Only的缩写，包括RO-data(只读数据)和RO-code(代码).RW:Read-Write的缩写，主要是RW-data，RW-data由程序初始化初始值<br>Z1 : Zero-initialized的缩写，主要是ZI-data，由编译器初始化为0。<br>.text:与RO-code同义.<br>constdata:与RO-data同义。<br>bss. :与ZI-data同义。<br>data :与RW-data同义</p>
+<h2 id="map文件的组成"><a href="#map文件的组成" class="headerlink" title="map文件的组成"></a>map文件的组成</h2><ol>
+<li>程序段交叉引用关系	描述各文件之间函数调用关系<br>以下面这句为例：</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">main.o(.text.RCC_Configuration) refers to n32g45x_rcc.o(.text.RCC_EnableAHBPeriphClk) <span class="keyword">for</span> RCC_EnableAHBPeriphClk</span><br></pre></td></tr></table></figure>
+<p>上面这个条目表示<br>main.c 中的 RCC_Configuration 函数调用了 n32g45x_rcc.c 中的 RCC_EnableAHBPeriphClk 函数<br>2. 删除映像未使用的程序段	<br>描述工程中未用到而被删除的冗余程序段(函数&#x2F;数据)(比如说定义了变量temp，但是后面并没有使用temp，MAP文件将变量temp删除，生成一个被删除的列表，也可以是函数，表示未被是使用。)<br>这个部分非常有意义，通过删除这些冗余的部分，可以有效降低代码量，特别是对一些资源紧张的MCU<br>如果发现空间不够，可以尝试在Keil的配置页面里面勾选上这个，大多数情况下都能显著减少固件的大小。(将每个函数编译到独立的 .text.函数名 段中，而非全部合并到单一的 .text 段，以实现更精细的代码优化和链接控制)<br><img   src="https://dadeju.github.io/picx-images-hosting/image.361tvbe0du.png"  alt="image"><br>3. 映像符号表	<br>描述各符号（程序段&#x2F;数据）在存储器中的地址、类型、大小等<br>这里在分成了两个部分：Local Symbols、Global Symbols<br><img   src="https://dadeju.github.io/picx-images-hosting/image.491j67l1br.png"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.83aap63jra.png"  alt="image"><br>如果在main.c里面全局定义</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__IO <span class="type">uint32_t</span> gCnt = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>可以在map文件中<mark>Global Symbols</mark>部分查看到</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gCnt                                     <span class="number">0x20000050</span>   Data           <span class="number">4</span>  main.o(.bss.gCnt)</span><br></pre></td></tr></table></figure>
+<p>如果在main.c里面给gCnt作用域做限定</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> __IO <span class="type">uint32_t</span> gCnt = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>可以在map文件中<mark>Local Symbols</mark>部分查看到</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gCnt                                     <span class="number">0x20000050</span>   Data           <span class="number">4</span>  main.o(.bss.gCnt)</span><br></pre></td></tr></table></figure>
+<p>证明 gCnt 已被正确分配到 RAM 的 .bss 段<br>4. 映像内存分布图	<br>描述各个程序段（函数）在存储器中的地址及占用大小<br>这个部分可以分为加载域Load Region和运行域Execution Region<br><mark>加载域</mark>反映了ARM可执行映像文件各个段存放在存储器中时的位置关系。<br><mark>运行域</mark>反映了ARM可执行映像文件各个段真正执行时在存储器中的位置关系。<br>可以看到程序入口地址Image Entry point : 0x08000199<br>为啥不是0x08000000呢？<br>可以在上面提到的Global Symbols中找到答案<br><img   src="https://dadeju.github.io/picx-images-hosting/image.8dx4icmes3.png"  alt="image"><br><mark>__Vectors_Size</mark> 的大小刚好就是0x00000198，这部分就是中断向量表<br><img   src="https://dadeju.github.io/picx-images-hosting/image.8z6s4no1b2.png"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.6pnrl5s8n0.png"  alt="image"><br>5. 映像组件大小	给出整个映像代码（.o）占用空间汇总信息<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7axf7h5dze.png"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.2a5cfwz0pp.png"  alt="image"></p>
 
                     
                 </div>
@@ -233,31 +248,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/06/14/map-%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6-%E8%A7%A3%E6%9E%90/"
-                                   title="map(映射文件)解析"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">map(映射文件)解析</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/06/04/CAN%E6%B3%A2%E7%89%B9%E7%8E%87%E8%AE%A1%E7%AE%97/"
-                                   title="CAN波特率计算"
+                                   href="/2025/06/10/keil%E4%BC%98%E5%8C%96%E7%AD%89%E7%BA%A7%E4%B8%8E%E8%B0%83%E8%AF%95/"
+                                   title="keil优化等级与调试"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">CAN波特率计算</span>
+                                        <span class="post-nav-title-item text-ellipsis">keil优化等级与调试</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
