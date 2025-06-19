@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Jun 19 2025 21:51:27 GMT+0800">2025-06-19 21:51:27</span>
+                    <span class="datetime" data-updated="Thu Jun 19 2025 21:53:02 GMT+0800">2025-06-19 21:53:02</span>
                 </span>
             
         
@@ -214,7 +214,7 @@
 <p>通过MAP文件查看SP数值<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.4g4r8ksgcf.png"  alt="图片1"></p>
 <p>通过MAP文件查看复位中断入口地址<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.7p3v58g29k.png"  alt="图片2"></p>
 <p>Keil工程实际生成的HEX文件可以看出，前两个字（4个字节）分别就是SP和PC的值<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.73u7ixlrws.png"  alt="图片3"></p>
-<p>下面这段代码用于开辟栈（stack）空间，用于局部变量，函数调用，函数的参数等<br><img   src="https://dadeju.github.io/picx-images-hosting/image.8dx4p9u5d7.png"  alt="image"><br>34行：EQU是代表宏定义的伪指令，类似于C语言中的#define，<br>伪指令的意思是指这个“指令”，并不会生成二进制代码，也不会引起变量空间的分配。<br>0x00001500表示栈大小，注意这里是字节为单位</p>
+<p>下面这段代码用于开辟栈（stack）空间，用于局部变量，函数调用，函数的参数等<br><img   src="https://dadeju.github.io/picx-images-hosting/image.8dx4p9u5d7.png"  alt="image"><br><mark>34行</mark>：EQU是代表宏定义的伪指令，类似于C语言中的#define，<br>伪指令的意思是指这个“指令”，并不会生成二进制代码，也不会引起变量空间的分配。<br>0x00001500表示栈大小，注意这里是字节为单位</p>
 <p><mark>36行</mark>：开辟一段数据空间可读可写，段名STACK，按照8字节对齐<br>ARER伪指令表示下面将开始定义一个代码段或者数据段。此处定义数据段，ARER后面的关键字表示这个段的属性。</p>
 <ol>
 <li>STACK：表示这个段的名字，可以任意命名</li>
