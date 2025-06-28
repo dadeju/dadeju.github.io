@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="GaoSheng">
+    
+    <title>
+        
+            N32H487 6Steps例程详解 |
+        
+        GaoSheng
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/brands.min.css">
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#0066cc","title":"GaoSheng","author":"GaoSheng","avatar":null,"logo":null,"favicon":null},"menu":{"home":"/","archives":"/archives"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"我也许不知道答案，但我知道怎么找到答案","hitokoto":false},"social_contact":{"enable":true,"links":{"weixin":"img | ./images/wxcode.png","email":null}},"scroll":{"progress_bar":false,"percent":false,"hide_header":true},"home":{"announcement":null,"category":false,"tag":false,"post_datetime":"updated"},"post":{"author_badge":{"enable":true,"level_badge":true,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":false,"min2read":false},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":false,"share":false,"reward":{"enable":false,"img_link":null,"text":null,"icon":null}},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"toc":{"enable":false,"number":false,"expand_all":false,"init_open":true,"layout":"right"},"website_count":{"busuanzi_count":{"enable":false,"site_uv":false,"site_pv":false,"page_pv":false}},"local_search":{"enable":true,"preload":false},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.39"},"waline":{"server_url":null,"reaction":false,"version":"3.3.2"},"giscus":{"repo":null,"repo_id":null,"category":"Announcements","category_id":null,"reactions_enabled":false},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":false},"lazyload":{"enable":false},"cdn":{"enable":true,"provider":"cdnjs"},"pjax":{"enable":false},"footer":{"since":2020,"word_count":false,"site_deploy":{"enable":true,"provider":"github","url":null},"record":{"enable":false,"list":[{"code":null,"link":null}]}},"inject":{"enable":false,"css":[null],"js":[null]},"root":"","source_data":{},"version":"4.2.5"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+
+<main class="page-container border-box">
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left flex-start border-box">
+            
+            <a class="site-name border-box" href="/">
+               GaoSheng
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc border-box">
+                <ul class="menu-list border-box">
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/">
+                                
+                                首页
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/archives">
+                                
+                                归档
+                                
+                            </a>
+                            
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="menu-text-color fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile border-box flex-start">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list border-box">
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/">
+                            
+                            首页
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
+                            
+                            归档
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        N32H487 6Steps例程详解
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">GaoSheng</span>
+                                
+                                    <span class="author-badge">Lv4</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-06-28 17:49:57</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Sat Jun 28 2025 18:01:19 GMT+0800">2025-06-28 18:01:19</span>
+                </span>
+            
+        
+
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <p>本文会对国民的H487的定时器六步换相例程做一个相对详尽的讲解<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.1ap9mdrv01.png"  alt="图片1"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">RCC_Configuration</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* TIMx, GPIOx and AFIO clocks enable */</span></span><br><span class="line">    RCC_EnableAHBPeriphClk(TIMx_CLK,ENABLE);</span><br><span class="line">    RCC_EnableAHB1PeriphClk(TIMx_CH1_GPIO_CLK | TIMx_CH2_GPIO_CLK |\</span><br><span class="line">                            TIMx_CH3_GPIO_CLK | TIMx_CH1N_GPIO_CLK |\</span><br><span class="line">                            TIMx_CH2N_GPIO_CLK | TIMx_CH3N_GPIO_CLK,ENABLE);</span><br><span class="line">    RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_AFIO,ENABLE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一句是开启ATIM的时钟，使用的HCLK<br>后面两句是开启GPIO时钟和打开复用功能时钟。<br>之前用过国民技术N32的朋友可能会观察到为什么这里的高级定时器叫<mark>ATIM</mark>（Advanced-control Timers）。之前的G和L系列都是没有这个区分的<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.witvijk4w.png"  alt="图片2"><br>通过UM手册中的时钟可以观察到ATIM可以选择两个时钟，SYSCLK和HCLK，对应的API是RCC_ConfigATimClk<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.8ojyv5cipb.png"  alt="图片3"><br>那为什么工程代码直接就给ATIM配置HCLK，没有进行选择呢？<br>打开UM手册中时钟配置寄存器 2 (RCC_CFG2)的部分<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%874.5xawn2qenj.png"  alt="图片4"><br>由于复位值是0x 0000 7000。其中第28位是1.即默认选择<mark>HCLK</mark>作用ATIM的时钟源。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/* NVIC Configuration */</span></span><br><span class="line">NVIC_Configuration();</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">NVIC_Configuration</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    NVIC_InitType NVIC_InitStructure;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Enable the TIMx Interrupt */</span></span><br><span class="line">    NVIC_InitStructure.NVIC_IRQChannel                   = TIMx_IRQn;</span><br><span class="line">    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = <span class="number">1</span>;</span><br><span class="line">    NVIC_InitStructure.NVIC_IRQChannelSubPriority        = <span class="number">1</span>;    </span><br><span class="line">    NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;</span><br><span class="line">    NVIC_Init(&amp;NVIC_InitStructure);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置ATIM的中断等级</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* GPIO Configuration */</span></span><br><span class="line">GPIO_Configuration();</span><br></pre></td></tr></table></figure>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%875.175nonysa6.png"  alt="图片5"><br>将所使用到的GPIO全部复用到对应的ATIM通道上面<br>接下来是SysTick的配置</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">SysTick_Configuration</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* Setup SysTick Timer for 10 msec interrupts ,(SystemCoreClock) / 100) cannot be greater than 0xFFFFFF */</span></span><br><span class="line">    <span class="keyword">if</span> (SysTick_Config((SystemCoreClock) / <span class="number">100</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Capture error */</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">            ;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    NVIC_SetPriority(SysTick_IRQn, <span class="number">0x0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置systick每10ms触发一次<br>这里调用SysTick_Config可以展开说说，在core_cm4.h文件中可以看到</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">if</span> defined (__Vendor_SysTickConfig) &amp;&amp; (__Vendor_SysTickConfig == 0U)</span></span><br></pre></td></tr></table></figure>
+<p>这里表示只有当__Vendor_SysTickConfig被定义，且被定义为0时，才会调用CMSIS的函数。可以看到国民的配置文件中就是这么做的<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%876.32i8hab7vx.png"  alt="图片6"><br>补充一点，现在这种情况下，编译后在map文件中无法到SysTick_Config的函数，这是因为该函数被__STATIC_INLINE修饰，已经被<mark>内联到调用处</mark>。</p>
+<p>Period（Auto-Reload Register）为2400(需要注意的是这个寄存器是16位)。<br>周期为外设寄存器的频率除以ARR，即240M&#x2F;2400 &#x3D;&#x3D; 100KHz<br>占空比(CCR&#x2F;ARR)分别是1200&#x2F;2400、600&#x2F;2400、300&#x2F;2400<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%877.58hn322vn1.png"  alt="图片7"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TIM_OCInitStructure.OutputNState = TIM_OUTPUT_NSTATE_ENABLE;</span><br></pre></td></tr></table></figure>
+<p>打开互补输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">/* interrupt Enable */</span></span><br><span class="line">TIM_ConfigInt(TIMx, TIM_INT_COM, ENABLE);   </span><br></pre></td></tr></table></figure>
+<p>使能COM中断<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%878.7lk9k9goto.png"  alt="图片8"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Main Output Enable */</span></span><br><span class="line">TIM_EnableCtrlPwmOutputs(TIMx, ENABLE);   </span><br></pre></td></tr></table></figure>
+<p>使能PWM输出。H48X有一点比较特殊：<br>H48X：<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%879.b9697p3u3.png"  alt="图片9"><br>除了高级定时器ATIM1&#x2F;2&#x2F;3外，通用定时器GTIM8&#x2F;9&#x2F;10打开PWM竟然也需要这个API。<br>在别的系列中只有高级定时器有这个额外的操作，以G45X为例：<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%8710.3rbi1ayqwa.png"  alt="图片10"></p>
+<p>翻阅UM手册发现竟然是原因国民H48x系列的<mark>GTIM能支持一对CH互补输出</mark><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%8711.pfm02xep5.png"  alt="图片11"><br>TIM_EnableCtrlPwmOutputs的其实就是置起TIMx_BKDT(刹车、死区寄存器)的第八位，将OC和OCN使能</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">SysTick_Handler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;   </span><br><span class="line">    <span class="keyword">if</span>(temp==<span class="number">9</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Generate TIM1 COM event by software */</span></span><br><span class="line">        TIM_GenerateEvent(TIMx, TIM_EVT_SRC_COM);  </span><br><span class="line">        temp=<span class="number">0</span>;        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        temp++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Systick中断10ms触发一次，这里进十次中断后使用TIM_GenerateEvent来触发COM事件<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%8712.6pns4t70dk.png"  alt="图片12"><br>定时器中断中是对这6Step过程中每个PWM的开关做的控制</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TIM_EnableCapCmpCh(TIMx, TIM_CH_3, TIM_CAP_CMP_DISABLE);</span><br><span class="line">TIM_EnableCapCmpChN(TIMx, TIM_CH_3, TIM_CAP_CMP_N_DISABLE);</span><br></pre></td></tr></table></figure>
+<p>这个API可以对定时器的单独的CH做一个开关控制<br>使用逻辑分析仪查看波形：<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%8713.3d52afqg14.png"  alt="图片13"><br>CH1：<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%8714.6ikk9dkuxz.png"  alt="图片14"><br>波形与预期相符<br>下面是完整代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* System Clocks Configuration */</span></span><br><span class="line">    RCC_Configuration();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* NVIC Configuration */</span></span><br><span class="line">    NVIC_Configuration();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* GPIO Configuration */</span></span><br><span class="line">    GPIO_Configuration();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* SysTick Configuration */</span></span><br><span class="line">    SysTick_Configuration();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    The TIMx peripheral offers the possibility to program in advance the</span></span><br><span class="line"><span class="comment">    configuration for the next TIMx outputs behaviour (step) and change the configuration</span></span><br><span class="line"><span class="comment">    of all the channels at the same time. This operation is possible when the COM</span></span><br><span class="line"><span class="comment">    (commutation) event is used.</span></span><br><span class="line"><span class="comment">    The COM event can be generated by software by setting the COM bit in the TIMx_EVTGEN</span></span><br><span class="line"><span class="comment">    register or by hardware (on TRC rising edge).</span></span><br><span class="line"><span class="comment">    In this example, a software COM event is generated each 100 ms: using the Systick</span></span><br><span class="line"><span class="comment">    interrupt.</span></span><br><span class="line"><span class="comment">    The TIMx is configured in Timing Mode, each time a COM event occurs,</span></span><br><span class="line"><span class="comment">    a new TIMx configuration will be set in advance.</span></span><br><span class="line"><span class="comment">    The following Table  describes the TIMx Channels states:</span></span><br><span class="line"><span class="comment">              -----------------------------------------------</span></span><br><span class="line"><span class="comment">             | Step1 | Step2 | Step3 | Step4 | Step5 | Step6 |</span></span><br><span class="line"><span class="comment">    ----------------------------------------------------------</span></span><br><span class="line"><span class="comment">    |Channel1  |   1   |   0   |   0   |   0   |   0   |   1   |</span></span><br><span class="line"><span class="comment">    ----------------------------------------------------------</span></span><br><span class="line"><span class="comment">    |Channel1N |   0   |   0   |   1   |   1   |   0   |   0   |</span></span><br><span class="line"><span class="comment">    ----------------------------------------------------------</span></span><br><span class="line"><span class="comment">    |Channel2  |   0   |   0   |   0   |   1   |   1   |   0   |</span></span><br><span class="line"><span class="comment">    ----------------------------------------------------------</span></span><br><span class="line"><span class="comment">    |Channel2N |   1   |   1   |   0   |   0   |   0   |   0   |</span></span><br><span class="line"><span class="comment">    ----------------------------------------------------------</span></span><br><span class="line"><span class="comment">    |Channel3  |   0   |   1   |   1   |   0   |   0   |   0   |</span></span><br><span class="line"><span class="comment">    ----------------------------------------------------------</span></span><br><span class="line"><span class="comment">    |Channel3N |   0   |   0   |   0   |   0   |   1   |   1   |</span></span><br><span class="line"><span class="comment">    ----------------------------------------------------------    </span></span><br><span class="line"><span class="comment">    */</span>  </span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Time Base configuration */</span></span><br><span class="line">    TIM_InitTimBaseStruct(&amp;TIM_TimeBaseStructure);    </span><br><span class="line">    TIM_TimeBaseStructure.Prescaler     = <span class="number">0</span>;</span><br><span class="line">    TIM_TimeBaseStructure.CounterMode   = TIM_CNT_MODE_UP;</span><br><span class="line">    TIM_TimeBaseStructure.Period        = <span class="number">2400</span>;</span><br><span class="line">    TIM_TimeBaseStructure.ClkDiv        = TIM_CLK_DIV1;</span><br><span class="line">    TIM_TimeBaseStructure.RepetCnt      = <span class="number">0</span>;</span><br><span class="line">    TIM_InitTimeBase(TIMx, &amp;TIM_TimeBaseStructure);   </span><br><span class="line"></span><br><span class="line">     <span class="comment">/* Channel 1, 2 and 3 Configuration in PWM mode */</span></span><br><span class="line">    TIM_InitOcStruct(&amp;TIM_OCInitStructure);     </span><br><span class="line">    TIM_OCInitStructure.OCMode       = TIM_OCMODE_TIMING;</span><br><span class="line">    TIM_OCInitStructure.OutputState  = TIM_OUTPUT_STATE_ENABLE;</span><br><span class="line">    TIM_OCInitStructure.OutputNState = TIM_OUTPUT_NSTATE_ENABLE;</span><br><span class="line">    TIM_OCInitStructure.Pulse        = <span class="number">1200</span>;</span><br><span class="line">    TIM_OCInitStructure.OCPolarity   = TIM_OC_POLARITY_HIGH;</span><br><span class="line">    TIM_OCInitStructure.OCNPolarity  = TIM_OCN_POLARITY_HIGH;</span><br><span class="line">    TIM_OCInitStructure.OCIdleState  = TIM_OC_IDLE_STATE_SET;</span><br><span class="line">    TIM_OCInitStructure.OCNIdleState = TIM_OCN_IDLE_STATE_SET;</span><br><span class="line">    TIM_InitOc1(TIMx, &amp;TIM_OCInitStructure);   </span><br><span class="line">    </span><br><span class="line">    TIM_OCInitStructure.Pulse = <span class="number">600</span>;</span><br><span class="line">    TIM_InitOc2(TIMx, &amp;TIM_OCInitStructure);</span><br><span class="line"></span><br><span class="line">    TIM_OCInitStructure.Pulse = <span class="number">300</span>;</span><br><span class="line">    TIM_InitOc3(TIMx, &amp;TIM_OCInitStructure);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Automatic Output enable, Break, dead time and lock configuration*/</span></span><br><span class="line">    TIM_InitBkdtStruct(&amp;TIM_BDTRInitStructure);</span><br><span class="line">    TIM_BDTRInitStructure.OSSRState       = TIM_OSSR_STATE_ENABLE;</span><br><span class="line">    TIM_BDTRInitStructure.OSSIState       = TIM_OSSI_STATE_ENABLE;</span><br><span class="line">    TIM_BDTRInitStructure.LOCKLevel       = TIM_LOCK_LEVEL_OFF;</span><br><span class="line">    TIM_BDTRInitStructure.DeadTime        = <span class="number">1</span>;</span><br><span class="line">    TIM_BDTRInitStructure.Break           = TIM_BREAK_IN_DISABLE; </span><br><span class="line">    TIM_BDTRInitStructure.AutomaticOutput = TIM_AUTO_OUTPUT_ENABLE;</span><br><span class="line"></span><br><span class="line">    TIM_ConfigBkdt(TIMx, &amp;TIM_BDTRInitStructure);</span><br><span class="line">    </span><br><span class="line">    TIM_EnableCapCmpPreloadControl(TIMx, ENABLE);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* interrupt Enable */</span></span><br><span class="line">    TIM_ConfigInt(TIMx, TIM_INT_COM, ENABLE);   </span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* TIM1 counter enable */</span></span><br><span class="line">    TIM_Enable(TIMx, ENABLE);    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* Main Output Enable */</span></span><br><span class="line">    TIM_EnableCtrlPwmOutputs(TIMx, ENABLE);    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*\*\name    RCC_Configuration.</span></span><br><span class="line"><span class="comment">*\*\fun     Configures the different system clocks.</span></span><br><span class="line"><span class="comment">*\*\param   none</span></span><br><span class="line"><span class="comment">*\*\return  none </span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">RCC_Configuration</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* TIMx, GPIOx and AFIO clocks enable */</span></span><br><span class="line">    RCC_EnableAHBPeriphClk(TIMx_CLK,ENABLE);</span><br><span class="line">    RCC_EnableAHB1PeriphClk(TIMx_CH1_GPIO_CLK | TIMx_CH2_GPIO_CLK |\</span><br><span class="line">                            TIMx_CH3_GPIO_CLK | TIMx_CH1N_GPIO_CLK |\</span><br><span class="line">                            TIMx_CH2N_GPIO_CLK | TIMx_CH3N_GPIO_CLK,ENABLE);</span><br><span class="line">    RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_AFIO,ENABLE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*\*\name    NVIC_Configuration.</span></span><br><span class="line"><span class="comment">*\*\fun     Configures the nested vectored interrupt controller.</span></span><br><span class="line"><span class="comment">*\*\param   none</span></span><br><span class="line"><span class="comment">*\*\return  none </span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">NVIC_Configuration</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    NVIC_InitType NVIC_InitStructure;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Enable the TIMx Interrupt */</span></span><br><span class="line">    NVIC_InitStructure.NVIC_IRQChannel                   = TIMx_IRQn;</span><br><span class="line">    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = <span class="number">1</span>;</span><br><span class="line">    NVIC_InitStructure.NVIC_IRQChannelSubPriority        = <span class="number">1</span>;    </span><br><span class="line">    NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;</span><br><span class="line">    NVIC_Init(&amp;NVIC_InitStructure);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*\*\name    GPIO_Configuration.</span></span><br><span class="line"><span class="comment">*\*\fun     Configures the GPIO pins.</span></span><br><span class="line"><span class="comment">*\*\param   none</span></span><br><span class="line"><span class="comment">*\*\return  none </span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">GPIO_Configuration</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    GPIO_InitType GPIO_InitStructure;</span><br><span class="line"></span><br><span class="line">    GPIO_InitStruct(&amp;GPIO_InitStructure);</span><br><span class="line">    <span class="comment">/* GPIOx Configuration: Pin of TIMx */</span></span><br><span class="line">    GPIO_InitStructure.Pin        = TIMx_CH1_GPIO_PIN;</span><br><span class="line">    GPIO_InitStructure.GPIO_Mode  = GPIO_MODE_AF_PP;</span><br><span class="line">    GPIO_InitStructure.GPIO_Slew_Rate = GPIO_SLEW_RATE_SLOW;</span><br><span class="line">    GPIO_InitStructure.GPIO_Alternate = TIMx_CH1_GPIO_AF;</span><br><span class="line">    GPIO_InitPeripheral(TIMx_CH1_GPIO_PORT, &amp;GPIO_InitStructure);</span><br><span class="line">    </span><br><span class="line">    GPIO_InitStructure.Pin        = TIMx_CH2_GPIO_PIN;</span><br><span class="line">    GPIO_InitStructure.GPIO_Alternate = TIMx_CH2_GPIO_AF;</span><br><span class="line">    GPIO_InitPeripheral(TIMx_CH2_GPIO_PORT, &amp;GPIO_InitStructure);   </span><br><span class="line"></span><br><span class="line">    GPIO_InitStructure.Pin        = TIMx_CH3_GPIO_PIN;</span><br><span class="line">    GPIO_InitStructure.GPIO_Alternate = TIMx_CH3_GPIO_AF;</span><br><span class="line">    GPIO_InitPeripheral(TIMx_CH3_GPIO_PORT, &amp;GPIO_InitStructure);   </span><br><span class="line"></span><br><span class="line">    GPIO_InitStructure.Pin        = TIMx_CH1N_GPIO_PIN;</span><br><span class="line">    GPIO_InitStructure.GPIO_Alternate = TIMx_CH1N_GPIO_AF;</span><br><span class="line">    GPIO_InitPeripheral(TIMx_CH1N_GPIO_PORT, &amp;GPIO_InitStructure);   </span><br><span class="line"></span><br><span class="line">    GPIO_InitStructure.Pin        = TIMx_CH2N_GPIO_PIN;</span><br><span class="line">    GPIO_InitStructure.GPIO_Alternate = TIMx_CH2N_GPIO_AF;</span><br><span class="line">    GPIO_InitPeripheral(TIMx_CH2N_GPIO_PORT, &amp;GPIO_InitStructure);   </span><br><span class="line">    </span><br><span class="line">    GPIO_InitStructure.Pin        = TIMx_CH3N_GPIO_PIN;</span><br><span class="line">    GPIO_InitStructure.GPIO_Alternate = TIMx_CH3N_GPIO_AF;</span><br><span class="line">    GPIO_InitPeripheral(TIMx_CH3N_GPIO_PORT, &amp;GPIO_InitStructure);   </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*\*\name    SysTick_Configuration.</span></span><br><span class="line"><span class="comment">*\*\fun     Configures the SysTick.</span></span><br><span class="line"><span class="comment">*\*\param   none</span></span><br><span class="line"><span class="comment">*\*\return  none </span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">SysTick_Configuration</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* Setup SysTick Timer for 10 msec interrupts ,(SystemCoreClock) / 100) cannot be greater than 0xFFFFFF */</span></span><br><span class="line">    <span class="keyword">if</span> (SysTick_Config((SystemCoreClock) / <span class="number">100</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Capture error */</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">            ;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    NVIC_SetPriority(SysTick_IRQn, <span class="number">0x0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">SysTick_Handler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;   </span><br><span class="line">    <span class="keyword">if</span>(temp==<span class="number">9</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Generate TIM1 COM event by software */</span></span><br><span class="line">        TIM_GenerateEvent(TIMx, TIM_EVT_SRC_COM);  </span><br><span class="line">        temp=<span class="number">0</span>;        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        temp++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** N32H47X Peripherals Interrupt Handlers, interrupt handler&#x27;s name please refer </span></span><br><span class="line"><span class="comment">     to the startup file (startup_n32h4xx.s) **/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*\*\name    TIMx_IRQHandler.</span></span><br><span class="line"><span class="comment">*\*\fun     This function handles TIMx interrupts.</span></span><br><span class="line"><span class="comment">*\*\param   none</span></span><br><span class="line"><span class="comment">*\*\return  none </span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">TIMx_IRQHandler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* Clear TIMx COM pending bit */</span></span><br><span class="line">    TIM_ClrIntPendingBit(TIMx, TIM_INT_COM);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (step == <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Next step: Step 2 Configuration ---------------------------- */</span></span><br><span class="line">        <span class="comment">/*  Channel3 configuration */</span></span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_3, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_3, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel1 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_1, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_1, TIM_CAP_CMP_ENABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_1, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel2 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_2, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_2, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_2, TIM_CAP_CMP_N_ENABLE);</span><br><span class="line">        step++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (step == <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Next step: Step 3 Configuration ---------------------------- */</span></span><br><span class="line">        <span class="comment">/*  Channel2 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_2, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_2, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_2, TIM_CAP_CMP_N_ENABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel3 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_3, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_3, TIM_CAP_CMP_ENABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_3, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel1 configuration */</span></span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_1, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_1, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line">        step++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (step == <span class="number">3</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Next step: Step 4 Configuration ---------------------------- */</span></span><br><span class="line">        <span class="comment">/*  Channel3 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_3, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_3, TIM_CAP_CMP_ENABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_3, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel2 configuration */</span></span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_2, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_2, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel1 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_1, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_1, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_1, TIM_CAP_CMP_N_ENABLE);</span><br><span class="line">        step++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (step == <span class="number">4</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Next step: Step 5 Configuration ---------------------------- */</span></span><br><span class="line">        <span class="comment">/*  Channel3 configuration */</span></span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_3, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_3, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel1 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_1, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_1, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_1, TIM_CAP_CMP_N_ENABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel2 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_2, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_2, TIM_CAP_CMP_ENABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_2, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line">        step++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (step == <span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Next step: Step 6 Configuration ---------------------------- */</span></span><br><span class="line">        <span class="comment">/*  Channel3 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_3, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_3, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_3, TIM_CAP_CMP_N_ENABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel1 configuration */</span></span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_1, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_1, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel2 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_2, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_2, TIM_CAP_CMP_ENABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_2, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line">        step++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(step == <span class="number">6</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Next step: Step 1 Configuration ---------------------------- */</span></span><br><span class="line">        <span class="comment">/*  Channel1 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_1, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_1, TIM_CAP_CMP_ENABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_2, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel3 configuration */</span></span><br><span class="line">        TIM_SelectOcMode(TIMx, TIM_CH_3, TIM_OCMODE_PWM1);</span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_3, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_3, TIM_CAP_CMP_N_ENABLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*  Channel2 configuration */</span></span><br><span class="line">        TIM_EnableCapCmpCh(TIMx, TIM_CH_2, TIM_CAP_CMP_DISABLE);</span><br><span class="line">        TIM_EnableCapCmpChN(TIMx, TIM_CH_2, TIM_CAP_CMP_N_DISABLE);</span><br><span class="line">        step = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    
+                </div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                    </div>
+                    <div>
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/06/23/N32-MDK%E4%B8%8B%E8%BD%BD%E6%8A%A5%E9%94%99/"
+                                   title="N32 MDK下载报错"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">N32 MDK下载报错</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="copyright-info info-item">
+    &copy;&nbsp;<span>2020</span>&nbsp;-&nbsp;2025
+    
+            &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">GaoSheng</a>
+        
+    </div>
+
+    <!-- <div class="theme-info info-item">
+        由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+    </div> -->
+
+    
+        
+        <div class="deploy-info info-item">
+            
+            本站由 <span class="tooltip" data-tooltip-content="GitHub Pages"><img src="/images/brands/github.png"></span> 提供部署服务
+            
+        </div>
+    
+
+    
+
+    
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+
+        <!-- PC go comment -->
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <!-- toggle mode -->
+        
+            <li class="tools-item tool-toggle-theme-mode flex-center">
+                <i class="fas fa-moon"></i>
+            </li>
+        
+
+        <!-- rss -->
+        
+
+        <!-- to bottom -->
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+</main>
+
+
+
+
+
+<!-- common js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
+
+<!-- local search -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/local-search.min.js"></script>
+
+
+<!-- lazyload -->
+
+
+<div class="">
+    <!-- home page -->
+    
+
+    <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
+    
+
+    <!-- categories page -->
+    
+
+    <!-- links page -->
+    
+
+    <!-- photos page -->
+    
+
+    <!-- tools page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+
+
+</body>
+</html>
