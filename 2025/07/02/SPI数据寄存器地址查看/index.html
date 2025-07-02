@@ -9,6 +9,8 @@
     
     <title>
         
+            SPI数据寄存器地址查看 |
+        
         GaoSheng
     </title>
     
@@ -45,10 +47,10 @@
     
 
     <!-- page content -->
-    <div class="page-main-content border-box is-home">
+    <div class="page-main-content border-box">
         <div class="page-main-content-top">
             
-<header class="header-wrapper transparent-1">
+<header class="header-wrapper">
 
     <div class="border-box header-content">
         <div class="left flex-start border-box">
@@ -142,43 +144,48 @@
             <div class="main-content border-box">
                 
 
-                    <div class="home-content-container fade-in-down-animation">
-    
-    <ul class="home-post-list border-box">
-        
-            <li class="home-post-item">
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
 
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        SPI数据寄存器地址查看
+                    </div>
                 
 
-                <div class="home-post-item-bottom border-box">
-                    
-                    <h3 class="home-post-title border-box">
-                        <a href="/2020/05/07/%E5%8D%81%E5%88%86%E9%92%9F%E5%AD%A6%E4%BC%9Amarkdown/">
-                            十分钟学会markdown
-                        </a>
-                    </h3>
-
-                    <div class="home-post-content keep-markdown-body">
+                
+                    <div class="post-header border-box">
                         
-                            什么是markdown？
-一种轻量级标记语言，本文就是用markdown编辑。
-markdown有优点？
-方便。回想一下你写文章的时候在做什么，首先输入文字，然后排版。如果你使用makedown就会为你节约掉排版的时间。且会使你的板书十分工整且优美。...
-                        
-                    </div>
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">GaoSheng</span>
+                                
+                                    <span class="author-badge">Lv4</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
 
-                    
-
-<div class="post-meta-info-container border-box home">
+<div class="post-meta-info-container border-box post">
     <div class="post-meta-info border-box">
         
-            <span class="meta-info-item border-box">
-                <i class="icon fa-solid fa-history"></i>&nbsp;<span class="home-post-history"
-                                                                                data-updated="Thu May 07 2020 14:09:00 GMT+0800"
-                >2020-05-07 14:09:00</span>
-            </span>
-        
 
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-07-02 20:34:52</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Wed Jul 02 2025 20:37:21 GMT+0800">2025-07-02 20:37:21</span>
+                </span>
+            
         
 
         
@@ -191,102 +198,78 @@ markdown有优点？
         
     </div>
 
-    
-        <a class="home-read-more" href="/2020/05/07/%E5%8D%81%E5%88%86%E9%92%9F%E5%AD%A6%E4%BC%9Amarkdown/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
     
 </div>
 
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <p>群里面有小伙伴问SPI对应的数据寄存器的地址在哪，怎么找？<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.8l0d3b3gsa.png"  alt="图片1"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.13m1wtpqd6.png"  alt="图片2"><br>对于初学者来说这个问题非常经典，本文介绍三种方式来找到想要的寄存器的地址</p>
+<h3 id="在UM手册里面查找"><a href="#在UM手册里面查找" class="headerlink" title="在UM手册里面查找"></a>在UM手册里面查找</h3><p>首先找到用户手册总线架构的章节：<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.60uiqo3i61.png"  alt="图片3"><br>上面截图可以看出来，SPI1是挂载在AP2总线上，SPI2,SPI3是挂载在APB1上<br>可以得到：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SPI1 寄存器地址就是 <span class="number">0x4001</span>_3000 – <span class="number">0x4001</span>_33FF</span><br><span class="line">SPI2 寄存器地址就是 <span class="number">0x4000</span>_3800 – <span class="number">0x4000</span>_3BFF</span><br><span class="line">SPI3 寄存器地址就是 <span class="number">0x4000</span>_3C00 – <span class="number">0x4000</span>_3FFF</span><br></pre></td></tr></table></figure>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%874.4jodowzdfb.png"  alt="图片4"><br>SPIx的基地址加上offset就是想要的寄存器的地址，以SPI_DAT为例<br>SPI1的SPI_DAT地址为0x4001_3000+0x0C &#x3D;&#x3D; 0x4001_300C</p>
+<h3 id="debug时看外设寄存器地址"><a href="#debug时看外设寄存器地址" class="headerlink" title="debug时看外设寄存器地址"></a>debug时看外设寄存器地址</h3><p>之前有提到过Keil的pack包里面有一个SVD文件，里面就包含了各个寄存器的位置（详细到寄存器的每个 BIT 位）<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%875.83abeq237a.png"  alt="图片5"><br>单击右边的外设寄存栏可以看到SPI_DAT的值：0x4001_300C，与之前计算的一致<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%876.6m46cyxygl.png"  alt="图片6"></p>
+<h3 id="通过库函数代码"><a href="#通过库函数代码" class="headerlink" title="通过库函数代码"></a>通过库函数代码</h3><p>可以看到CTRL1、CTRL2…都是16位的，加上RESERVED空间也是16位的。<br>到SPI_DAT的偏移地址是(6*16)&#x2F;8 &#x3D;&#x3D; 12 &#x3D;&#x3D; 0x0Ch<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%877.13m1wtpqd0.png"  alt="图片7"><br>可能有人会问，怎么知道要去看SPI_Module这个结构体呢,打开spi driver.h可以看到：<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%878.5fkv4d91v7.png"  alt="图片8"><br>几乎是清一色的对SPI_Module的操作，不难猜到SPI_Module和SPI寄存器之间的对应关系<br>再加上SPI1的基地址<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%879.8s3kyqpm7m.png"  alt="图片9"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%8710.7p3vnutsc2.png"  alt="图片10"><br>PERIPH_BASE+APB2PERIPH_BASE+SPI1_BASE+SPI(offset)这样也能得到SPI_DAT的地址</p>
+
+                    
                 </div>
-            </li>
-        
-            <li class="home-post-item">
 
                 
 
-                <div class="home-post-item-bottom border-box">
-                    
-                    <h3 class="home-post-title border-box">
-                        <a href="/2019/10/10/hello-world/">
-                            Hello World
-                        </a>
-                    </h3>
-
-                    <div class="home-post-content keep-markdown-body">
-                        
-                            Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, yo...
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
                         
                     </div>
+                    <div>
+                        
+                    </div>
+                </div>
 
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/06/30/slcan%E4%BD%BF%E7%94%A8EcuBus-pro%EF%BC%88%E5%B0%8F%E7%99%BD%E9%A3%9F%E7%94%A8/"
+                                   title="slcan使用EcuBus_pro（小白食用"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">slcan使用EcuBus_pro（小白食用</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
                     
 
-<div class="post-meta-info-container border-box home">
-    <div class="post-meta-info border-box">
-        
-            <span class="meta-info-item border-box">
-                <i class="icon fa-solid fa-history"></i>&nbsp;<span class="home-post-history"
-                                                                                data-updated="Sat Oct 12 2019 10:00:00 GMT+0800"
-                >2019-10-12 10:00:00</span>
-            </span>
-        
 
-        
 
-        
 
-        
 
-        
-        
-        
+
+                
+            </div>
+        </div>
+
         
     </div>
-
-    
-        <a class="home-read-more" href="/2019/10/10/hello-world/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
-    
-</div>
-
-                </div>
-            </li>
-        
-    </ul>
-    
-    <div class="paginator border-box flex-center">
-        <div class="border-box first-page paginator-btn allowed">
-            <a class="border-box"><i class="fa-solid fa-angle-double-left"></i></a>
-        </div>
-
-        <div class="border-box paginator-btn allowed">
-            <a class="border-box"
-               href="/page/5/"
-            ><i class="fa-solid fa-chevron-left"></i></a>
-        </div>
-
-
-        <div class="page-number-box border-box flex-center">
-            <input class="page-number-input border-box base-style"
-                   type="number"
-                   value="6"
-                   min="1"
-                   max="6"
-            /><span class="delimiter base-style">/</span><span class="base-style">6</span>
-        </div>
-
-
-        <div class="border-box paginator-btn">
-            <a class="border-box"
-               href="/"
-            ><i class="fa-solid fa-chevron-right"></i></a>
-        </div>
-
-        <div class="border-box last-page paginator-btn not-allow">
-            <a class="border-box"><i class="fa-solid fa-angle-double-right"></i></a>
-        </div>
-    </div>
-
-
-
-
 </div>
 
 
@@ -327,10 +310,31 @@ markdown有优点？
 
     <!-- post tools -->
     
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+
+        <!-- PC go comment -->
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
 
     <!-- side tools -->
     <div class="side-tools">
-        <div class="side-tools-container border-box side-tools-show-handle">
+        <div class="side-tools-container border-box ">
     <ul class="side-tools-list side-tools-show-handle border-box">
         <li class="tools-item tool-font-adjust-plus flex-center">
             <i class="fas fa-search-plus"></i>
@@ -420,7 +424,6 @@ markdown有优点？
 
 
 
-
 <!-- common js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
 
@@ -435,10 +438,20 @@ markdown有优点？
 <div class="">
     <!-- home page -->
     
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/page/home-page.min.js"></script>
-    
 
     <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
     
 
     <!-- categories page -->
