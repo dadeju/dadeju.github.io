@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Jul 10 2025 20:51:12 GMT+0800">2025-07-10 20:51:12</span>
+                    <span class="datetime" data-updated="Thu Jul 10 2025 20:53:39 GMT+0800">2025-07-10 20:53:39</span>
                 </span>
             
         
@@ -210,7 +210,8 @@
                     
 
                     
-                         <p>在21IC论坛上面看到这个帖子，楼主说N32G430加读保护后，依然可以读出固件，并有提到“代理商的FAE也可以重现这个现象”<br><img   src="https://dadeju.github.io/picx-images-hosting/image.4xutr7yir7.png"  alt="image"><br>手上刚好有这个型号的demo板，本着“没有调查就没有发言权”的精神遂做以下的验证，说先结论：<mark>加读保护后无法读出固件</mark><br>先试一下不加读保护，使用jflash回读固件<br><img   src="https://dadeju.github.io/picx-images-hosting/image.26lrj5e14x.png"  alt="image"><br>由于楼主说的是“CMSIS-DAT仿真器”姑且认为是笔误应为DAP，为了控制变量，我也使用DAP-link通过pyocd同步测试一下<br><img   src="https://dadeju.github.io/picx-images-hosting/1752151304866.4cl64x6u2i.png"  alt="1752151304866"><br>可以看到在不读保护的情况下，使用pyocd也能读出固件</p>
+                         <p>在21IC论坛上面看到这个帖子，楼主说N32G430加读保护后，依然可以读出固件，并有提到“代理商的FAE也可以重现这个现象”<br><img   src="https://dadeju.github.io/picx-images-hosting/image.4xutr7yir7.png"  alt="image"><br>手上刚好有这个型号的demo板，本着“没有调查就没有发言权”的精神遂做以下的验证，说先结论：<mark>加读保护后无法读出固件</mark><br>先试一下不加读保护，使用jflash回读固件<br><img   src="https://dadeju.github.io/picx-images-hosting/image.26lrj5e14x.png"  alt="image"><br>能够正常读出固件</p>
+<p>由于楼主说的是“CMSIS-DAT仿真器”姑且认为是笔误应为DAP，为了控制变量，我也使用DAP-link通过pyocd同步测试一下<br><img   src="https://dadeju.github.io/picx-images-hosting/1752151304866.4cl64x6u2i.png"  alt="1752151304866"><br>可以看到在不读保护的情况下，使用pyocd也能读出固件</p>
 <p>使用国民上位机加上读保护L1<br><img   src="https://dadeju.github.io/picx-images-hosting/1752151366261.41ycbrssr4.png"  alt="1752151366261"><br>再次尝试使用jflash读取：<br><img   src="https://dadeju.github.io/picx-images-hosting/1752151446495.7axg8fi0pr.png"  alt="1752151446495"><br>读取失败!</p>
 <p>再次使用pyocd通过dap-link读取：<br><img   src="https://dadeju.github.io/picx-images-hosting/1752151494802.8ojzcgu3wo.png"  alt="1752151494802"><br>同样也是读取失败!</p>
 <p>到这里可以判断出<mark>楼主的结论是错误</mark>。<br>不过楼主说的加了读保护L1后，还能直接下载，这是正常现象（L1 能下载，但不能读取）：<br><img   src="https://dadeju.github.io/picx-images-hosting/image.1vyxpzfc7f.png"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/394a7370e2feb868144a1d08b0fac77.8l0deqe34y.png"  alt="394a7370e2feb868144a1d08b0fac77"></p>
