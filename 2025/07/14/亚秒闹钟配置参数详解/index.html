@@ -9,7 +9,7 @@
     
     <title>
         
-            国民技术N32G430读保护无法生效？ |
+            亚秒闹钟配置参数详解 |
         
         GaoSheng
     </title>
@@ -153,7 +153,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        国民技术N32G430读保护无法生效？
+                        亚秒闹钟配置参数详解
                     </div>
                 
 
@@ -177,13 +177,13 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-07-10 20:11:26</span>
+                <span class="datetime">2025-07-14 20:32:37</span>
             </span>
 
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Thu Jul 10 2025 20:53:39 GMT+0800">2025-07-10 20:53:39</span>
+                    <span class="datetime" data-updated="Mon Jul 14 2025 22:05:01 GMT+0800">2025-07-14 22:05:01</span>
                 </span>
             
         
@@ -210,14 +210,67 @@
                     
 
                     
-                         <p>在21IC论坛上面看到这个帖子，楼主说N32G430加读保护后，依然可以读出固件，并有提到“代理商的FAE也可以重现这个现象”<br><img   src="https://dadeju.github.io/picx-images-hosting/image.4xutr7yir7.png"  alt="image"><br>手上刚好有这个型号的demo板，本着“没有调查就没有发言权”的精神遂做以下的验证，说先结论：<mark>加读保护后无法读出固件</mark><br>先试一下不加读保护，使用jflash回读固件<br><img   src="https://dadeju.github.io/picx-images-hosting/image.26lrj5e14x.png"  alt="image"><br>能够正常读出固件</p>
-<p>由于楼主说的是“CMSIS-DAT仿真器”姑且认为是笔误应为DAP，为了控制变量，我也使用DAP-link通过pyocd同步测试一下<br><img   src="https://dadeju.github.io/picx-images-hosting/1752151304866.4cl64x6u2i.png"  alt="1752151304866"><br>可以看到在不读保护的情况下，使用pyocd也能读出固件</p>
-<p>使用国民上位机加上读保护L1<br><img   src="https://dadeju.github.io/picx-images-hosting/1752151366261.41ycbrssr4.png"  alt="1752151366261"><br>再次尝试使用jflash读取：<br><img   src="https://dadeju.github.io/picx-images-hosting/1752151446495.7axg8fi0pr.png"  alt="1752151446495"><br>读取失败!</p>
-<p>再次使用pyocd通过dap-link读取：<br><img   src="https://dadeju.github.io/picx-images-hosting/1752151494802.8ojzcgu3wo.png"  alt="1752151494802"><br>同样也是读取失败!</p>
-<p>到这里可以判断出<mark>楼主的结论是错误</mark>。<br>不过楼主说的加了读保护L1后，还能直接下载，这是正常现象（L1 能下载，但不能读取）：<br><img   src="https://dadeju.github.io/picx-images-hosting/image.1vyxpzfc7f.png"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/394a7370e2feb868144a1d08b0fac77.8l0deqe34y.png"  alt="394a7370e2feb868144a1d08b0fac77"></p>
-<p>之前也有小伙伴问过类似的问题：<br><img   src="https://dadeju.github.io/picx-images-hosting/1752150500145.7axg8exq1j.png"  alt="1752150500145"></p>
-<p>通过大家的谈论可以看出大家都对于自己的固件安全非常关注：<br><img   src="https://dadeju.github.io/picx-images-hosting/1752150590872.2a5dgusv66.png"  alt="1752150590872"></p>
-<p>个人认为，应该没有哪家厂商能保证自己的芯片无法破解。只要愿意付出足够的代价都是有可能的。直接禁用掉调试口可能是比较稳妥的方法<br>下面这位大佬提供的思路挺有参考价值：<br><img   src="https://dadeju.github.io/picx-images-hosting/1752150861472.54y1mndszc.png"  alt="1752150861472"></p>
+                         <p><img   src="https://dadeju.github.io/picx-images-hosting/image.491kcwqux4.png"  alt="image"><br>有小伙伴在问RTC如何配置亚秒闹钟的参数。这个问题其实非常有价值，本文会做一个相对详尽的讲解。</p>
+<h3 id="亚秒闹钟用在什么地方？"><a href="#亚秒闹钟用在什么地方？" class="headerlink" title="亚秒闹钟用在什么地方？"></a>亚秒闹钟用在什么地方？</h3><p>需要用到周期性唤醒的场合，几十毫秒或者几百毫秒的唤醒间隔。有些MCU没有LPTIM（低功耗定时器），如果对精度要求不高，RTC的亚秒闹钟可以很好的胜任</p>
+<h3 id="什么是亚秒"><a href="#什么是亚秒" class="headerlink" title="什么是亚秒"></a>什么是亚秒</h3><p><img   src="https://dadeju.github.io/picx-images-hosting/image.58hnq3djag.png"  alt="image"><br>这里看到，亚秒并不是一个固定的时间间隔，它的分辨率由同步预分频器RTC_PRE –〉DIVS[14:0]决定。<br>通常情况下，如果使用的是LSE（32,768K）的时钟源</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SynchPrediv  = <span class="number">0xFF</span>; <span class="comment">// 32.768KHz</span></span><br><span class="line">AsynchPrediv = <span class="number">0x7F</span>; <span class="comment">// value range: 0-7F</span></span><br></pre></td></tr></table></figure>
+<p>根据上面的公式可以知道，此时亚秒的分辨率为(1&#x2F;(255+1))秒，即亚秒记数器每记一个脉冲值为<mark>3.9ms</mark>。这个值非常重要，请务必注意。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//@brief  Configure the RTC AlarmA/B Subseconds value and mask.*</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">RTC_ConfigAlarmSubSecond</span><span class="params">(<span class="type">uint32_t</span> RTC_Alarm, <span class="type">uint32_t</span> RTC_AlarmSubSecondValue, <span class="type">uint32_t</span> RTC_AlarmSubSecondMask)</span>;</span><br></pre></td></tr></table></figure>
+<p><mark>第一个参数是你RTC_AlarmA&#x2F;B，第二个参数是亚秒的数值，第三个参数是亚秒的掩码。</mark></p>
+<p>为了便于理解，这里插入一个简单的数学题：<br>如果固定住一个十进制的数的个位，比如固定个位为5，那么可以知道，每一个“个位”与其相同的数之间都是相差10.<br>例如15、25、35、45…<br>如果固定住一个十进制的数的个位和十位，比如固定为34，能知道，每一个“个位和十位”与其相同的数之间都是相差100.<br>例如134、234、334、434…</p>
+<p>再回到二进制,看RTC_ConfigAlarmSubSecond的第三个参数“RTC_AlarmSubSecondMask”</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">*     @arg RTC_SUBS_MASK_SS14_1 SS[<span class="number">14</span>:<span class="number">1</span>] are don<span class="string">&#x27;t care in Alarm comparison.</span></span><br><span class="line"><span class="string">*                                         Only SS[0] is compared</span></span><br><span class="line"><span class="string">*     @arg RTC_SUBS_MASK_SS14_2 SS[14:2] are don&#x27;</span>t care in Alarm comparison.</span><br><span class="line">*                                          Only SS[<span class="number">1</span>:<span class="number">0</span>] are compared</span><br><span class="line">*     @arg RTC_SUBS_MASK_SS14_3 SS[<span class="number">14</span>:<span class="number">3</span>] are don<span class="string">&#x27;t care in Alarm comparison.</span></span><br><span class="line"><span class="string">*                                          Only SS[2:0] are compared</span></span><br><span class="line"><span class="string">*     @arg RTC_SUBS_MASK_SS14_4 SS[14:4] are don&#x27;</span>t care in Alarm comparison.</span><br><span class="line">*                                          Only SS[<span class="number">3</span>:<span class="number">0</span>] are compared</span><br><span class="line">*     @arg RTC_SUBS_MASK_SS14_5 SS[<span class="number">14</span>:<span class="number">5</span>] are don<span class="string">&#x27;t care in Alarm comparison.</span></span><br><span class="line"><span class="string">*                                          Only SS[4:0] are compared.</span></span><br><span class="line"><span class="string">*     @arg RTC_SUBS_MASK_SS14_6 SS[14:6] are don&#x27;</span>t care in Alarm comparison.</span><br><span class="line">*                                          Only SS[<span class="number">5</span>:<span class="number">0</span>] are compared.</span><br><span class="line">*     @arg RTC_SUBS_MASK_SS14_7 SS[<span class="number">14</span>:<span class="number">7</span>] are don<span class="string">&#x27;t care in Alarm comparison.</span></span><br><span class="line"><span class="string">*                                          Only SS[6:0] are compared.</span></span><br><span class="line"><span class="string">*     @arg RTC_SUBS_MASK_SS14_8 SS[14:8] are don&#x27;</span>t care in Alarm comparison.</span><br><span class="line">*                                          Only SS[<span class="number">7</span>:<span class="number">0</span>] are compared.</span><br><span class="line">*     @arg RTC_SUBS_MASK_SS14_9 SS[<span class="number">14</span>:<span class="number">9</span>] are don<span class="string">&#x27;t care in Alarm comparison.</span></span><br><span class="line"><span class="string">*                                          Only SS[8:0] are compared.</span></span><br><span class="line"><span class="string">*     @arg RTC_SUBS_MASK_SS14_10 SS[14:10] are don&#x27;</span>t care in Alarm comparison.</span><br><span class="line">*                                          Only SS[<span class="number">9</span>:<span class="number">0</span>] are compared.</span><br><span class="line">*     @arg RTC_SUBS_MASK_SS14_11 SS[<span class="number">14</span>:<span class="number">11</span>] are don<span class="string">&#x27;t care in Alarm comparison.</span></span><br><span class="line"><span class="string">*                                          Only SS[10:0] are compared.</span></span><br><span class="line"><span class="string">*     @arg RTC_SUBS_MASK_SS14_12 SS[14:12] are don&#x27;</span>t care in Alarm comparison.</span><br><span class="line">*                                          Only SS[<span class="number">11</span>:<span class="number">0</span>] are compared.</span><br><span class="line">*     @arg RTC_SUBS_MASK_SS14_13 SS[<span class="number">14</span>:<span class="number">13</span>] are don<span class="string">&#x27;t care in Alarm comparison.</span></span><br><span class="line"><span class="string">*                                          Only SS[12:0] are compared.</span></span><br><span class="line"><span class="string">*     @arg RTC_SUBS_MASK_SS14_14 SS[14] is don&#x27;</span>t care in Alarm comparison.</span><br><span class="line">*                                          Only SS[<span class="number">13</span>:<span class="number">0</span>] are compared.</span><br><span class="line">*     @arg RTC_SUBS_MASK_NONE SS[<span class="number">14</span>:<span class="number">0</span>] are compared and must match</span><br><span class="line">*                                          to activate alarm.</span><br></pre></td></tr></table></figure>
+<p>以RTC_SUBS_MASK_SS14_7为例，它会<mark>匹配SS[6:0]，固定后7位</mark><br><img   src="https://dadeju.github.io/picx-images-hosting/image.6ikkwfnfng.png"  alt="image"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*<span class="number">128</span>* <span class="number">64</span> <span class="number">32</span> <span class="number">16</span> <span class="number">8</span> <span class="number">4</span> <span class="number">2</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>根据上面的经验可以知道，<mark>每一个被固定后7位的二进制，都是相差128的记数脉冲</mark><br>即相差128*（3.9ms）&#x3D;&#x3D; 499.2ms 约等于500ms<br><img   src="https://dadeju.github.io/picx-images-hosting/image.3rbioe2olt.png"  alt="image"><br>实际测试结果与预期相符。<br>到这里我们似乎忘记了第二个参数“RTC_AlarmSubSecondValue”，实际上这个确实不会影响亚秒闹钟的周期，到第三个参数选定时，周期就已经被确定下来了。这个参数就可以理解成是上面数据题上面被提到的<mark>实际被固定的数</mark>.我们只关心它固定了多少位，至于它实际固定了什么，这并不重要。</p>
+<p>如果选择RTC_SUBS_MASK_SS14_5，即匹配SS[4:0],第二个参数随意填了一个<mark>2025</mark></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">128</span> <span class="number">64</span> *<span class="number">32</span>* <span class="number">16</span> <span class="number">8</span> <span class="number">4</span> <span class="number">2</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>32*(3.9ms) &#x3D;&#x3D; 124.8ms</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RTC_ConfigAlarmSubSecond(RTC_A_ALARM, <span class="number">2025</span>, RTC_SUBS_MASK_SS14_5);</span><br></pre></td></tr></table></figure>
+<p><img   src="https://dadeju.github.io/picx-images-hosting/image.99tn4jm2io.png"  alt="image"></p>
+<p>由此我们可以得到下面这个表格：</p>
+<table>
+<thead>
+<tr>
+<th>掩码定义</th>
+<th>实际比较位</th>
+<th>固定位数 N</th>
+<th>周期 ≈ N×3.9ms</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>RTC_SUBS_MASK_SS14_7</code></td>
+<td><code>SS[6:0]</code></td>
+<td>7</td>
+<td>≈ 499.2ms</td>
+</tr>
+<tr>
+<td><code>RTC_SUBS_MASK_SS14_6</code></td>
+<td><code>SS[5:0]</code></td>
+<td>6</td>
+<td>≈ 249.6ms</td>
+</tr>
+<tr>
+<td><code>RTC_SUBS_MASK_SS14_5</code></td>
+<td><code>SS[4:0]</code></td>
+<td>5</td>
+<td>≈ 124.8ms</td>
+</tr>
+<tr>
+<td><code>RTC_SUBS_MASK_SS14_3</code></td>
+<td><code>SS[2:0]</code></td>
+<td>3</td>
+<td>≈ 31.2ms</td>
+</tr>
+<tr>
+<td><code>RTC_SUBS_MASK_SS14_X</code></td>
+<td><code>SS[X-1:0]</code></td>
+<td>X</td>
+<td>≈ X×3.9ms</td>
+</tr>
+</tbody></table>
+<p>可以观察到由于都不能整除，所以这种方法只适合对精度要求不高的场景。不过这个API的参数配置还是非常有趣的。</p>
 
                     
                 </div>
@@ -238,31 +291,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/07/14/%E4%BA%9A%E7%A7%92%E9%97%B9%E9%92%9F%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/"
-                                   title="亚秒闹钟配置参数详解"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">亚秒闹钟配置参数详解</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2025/07/02/SPI%E6%95%B0%E6%8D%AE%E5%AF%84%E5%AD%98%E5%99%A8%E5%9C%B0%E5%9D%80%E6%9F%A5%E7%9C%8B/"
-                                   title="SPI数据寄存器地址查看"
+                                   href="/2025/07/10/%E5%9B%BD%E6%B0%91%E6%8A%80%E6%9C%AFN32G430%E8%AF%BB%E4%BF%9D%E6%8A%A4%E6%97%A0%E6%B3%95%E7%94%9F%E6%95%88%EF%BC%9F/"
+                                   title="国民技术N32G430读保护无法生效？"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">SPI数据寄存器地址查看</span>
+                                        <span class="post-nav-title-item text-ellipsis">国民技术N32G430读保护无法生效？</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
