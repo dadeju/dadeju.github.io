@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="GaoSheng">
+    
+    <title>
+        
+            开源按键组件MultiButton介绍 |
+        
+        GaoSheng
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/brands.min.css">
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#0066cc","title":"GaoSheng","author":"GaoSheng","avatar":null,"logo":null,"favicon":null},"menu":{"home":"/","archives":"/archives"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"我也许不知道答案，但我知道怎么找到答案","hitokoto":false},"social_contact":{"enable":true,"links":{"weixin":"img | ./images/wxcode.png","email":null}},"scroll":{"progress_bar":false,"percent":false,"hide_header":true},"home":{"announcement":null,"category":false,"tag":false,"post_datetime":"updated"},"post":{"author_badge":{"enable":true,"level_badge":true,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":false,"min2read":false},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":false,"share":false,"reward":{"enable":false,"img_link":null,"text":null,"icon":null}},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"toc":{"enable":false,"number":false,"expand_all":false,"init_open":true,"layout":"right"},"website_count":{"busuanzi_count":{"enable":false,"site_uv":false,"site_pv":false,"page_pv":false}},"local_search":{"enable":true,"preload":false},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.39"},"waline":{"server_url":null,"reaction":false,"version":"3.3.2"},"giscus":{"repo":null,"repo_id":null,"category":"Announcements","category_id":null,"reactions_enabled":false},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":false},"lazyload":{"enable":false},"cdn":{"enable":true,"provider":"cdnjs"},"pjax":{"enable":false},"footer":{"since":2020,"word_count":false,"site_deploy":{"enable":true,"provider":"github","url":null},"record":{"enable":false,"list":[{"code":null,"link":null}]}},"inject":{"enable":false,"css":[null],"js":[null]},"root":"","source_data":{},"version":"4.2.5"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+
+<main class="page-container border-box">
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left flex-start border-box">
+            
+            <a class="site-name border-box" href="/">
+               GaoSheng
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc border-box">
+                <ul class="menu-list border-box">
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/">
+                                
+                                首页
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/archives">
+                                
+                                归档
+                                
+                            </a>
+                            
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="menu-text-color fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile border-box flex-start">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list border-box">
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/">
+                            
+                            首页
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
+                            
+                            归档
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        开源按键组件MultiButton介绍
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">GaoSheng</span>
+                                
+                                    <span class="author-badge">Lv4</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-07-16 19:27:38</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Wed Jul 16 2025 19:34:14 GMT+0800">2025-07-16 19:34:14</span>
+                </span>
+            
+        
+
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <p>本文简要介绍一个开源的按键组件项目<mark>MultiButton</mark><br>https&#x2F;github.com&#x2F;0x1abin&#x2F;MultiButton<br>可以避免重复造轮子，不需要去翻来覆去的去考虑单击&#x2F;双击&#x2F;长按…的逻辑。不用去考虑消抖的问题，让开发者专注于自己的业务逻辑</p>
+<h3 id="MultiButton的优势"><a href="#MultiButton的优势" class="headerlink" title="MultiButton的优势"></a>MultiButton的优势</h3><p>✅多种按键事件: 按下、抬起、单击、双击、长按开始、长按保持、重复按下<br>✅硬件去抖: 内置数字滤波，消除按键抖动<br>✅状态机驱动: 清晰的状态转换逻辑，可靠性高<br>✅多按键支持: 支持无限数量的按键实例<br>✅回调机制: 灵活的事件回调函数注册<br>✅内存优化: 紧凑的数据结构，低内存占用<br>✅配置灵活: 可自定义时间参数和功能选项<br>✅参数验证: 完善的错误检查和边界条件处理</p>
+<h3 id="如何移植到自己的项目（宝宝级教程）"><a href="#如何移植到自己的项目（宝宝级教程）" class="headerlink" title="如何移植到自己的项目（宝宝级教程）"></a>如何移植到自己的项目（宝宝级教程）</h3><p>MultiButton耦合性很低，不依赖任何硬件与操作系统</p>
+<ol>
+<li><p>Github上面的工程download到本地后，将multi_button.c、multi_button.h添加到工程<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.6m46wwszdq.png"  alt="图片1"></p>
+</li>
+<li><p>在keil的魔术棒（Options for Target…）栏选择C&#x2F;C++，增加multi_button.h的路径到工程<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.13m2grkra6.png"  alt="图片2"></p>
+</li>
+<li><p>配置读取GPIO状态的函数</p>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Hardware abstraction layer function</span></span><br><span class="line"><span class="comment">// This simulates reading GPIO states</span></span><br><span class="line"><span class="type">uint8_t</span> <span class="title function_">read_button_gpio</span><span class="params">(<span class="type">uint8_t</span> button_id)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">switch</span> (button_id) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> (GPIO_ReadInputDataBit(GPIOA, GPIO_PIN_15) == Bit_SET);</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> btn2_state;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>初始化按键（<mark>第三个参数：active_level: 0&#x3D;低电平有效, 1&#x3D;高电平有效</mark>）</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">button_init(&amp;btn1, read_button_gpio, <span class="number">0</span>, <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>注册回调函数</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Callback functions for button 1</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">btn1_single_click_handler</span><span class="params">(Button* btn)</span></span><br><span class="line">&#123;</span><br><span class="line">    (<span class="type">void</span>)btn;  <span class="comment">// suppress unused parameter warning</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Button 1: Single Click\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">btn1_double_click_handler</span><span class="params">(Button* btn)</span></span><br><span class="line">&#123;</span><br><span class="line">    (<span class="type">void</span>)btn;  <span class="comment">// suppress unused parameter warning</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Button 1: Double Click\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">btn1_long_press_start_handler</span><span class="params">(Button* btn)</span></span><br><span class="line">&#123;</span><br><span class="line">    (<span class="type">void</span>)btn;  <span class="comment">// suppress unused parameter warning</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Button 1: Long Press Start\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">btn1_long_press_hold_handler</span><span class="params">(Button* btn)</span></span><br><span class="line">&#123;</span><br><span class="line">    (<span class="type">void</span>)btn;  <span class="comment">// suppress unused parameter warning</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Button 1: Long Press Hold...\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">    <span class="comment">// Attach event handlers for button 1</span></span><br><span class="line">    button_attach(&amp;btn1, BTN_SINGLE_CLICK, btn1_single_click_handler);</span><br><span class="line">    button_attach(&amp;btn1, BTN_DOUBLE_CLICK, btn1_double_click_handler);</span><br><span class="line">    button_attach(&amp;btn1, BTN_LONG_PRESS_START, btn1_long_press_start_handler);</span><br><span class="line">    button_attach(&amp;btn1, BTN_LONG_PRESS_HOLD, btn1_long_press_hold_handler);</span><br><span class="line">    button_attach(&amp;btn1, BTN_PRESS_REPEAT, btn1_press_repeat_handler);</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>启动按键处理</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Start button processing</span></span><br><span class="line">button_start(&amp;btn1);</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>周期性调用button_ticks()函数，给MultiButton配置一个 5ms的定时器，用到TIMER或者 Systick都可以</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief  Systick Config</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Systick_MS_Config</span><span class="params">(<span class="type">uint32_t</span> sys_freq)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* Setup SysTick Timer for 5 msec interrupts */</span></span><br><span class="line">    <span class="keyword">if</span> (SysTick_Config(sys_freq / <span class="number">200</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Capture error */</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>在Systick中断中调用button_ticks</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">SysTick_Handler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">		button_ticks();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>完整代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;User_Systick_Config.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;multi_button.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;SEGGER_RTT.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">SysTick_Handler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">		button_ticks();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief  Inserts a delay time.</span></span><br><span class="line"><span class="comment"> * @param count specifies the delay time length.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Delay</span><span class="params">(<span class="type">uint32_t</span> count)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (; count &gt; <span class="number">0</span>; count--)</span><br><span class="line">        ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// Button instances</span></span><br><span class="line"><span class="type">static</span> Button btn1, btn2;</span><br><span class="line"><span class="type">static</span> <span class="keyword">volatile</span> <span class="type">int</span> running = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Simulate GPIO state for demonstration</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> btn1_state = <span class="number">0</span>;</span><br><span class="line"><span class="type">static</span> <span class="type">int</span> btn2_state = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Signal handler for graceful exit</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">signal_handler</span><span class="params">(<span class="type">int</span> sig)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (sig == SIGINT) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\nReceived SIGINT, exiting...\n&quot;</span>);</span><br><span class="line">        running = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hardware abstraction layer function</span></span><br><span class="line"><span class="comment">// This simulates reading GPIO states</span></span><br><span class="line"><span class="type">uint8_t</span> <span class="title function_">read_button_gpio</span><span class="params">(<span class="type">uint8_t</span> button_id)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">switch</span> (button_id) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> (GPIO_ReadInputDataBit(GPIOA, GPIO_PIN_15) == Bit_SET);</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> btn2_state;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Callback functions for button 1</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">btn1_single_click_handler</span><span class="params">(Button* btn)</span></span><br><span class="line">&#123;</span><br><span class="line">    (<span class="type">void</span>)btn;  <span class="comment">// suppress unused parameter warning</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Button 1: Single Click\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">btn1_double_click_handler</span><span class="params">(Button* btn)</span></span><br><span class="line">&#123;</span><br><span class="line">    (<span class="type">void</span>)btn;  <span class="comment">// suppress unused parameter warning</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Button 1: Double Click\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">btn1_long_press_start_handler</span><span class="params">(Button* btn)</span></span><br><span class="line">&#123;</span><br><span class="line">    (<span class="type">void</span>)btn;  <span class="comment">// suppress unused parameter warning</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Button 1: Long Press Start\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">btn1_long_press_hold_handler</span><span class="params">(Button* btn)</span></span><br><span class="line">&#123;</span><br><span class="line">    (<span class="type">void</span>)btn;  <span class="comment">// suppress unused parameter warning</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Button 1: Long Press Hold...\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">btn1_press_repeat_handler</span><span class="params">(Button* btn)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Button 1: Press Repeat (count: %d)\n&quot;</span>, button_get_repeat_count(btn));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Initialize buttons</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">buttons_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Initialize button 1 (active high for simulation)</span></span><br><span class="line">    button_init(&amp;btn1, read_button_gpio, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Attach event handlers for button 1</span></span><br><span class="line">    button_attach(&amp;btn1, BTN_SINGLE_CLICK, btn1_single_click_handler);</span><br><span class="line">    button_attach(&amp;btn1, BTN_DOUBLE_CLICK, btn1_double_click_handler);</span><br><span class="line">    button_attach(&amp;btn1, BTN_LONG_PRESS_START, btn1_long_press_start_handler);</span><br><span class="line">    button_attach(&amp;btn1, BTN_LONG_PRESS_HOLD, btn1_long_press_hold_handler);</span><br><span class="line">    button_attach(&amp;btn1, BTN_PRESS_REPEAT, btn1_press_repeat_handler);</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Start button processing</span></span><br><span class="line">    button_start(&amp;btn1);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">KeyInputExtiInit</span><span class="params">(GPIO_Module* GPIOx, <span class="type">uint16_t</span> Pin)</span></span><br><span class="line">&#123;</span><br><span class="line">    GPIO_InitType GPIO_InitStructure;</span><br><span class="line">    EXTI_InitType EXTI_InitStructure;</span><br><span class="line">    NVIC_InitType NVIC_InitStructure;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Enable the GPIO Clock */</span></span><br><span class="line"></span><br><span class="line">		RCC_EnableAPB2PeriphClk(RCC_APB2_PERIPH_GPIOA | RCC_APB2_PERIPH_AFIO, ENABLE);</span><br><span class="line"></span><br><span class="line">		GPIO_InitStruct(&amp;GPIO_InitStructure);</span><br><span class="line">		GPIO_InitStructure.Pin        = Pin;</span><br><span class="line">		GPIO_InitStructure.GPIO_Pull    = GPIO_Pull_Up;</span><br><span class="line">		GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Input;</span><br><span class="line">		GPIO_InitPeripheral(GPIOx, &amp;GPIO_InitStructure);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief  Main program.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/*SystemInit() function has been called by startup file startup_n32wb43x.s*/</span></span><br><span class="line">	  buttons_init();</span><br><span class="line">	</span><br><span class="line">	  Systick_MS_Config(SystemCoreClock);</span><br><span class="line">    <span class="comment">//make the timer invoking the button_ticks() interval 5ms.</span></span><br><span class="line">    <span class="comment">//This function is implemented by yourself.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*Initialize key as external line interrupt*/</span></span><br><span class="line">    KeyInputExtiInit(GPIOA, GPIO_PIN_15);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">//int fputc(int ch, FILE* f)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//&#123;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// if (ch == &#x27;\n&#x27;) &#123;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// SEGGER_RTT_PutChar(0, &#x27;\r&#x27;);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// SEGGER_RTT_PutChar(0, ch);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// return ch;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面是移植后的测试情况<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.8z6te46skd.png"  alt="图片3"></p>
+
+                    
+                </div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                    </div>
+                    <div>
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/07/14/%E4%BA%9A%E7%A7%92%E9%97%B9%E9%92%9F%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/"
+                                   title="亚秒闹钟配置参数详解"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">亚秒闹钟配置参数详解</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="copyright-info info-item">
+    &copy;&nbsp;<span>2020</span>&nbsp;-&nbsp;2025
+    
+            &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">GaoSheng</a>
+        
+    </div>
+
+    <!-- <div class="theme-info info-item">
+        由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+    </div> -->
+
+    
+        
+        <div class="deploy-info info-item">
+            
+            本站由 <span class="tooltip" data-tooltip-content="GitHub Pages"><img src="/images/brands/github.png"></span> 提供部署服务
+            
+        </div>
+    
+
+    
+
+    
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+
+        <!-- PC go comment -->
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <!-- toggle mode -->
+        
+            <li class="tools-item tool-toggle-theme-mode flex-center">
+                <i class="fas fa-moon"></i>
+            </li>
+        
+
+        <!-- rss -->
+        
+
+        <!-- to bottom -->
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+</main>
+
+
+
+
+
+<!-- common js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
+
+<!-- local search -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/local-search.min.js"></script>
+
+
+<!-- lazyload -->
+
+
+<div class="">
+    <!-- home page -->
+    
+
+    <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
+    
+
+    <!-- categories page -->
+    
+
+    <!-- links page -->
+    
+
+    <!-- photos page -->
+    
+
+    <!-- tools page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+
+
+</body>
+</html>
