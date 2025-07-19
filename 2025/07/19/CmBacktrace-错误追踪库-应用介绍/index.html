@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Sat Jul 19 2025 16:58:13 GMT+0800">2025-07-19 16:58:13</span>
+                    <span class="datetime" data-updated="Sat Jul 19 2025 17:12:15 GMT+0800">2025-07-19 17:12:15</span>
                 </span>
             
         
@@ -210,22 +210,22 @@
                     
 
                     
-                         <p>关于HardFault调试方法可以移步至<br><a class="link"   target="_blank" rel="noopener" href="https://dadeju.github.io/2025/04/19/HardFault%E5%B8%B8%E8%A7%81%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95/" >https://dadeju.github.io/2025/04/19/HardFault%E5%B8%B8%E8%A7%81%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95/<i class="fas fa-external-link-alt"></i></a><br>根据故障寄存器信息来定位故障原因及故障代码地址，虽然这样能解决一小部分问题，但是重复的、繁琐的分析过程也会耽误很多时间。而且对于一些复杂问题，只依靠代码地址是无法解决的，必须得还原错误现场的函数调用逻辑关系。虽然连接仿真器可以查看到的函数调用栈，但故障状态下是无法显示的<br>尤其是下面这种，极难复现的问题<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.1vyy2mp7e9.png"  alt="图片1"></p>
-<p>使用CmBacktrace能够很好的应对这类场景，可以将错误信息输出到控制台上，CmBacktrace 输出的信息包括函数调用栈、故障诊断结果、堆栈、故障寄存器及产品固件信息，极大的提升了错误定位的效率及准确性。</p>
+                         <p>关于HardFault调试方法可以移步至<br><a class="link"   target="_blank" rel="noopener" href="https://dadeju.github.io/2025/04/19/HardFault%E5%B8%B8%E8%A7%81%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95/" >https://dadeju.github.io/2025/04/19/HardFault%E5%B8%B8%E8%A7%81%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95/<i class="fas fa-external-link-alt"></i></a><br>根据故障寄存器信息来定位故障原因及故障代码地址，虽然这样能解决一小部分问题，但是<mark>重复的、繁琐</mark>的分析过程也会耽误很多时间。而且对于一些复杂问题，只依靠代码地址是难以解决的，必须得还原错误现场的函数调用逻辑关系。虽然连接仿真器可以查看到的函数调用栈，但故障状态下是无法显示的<br>尤其是下面这种，极难复现的问题<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.1vyy2mp7e9.png"  alt="图片1"></p>
+<p><strong>使用CmBacktrace能够很好的应对这类场景，可以将错误信息输出到控制台上，CmBacktrace 输出的信息包括函数调用栈、故障诊断结果、堆栈、故障寄存器及产品固件信息，极大的提升了错误定位的效率及准确性。</strong></p>
 <h3 id="移植过程"><a href="#移植过程" class="headerlink" title="移植过程"></a>移植过程</h3><p>1.添加库文件到工程<br>把CmBacktrace项目文件download到本地<a class="link"   target="_blank" rel="noopener" href="https://github.com/armink/CmBacktrace" >https://github.com/armink/CmBacktrace<i class="fas fa-external-link-alt"></i></a><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.3gop23meuo.png"  alt="图片2"></p>
 <p>需要注意的是fault_handler目录下的cmb_fault.S文件需要和自己使用的平台对应<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.175oim1odr.png"  alt="图片3"></p>
 <p>打开C99支持<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%874.1sfc4ww4oe.png"  alt="图片4"></p>
 <h3 id="配置cmb-cfg-h文件"><a href="#配置cmb-cfg-h文件" class="headerlink" title="配置cmb_cfg.h文件"></a>配置cmb_cfg.h文件</h3><p><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%875.3d534dtc4t.png"  alt="图片5"></p>
 <h3 id="注释之前的HardFault-Handler函数"><a href="#注释之前的HardFault-Handler函数" class="headerlink" title="注释之前的HardFault_Handler函数"></a>注释之前的HardFault_Handler函数</h3><p><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%876.2vf1fsryjv.png"  alt="图片6"></p>
 <h3 id="初始化cm-backtrace"><a href="#初始化cm-backtrace" class="headerlink" title="初始化cm_backtrace"></a>初始化cm_backtrace</h3><p>cm_backtrace_init(“KeyInterrupt”, “V1.0”, “V1.0”);</p>
-<p>在\CmBacktrace-1.4.1\demos\non_os路径下找一个主动触发的demo<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%877.4g4sf9p60a.png"  alt="图片7"></p>
+<p>在\CmBacktrace-1.4.1\demos\non_os路径下找一个主动触发硬件错误的demo<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%877.4g4sf9p60a.png"  alt="图片7"></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">fault_test_by_div0</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">int</span> * SCB_CCR = (<span class="keyword">volatile</span> <span class="type">int</span> *) <span class="number">0xE000ED14</span>; <span class="comment">// SCB-&gt;CCR</span></span><br><span class="line">    <span class="type">int</span> x, y, z;</span><br><span class="line"></span><br><span class="line">    *SCB_CCR |= (<span class="number">1</span> &lt;&lt; <span class="number">4</span>); <span class="comment">/* bit4: DIV_0_TRP. */</span></span><br><span class="line"></span><br><span class="line">    x = <span class="number">10</span>;</span><br><span class="line">    y = <span class="number">0</span>;</span><br><span class="line">    z = x / y;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;z:%d\n&quot;</span>, z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>甚至能提示HardFault的原因<br> <img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%878.45hym49xux.png"  alt="图片8"></p>
 <p>根据下面的提示，在MDK-ARM\Objects目录下运行：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">addr2line -e KeyInterrupt.axf -a -f <span class="number">0800157</span>c <span class="number">080016f</span>a </span><br></pre></td></tr></table></figure>
 
-<p>addr2line是一个能将地址映射到源代码位置的工具（函数名 + 文件 + 行号）<br>-e  KeyInterrupt.axf  指定带有调试信息的 ELF&#x2F;AXF 文件<br>-a  显示地址（Address）本身<br>-f  显示函数名（Function）</p>
+<p><mark>addr2line</mark>是一个能将地址映射到源代码位置的工具（函数名 + 文件 + 行号）<br>-e  KeyInterrupt.axf  指定带有调试信息的 ELF&#x2F;AXF 文件<br>-a  显示地址（Address）本身<br>-f  显示函数名（Function）</p>
 <p>使用 addr2line 命令，查看函数调用栈详细信息，并定位错误代码<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%879.1lc49h9z8o.png"  alt="图片9"></p>
 
                     
