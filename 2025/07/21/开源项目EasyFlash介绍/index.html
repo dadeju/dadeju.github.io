@@ -183,7 +183,7 @@
             
                 <span class="meta-info-item post-update-date">
                     <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Mon Jul 21 2025 19:54:24 GMT+0800">2025-07-21 19:54:24</span>
+                    <span class="datetime" data-updated="Tue Jul 22 2025 19:19:47 GMT+0800">2025-07-22 19:19:47</span>
                 </span>
             
         
@@ -215,7 +215,7 @@
 <p>资源占用少：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">最低要求： ROM: <span class="number">6</span>K bytes     RAM: <span class="number">0.1</span>K bytes</span><br></pre></td></tr></table></figure>
 
-<p>EasyFlash移植难度不大，所以对所有 <mark>移植接口都有做预 </mark>。移植主要是修改\easyflash\port\ef_port.c 文件，实现里面的擦、写、读及打印功能即可。</p>
+<p>EasyFlash移植难度不大，对所有 <mark>移植接口都有做预留 </mark>。移植主要是修改\easyflash\port\ef_port.c 文件，实现里面的擦、写、读及打印功能即可。</p>
 <h3 id="移植过程"><a href="#移植过程" class="headerlink" title="移植过程"></a>移植过程</h3><p>1.将easyflash源文件及头文件添加到工程<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.5c19xr0jo7.png"  alt="图片1"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.102gq7h85y.png"  alt="图片2"><br>2.根据选用的MCU的flash规格修改ef_cfg.h文件<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.3rbiya3c7q.png"  alt="图片3"></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* The minimum size of flash erasure. May be a flash sector size. */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EF_ERASE_MIN_SIZE       2048   <span class="comment">/* 擦除粒度@note you must define it for a value */</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* the flash write granularity, unit: bit</span></span><br><span class="line"><span class="comment"> * only support 1(nor flash)/ 8(stm32f4)/ 32(stm32f1) */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EF_WRITE_GRAN       32      <span class="comment">/* 写入粒度@note you must define it for a value */</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* backup area start address */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EF_START_ADDR            (FLASH_BASE + 100 * 1024) <span class="comment">/* @note you must define it for a value */</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* ENV area size. It&#x27;s at least one empty sector for GC. So it&#x27;s definition must more then or equal 2 flash sector size. */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ENV_AREA_SIZE             (2 * EF_ERASE_MIN_SIZE)<span class="comment">/* @note you must define it for a value if you used ENV */</span></span></span><br></pre></td></tr></table></figure>
 
