@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="GaoSheng">
+    
+    <title>
+        
+            SST超级精简RTOS介绍 |
+        
+        GaoSheng
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/brands.min.css">
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#0066cc","title":"GaoSheng","author":"GaoSheng","avatar":null,"logo":null,"favicon":null},"menu":{"home":"/","archives":"/archives"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"我也许不知道答案，但我知道怎么找到答案","hitokoto":false},"social_contact":{"enable":true,"links":{"weixin":"img | ./images/wxcode.png","email":null}},"scroll":{"progress_bar":false,"percent":false,"hide_header":true},"home":{"announcement":null,"category":false,"tag":false,"post_datetime":"updated"},"post":{"author_badge":{"enable":true,"level_badge":true,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":false,"min2read":false},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":false,"share":false,"reward":{"enable":false,"img_link":null,"text":null,"icon":null}},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"toc":{"enable":false,"number":false,"expand_all":false,"init_open":true,"layout":"right"},"website_count":{"busuanzi_count":{"enable":false,"site_uv":false,"site_pv":false,"page_pv":false}},"local_search":{"enable":true,"preload":false},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.39"},"waline":{"server_url":null,"reaction":false,"version":"3.3.2"},"giscus":{"repo":null,"repo_id":null,"category":"Announcements","category_id":null,"reactions_enabled":false},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":false},"lazyload":{"enable":false},"cdn":{"enable":true,"provider":"cdnjs"},"pjax":{"enable":false},"footer":{"since":2020,"word_count":false,"site_deploy":{"enable":true,"provider":"github","url":null},"record":{"enable":false,"list":[{"code":null,"link":null}]}},"inject":{"enable":false,"css":[null],"js":[null]},"root":"","source_data":{},"version":"4.2.5"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+
+<main class="page-container border-box">
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left flex-start border-box">
+            
+            <a class="site-name border-box" href="/">
+               GaoSheng
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc border-box">
+                <ul class="menu-list border-box">
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/">
+                                
+                                首页
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/archives">
+                                
+                                归档
+                                
+                            </a>
+                            
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="menu-text-color fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile border-box flex-start">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list border-box">
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/">
+                            
+                            首页
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
+                            
+                            归档
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        SST超级精简RTOS介绍
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">GaoSheng</span>
+                                
+                                    <span class="author-badge">Lv4</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-07-30 19:00:30</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Wed Jul 30 2025 19:20:57 GMT+0800">2025-07-30 19:20:57</span>
+                </span>
+            
+        
+
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <p>本文介绍一个非常精简的RTOS，Super-Simple-Tasker的<mark>非抢占版本SST0</mark><br><a class="link"   target="_blank" rel="noopener" href="https://github.com/QuantumLeaps/Super-Simple-Tasker" >https://github.com/QuantumLeaps/Super-Simple-Tasker<i class="fas fa-external-link-alt"></i></a></p>
+<p>SST0 是一个基于优先级的 RTOS 内核，但它的调度是非抢占式的。<mark>调度器总是执行当前就绪状态下优先级最高的基本任务，但调度操作只有在每个任务自愿执行完成（运行至完成）之后才会发生</mark>。</p>
+<p>SST0 提供以下特性：</p>
+<ul>
+<li>基本任务（非阻塞、执行到底的方式）</li>
+<li>基于优先级的非抢占式（协作式）调度</li>
+<li>每个优先级只能有一个任务</li>
+<li>每个任务可以有多个“激活”（事件队列）</li>
+</ul>
+<h3 id="移植流程"><a href="#移植流程" class="headerlink" title="移植流程"></a>移植流程</h3><p>1.将Super-Simple-Tasker工程download到本地后，添加sst0_c文件夹下面的内容到工程，添加对应的头文件路径<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%871.4n80qk1ffg.png"  alt="图片1"></p>
+<p>2.新建bsp.c文件，参考\Super-Simple-Tasker-2.3.2\sst0_c\examples\blinky路径下的bsp_nucleo-l053r8.c文件<br>注释之前的SysTick_Handler函数<br>在bsp.c中 添加</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">SysTick_Handler</span><span class="params">(<span class="type">void</span>)</span>;  <span class="comment">/* prototype */</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">SysTick_Handler</span><span class="params">(<span class="type">void</span>)</span> &#123; <span class="comment">/* system clock tick ISR */</span></span><br><span class="line">    SST_TimeEvt_tick(); <span class="comment">/* process all SST time events */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>实现DBC_fault_handler函数，该函数是断言失败进行的操作，默认会进行复位操作，一般是输出一些出错信息到串口。<br>实现SST_onStart函数，初始化SysTick</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">SST_onStart</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    SystemCoreClockUpdate();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* set up the SysTick timer to fire at BSP_TICKS_PER_SEC rate */</span></span><br><span class="line">    SysTick_Config((SystemCoreClock / BSP_TICKS_PER_SEC) + <span class="number">1U</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* set priorities of ISRs used in the system */</span></span><br><span class="line">    NVIC_SetPriority(SysTick_IRQn, <span class="number">0U</span>);</span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SST_onIdleCond为空闲处理钩子函数，用于系统在无任务可运行时进入省电状态或空转状态。这些不做展开，可以直接配置成一个空函数。</p>
+<p>3.在Main.c里面初始化内核（在SST0中该函数为空）与板级支持包<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%872.1zikg78e3f.png"  alt="图片2"><br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%873.64e5sb5k63.png"  alt="图片3"></p>
+<p>4.编写构造任务，指定初始化函数和事件派发函数，构造定时事件</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    SST_Task super; <span class="comment">/* inherit SST_Task */</span></span><br><span class="line"></span><br><span class="line">    SST_TimeEvt te1;</span><br><span class="line">    SST_TimeEvt te2;</span><br><span class="line">&#125; Blinky;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Signals</span> &#123;</span></span><br><span class="line">    TIMEOUT1_SIG,</span><br><span class="line">    TIMEOUT2_SIG,</span><br><span class="line">    TIMEOUT3_SIG,</span><br><span class="line">    TIMEOUT4_SIG,</span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line">    MAX_SIG  <span class="comment">/* the last signal */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> Blinky Blinky_inst; <span class="comment">/* the Blinky instance */</span></span><br><span class="line">SST_Task * <span class="type">const</span> AO_Blinky = &amp;Blinky_inst.super; <span class="comment">/* opaque AO pointer */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//任务初始化：启动两个定时事件，定期向任务发出信号</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">Blinky_init</span><span class="params">(Blinky * <span class="type">const</span> me, SST_Evt <span class="type">const</span> * <span class="type">const</span> ie)</span> &#123;</span><br><span class="line">    (<span class="type">void</span>)ie; <span class="comment">/* unused parameter */</span></span><br><span class="line">    SST_TimeEvt_arm(&amp;me-&gt;te1, <span class="number">1U</span>,                          BSP_TICKS_PER_SEC); <span class="comment">//启动定时事件</span></span><br><span class="line">    SST_TimeEvt_arm(&amp;me-&gt;te2, <span class="number">1U</span> + (BSP_TICKS_PER_SEC/<span class="number">4U</span>), BSP_TICKS_PER_SEC);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//任务调度器，负责根据事件信号执行不同操作</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">Blinky_dispatch</span><span class="params">(Blinky * <span class="type">const</span> me, SST_Evt <span class="type">const</span> * <span class="type">const</span> e)</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (e-&gt;sig) &#123;</span><br><span class="line">        <span class="keyword">case</span> TIMEOUT1_SIG: &#123;</span><br><span class="line">                LedOff(GPIOA, GPIO_PIN_8);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">case</span> TIMEOUT2_SIG: &#123;</span><br><span class="line">                LedOn(GPIOA, GPIO_PIN_8);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">default</span>: &#123;</span><br><span class="line"><span class="comment">//            DBC_ERROR(200);</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">Blinky_ctor</span><span class="params">(Blinky * <span class="type">const</span> me)</span> &#123;</span><br><span class="line">    SST_Task_ctor(</span><br><span class="line">       &amp;me-&gt;super,</span><br><span class="line">       (SST_Handler)&amp;Blinky_init,  <span class="comment">//任务的初始化函数，首次启动时调用</span></span><br><span class="line">       (SST_Handler)&amp;Blinky_dispatch);  <span class="comment">//任务的事件处理函数，每次处理事件时会被调用</span></span><br><span class="line">    SST_TimeEvt_ctor(&amp;me-&gt;te1, TIMEOUT1_SIG, &amp;me-&gt;super); <span class="comment">//创建定时事件</span></span><br><span class="line">    SST_TimeEvt_ctor(&amp;me-&gt;te2, TIMEOUT2_SIG, &amp;me-&gt;super);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//用于注册任务</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Blinky_instantiate</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    Blinky_ctor(&amp;Blinky_inst);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>5.添加任务启动函数SST_Task_run<br>SST_Task_run() 是SST0 系统的主事件处理循环，负责不断从就绪表中挑出有事件的任务并执行其 dispatch 函数，任务中最好不要有阻塞的操作</p>
+<h3 id="Only-one-task-per-priority-level"><a href="#Only-one-task-per-priority-level" class="headerlink" title="Only one task per priority level"></a>Only one task per priority level</h3><p>由于SST0是非抢占式的，每个优先级只能有一个任务（最多32个优先级）<br>任务启动时会检查task_registry数组来判断该优先级 prio 是否已经有任务注册<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%874.51eghf9qai.png"  alt="图片4"></p>
+<h3 id="如何寻找优先级最高的就绪任务"><a href="#如何寻找优先级最高的就绪任务" class="headerlink" title="如何寻找优先级最高的就绪任务"></a>如何寻找优先级最高的就绪任务</h3><p>ARMv7-M 及以上架构的处理器拥有 CLZ（Count Leading Zeros）指令，可以统计一个 32 位整数中从最高位（bit 31）开始的连续0的个数，利用前导零计算指令可以很快计算出就绪任务中的最高优先级<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%875.6f0zlgksbd.png"  alt="图片5"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> SST_LOG2(x_) ((uint_fast8_t)(32U - __builtin_clz((unsigned)(x_))))</span></span><br></pre></td></tr></table></figure>
+
+<p>例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ready_set = <span class="number">0x00000020</span>; <span class="comment">// 表示第 6 位有任务就绪</span></span><br><span class="line">SST_LOG2(ready_set) → <span class="number">6</span></span><br><span class="line">ready_set = <span class="number">0x00000020</span> = <span class="number">0010</span> <span class="number">0000b</span></span><br><span class="line">__builtin_clz(ready_set) = <span class="number">26</span></span><br><span class="line"><span class="number">32</span> - <span class="number">26</span> = <span class="number">6</span></span><br></pre></td></tr></table></figure>
+
+<p>如果使用的是ARMv6-M架构 (Cortex-M0 &#x2F; M0+)，SST也提供了软件处理方式(查表 + 分段右移)。需要注意的是这里不是简单的将优先级传入，而是需要将优先级转换为32位位图的第几位，即：“优先级 x” 表示为 “第 x 位为 1 的 32 位数”</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* SST_LOG2() implementation for ARMv6-M (no CLZ instruction) */</span></span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">uint_fast8_t</span> <span class="title function_">SST_LOG2</span><span class="params">(<span class="type">uint32_t</span> x)</span> &#123;</span><br><span class="line">    <span class="type">static</span> <span class="type">uint8_t</span> <span class="type">const</span> log2LUT[<span class="number">16</span>] = &#123;</span><br><span class="line">        <span class="number">0U</span>, <span class="number">1U</span>, <span class="number">2U</span>, <span class="number">2U</span>, <span class="number">3U</span>, <span class="number">3U</span>, <span class="number">3U</span>, <span class="number">3U</span>,</span><br><span class="line">        <span class="number">4U</span>, <span class="number">4U</span>, <span class="number">4U</span>, <span class="number">4U</span>, <span class="number">4U</span>, <span class="number">4U</span>, <span class="number">4U</span>, <span class="number">4U</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="type">uint_fast8_t</span> n = <span class="number">0U</span>;</span><br><span class="line">    SST_ReadySet tmp;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#<span class="keyword">if</span> (SST_PORT_MAX_TASK &gt; 16U)</span></span><br><span class="line">    tmp = (SST_ReadySet)(x &gt;&gt; <span class="number">16U</span>);</span><br><span class="line">    <span class="keyword">if</span> (tmp != <span class="number">0U</span>) &#123;</span><br><span class="line">        n += <span class="number">16U</span>;</span><br><span class="line">        x = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">    <span class="meta">#<span class="keyword">if</span> (SST_PORT_MAX_TASK &gt; 8U)</span></span><br><span class="line">    tmp = (x &gt;&gt; <span class="number">8U</span>);</span><br><span class="line">    <span class="keyword">if</span> (tmp != <span class="number">0U</span>) &#123;</span><br><span class="line">        n += <span class="number">8U</span>;</span><br><span class="line">        x = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">    tmp = (x &gt;&gt; <span class="number">4U</span>);</span><br><span class="line">    <span class="keyword">if</span> (tmp != <span class="number">0U</span>) &#123;</span><br><span class="line">        n += <span class="number">4U</span>;</span><br><span class="line">        x = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> n + log2LUT[x];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><mark>补充一点关于SST（抢占式）的内容</mark>：<br>SST 抢占式在 Cortex-M 上不手动保存上下文，它通过将每个任务<mark>映射到一个NVIC中断</mark>，利用硬件 ISR 自动上下文切换，达到“抢占”的效果。<br><img   src="https://dadeju.github.io/picx-images-hosting/%E5%9B%BE%E7%89%876.7i0owcgm6w.png"  alt="图片6"></p>
+
+                    
+                </div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                    </div>
+                    <div>
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/07/21/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AEEasyFlash%E4%BB%8B%E7%BB%8D/"
+                                   title="开源项目EasyFlash介绍"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">开源项目EasyFlash介绍</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="copyright-info info-item">
+    &copy;&nbsp;<span>2020</span>&nbsp;-&nbsp;2025
+    
+            &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">GaoSheng</a>
+        
+    </div>
+
+    <!-- <div class="theme-info info-item">
+        由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+    </div> -->
+
+    
+        
+        <div class="deploy-info info-item">
+            
+            本站由 <span class="tooltip" data-tooltip-content="GitHub Pages"><img src="/images/brands/github.png"></span> 提供部署服务
+            
+        </div>
+    
+
+    
+
+    
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+
+        <!-- PC go comment -->
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <!-- toggle mode -->
+        
+            <li class="tools-item tool-toggle-theme-mode flex-center">
+                <i class="fas fa-moon"></i>
+            </li>
+        
+
+        <!-- rss -->
+        
+
+        <!-- to bottom -->
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+</main>
+
+
+
+
+
+<!-- common js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
+
+<!-- local search -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/local-search.min.js"></script>
+
+
+<!-- lazyload -->
+
+
+<div class="">
+    <!-- home page -->
+    
+
+    <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
+    
+
+    <!-- categories page -->
+    
+
+    <!-- links page -->
+    
+
+    <!-- photos page -->
+    
+
+    <!-- tools page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+
+
+</body>
+</html>
