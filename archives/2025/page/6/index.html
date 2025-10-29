@@ -9,7 +9,7 @@
     
     <title>
         
-            云途HA SPI外设介绍 |
+            归档: 2025 |
         
         GaoSheng
     </title>
@@ -75,7 +75,7 @@
                         </li>
                     
                         
-                        <li class="menu-item flex-start border-box">
+                        <li class="menu-item flex-start border-box active">
                             <a class="menu-text-color border-box" href="/archives">
                                 
                                 归档
@@ -128,7 +128,7 @@
                 </li>
             
                 
-                <li class="drawer-menu-item border-box not-sub-menu">
+                <li class="drawer-menu-item border-box not-sub-menu active">
                     <label class="drawer-menu-label border-box">
                         <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
                             
@@ -166,166 +166,70 @@
             <div class="main-content border-box">
                 
 
-                    
-<div class="fade-in-down-animation">
-    <div class="post-page-container border-box">
-        <div class="post-content-container border-box">
+                    <div class="fade-in-down-animation">
+    <div class="archives-container">
+        <div class="archives-timeline border-box">
             
-
-            <div class="post-content-bottom border-box">
+<div class="archive-list-container border-box">
+    
+        <section class="archive-item border-box">
+            <div class="archive-item-header border-box">
+                <span class="archive-year">2025</span>
+            </div>
+            <ul class="archive-item-body border-box">
                 
-                    <div class="post-title">
-                        云途HA SPI外设介绍
-                    </div>
+                    <li class="post-item border-box">
+                        <span class="starting-point border-box flex-center"></span>
+                        <span class="post-date border-box">03-11</span>
+                        <a class="post-title border-box text-ellipsis"
+                           href="/2025/03/11/%E4%BA%91%E9%80%94HA-%E4%BB%8EPower-down%E6%A8%A1%E5%BC%8F%E5%94%A4%E9%86%92%E5%90%8E%EF%BC%8C%E4%BF%9D%E6%8C%81RTC%E6%97%B6%E9%92%9F%E7%9A%84%E6%96%B9%E6%B3%95%E5%88%86%E4%BA%AB/"
+                        >云途HA 从Power down模式唤醒后，保持RTC时钟的方法分享</a>
+                    </li>
                 
-
-                
-                    <div class="post-header border-box">
-                        
-                        <div class="info-box">
-                            <div class="author border-box">
-                                <span class="name">GaoSheng</span>
-                                
-                                    <span class="author-badge">Lv5</span>
-                                
-                            </div>
-                            <div class="meta-info border-box">
-                                
-
-<div class="post-meta-info-container border-box post">
-    <div class="post-meta-info border-box">
-        
-
-        
-            <span class="meta-info-item post-create-date">
-                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2025-03-27 20:28:49</span>
-            </span>
-
-            
-                <span class="meta-info-item post-update-date">
-                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                    <span class="datetime" data-updated="Fri Mar 28 2025 19:30:39 GMT+0800">2025-03-28 19:30:39</span>
-                </span>
-            
-        
-
-        
-
-        
-            <span class="post-tag meta-info-item border-box">
-                <ul class="post-tag-ul">
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE/">通讯协议</a></li>
-                        
-                    
-                </ul>
-            </span>
-        
-
-        
-        
-        
-        
-    </div>
-
+            </ul>
+        </section>
     
 </div>
 
-                            </div>
-                        </div>
-                    </div>
-                
-
-                <div class="post-content keep-markdown-body ">
-                    
-
-                    
-                         <p>首先来看HA的DS手册中对SPI外设的描述：<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7axc2dsvaf.webp"  alt="image"><br>SPI外设的电路系统框图如下所示：<br><img   src="https://dadeju.github.io/picx-images-hosting/1743079265174.3nrsev9vea.webp"  alt="1743079265174"><br>通过RM手册的IPC章节可知，SPI模块的外设功能时钟是可选的<br><img   src="https://dadeju.github.io/picx-images-hosting/image.6t7adtdydb.webp"  alt="image"><br>首先是IPC的DIV分频，是一个四位，范围从0-15；<br><img   src="https://dadeju.github.io/picx-images-hosting/image.26lnd4i6yb.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.26lnd4ikok.webp"  alt="image"><br>实际上还需要通过PRESCALE来计算SPI的分频，但是在配置SPI过程中你只需要写你预期的波率即可，<mark>底层驱动中会自动通过一个SPI_SetBaudRate的函数来计算出对应的分频值</mark><br><img   src="https://dadeju.github.io/picx-images-hosting/image.7i0jxumgmh.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/image.1zifhpj98d.webp"  alt="image"><br>全双工通信方式可以通过中断通信，DMA 通信，阻塞通信三种方式进行<br>云途的SPI传输有三个API（本文最关键的部分）：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">SPI_DRV_MasterTransfer</span><br><span class="line">功能：执行非阻塞（异步）的 SPI 数据传输。</span><br><span class="line">函数发起传输后立即返回，不等待传输完成。</span><br><span class="line">用户需要通过调用 SPI_DRV_MasterGetTransferStatus 来检查传输状态。</span><br><span class="line">如果需要终止传输，可以调用 SPI_DRV_MasterAbortTransfer。</span><br><span class="line"></span><br><span class="line">SPI_DRV_MasterTransferBlocking</span><br><span class="line">执行阻塞（同步）的 SPI 数据传输。</span><br><span class="line">特点：</span><br><span class="line">函数会一直阻塞，直到传输完成或超时。</span><br><span class="line">如果传输在指定的超时时间内未完成，函数将返回 STATUS_TIMEOUT。</span><br><span class="line"></span><br><span class="line">SPI_DRV_MasterTransferPolling</span><br><span class="line">执行轮询（Polling）模式的 SPI 数据传输。</span><br><span class="line">特点：</span><br><span class="line">函数会主动轮询硬件状态寄存器，直到传输完成。</span><br><span class="line">不依赖中断或 DMA，完全由软件控制传输过程。</span><br><span class="line">函数会阻塞当前线程，直到传输完成。</span><br></pre></td></tr></table></figure>
-
-<p>SPI本身是支持一主多从时分复用的，这些SCK和SIN，SOUT线都是接在一起的，SPI从机设备的生产厂商各自不同，不能保证每家都有这个设计。临时凑在一起，总归会有比较大的风险（若当其中一个从机的发送数据信号线为高电平而另一个从机为低电平时，就会出现局部短路，进而损坏电路。）所以还是建议保守一点好，有几个从机，就配置几个SPI，这样能保证每个从机之间互不影响。</p>
-<p>而多PCS设计的作用更多在于PCB布线的方便，从多个可选的PCS引脚中就近选择一个可用的PCS接到SPI从机设备上，对应在软件上，一旦确定下来某个SPI外设使用确定的PCS引脚，在整个程序的运行周期中就不再改动了。</p>
-<p>CONT这个寄存器值得关注一下，置1后，PCS的状态将由SPI-&gt;TXCFG配置控制pcs结束，即需要软件去重新写SPI-&gt;TXCFG才会拉高pcs。具体表现为在传输完一帧后，是否需要重新拉高pcs。<br><img   src="https://dadeju.github.io/picx-images-hosting/image.54xxhz54mz.webp"  alt="image"><br><img   src="https://dadeju.github.io/picx-images-hosting/3c6fa3f3d49e32c551955a69a184a73.9kgcn8jvcl.webp"  alt="3c6fa3f3d49e32c551955a69a184a73"><br>CONT置1：<img   src="https://dadeju.github.io/picx-images-hosting/9040e6fbd3f1a3a4f563662deec5495.8s3h5i5jhd.webp"  alt="9040e6fbd3f1a3a4f563662deec5495"><br>CONT置0：<img   src="https://dadeju.github.io/picx-images-hosting/acf91cda2189269f5e8953f8abd2678.m8spa2dt.webp"  alt="acf91cda2189269f5e8953f8abd2678"></p>
-<p><a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/cEGljK0pNDIvzAf7W_zqbQ" >https://mp.weixin.qq.com/s/cEGljK0pNDIvzAf7W_zqbQ<i class="fas fa-external-link-alt"></i></a><br>YTM32B1HA0xRM V1.2</p>
-
-                    
-                </div>
-
-                
-
-                <div class="post-bottom-tags-and-share border-box">
-                    <div>
-                        
-                            <ul class="post-tags-box border-box">
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE/">通讯协议</a>
-                                    </li>
-                                
-                            </ul>
-                        
-                    </div>
-                    <div>
-                        
-                    </div>
-                </div>
-
-                
-
-                
-                    <div class="post-nav border-box">
-                        
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2025/03/31/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%A5%87%E7%89%B9%E7%9A%84debug%E7%BB%8F%E5%8E%86/"
-                                   title="记一次奇特的debug经历"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">记一次奇特的debug经历</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
-                        
-                            <div class="next-post">
-                                <a class="next"
-                                   rel="next"
-                                   href="/2025/03/24/IIC%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/"
-                                   title="IIC协议介绍"
-                                >
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">IIC协议介绍</span>
-                                        <span class="post-nav-item">下一篇</span>
-                                    </span>
-                                    <span class="right arrow-icon flex-center">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </span>
-                                </a>
-                            </div>
-                        
-                    </div>
-                
-
-                
-                    
-
-
-
-
-
-
-                
-            </div>
+        </div>
+    </div>
+    
+    <div class="paginator border-box flex-center">
+        <div class="border-box first-page paginator-btn allowed">
+            <a class="border-box"><i class="fa-solid fa-angle-double-left"></i></a>
         </div>
 
-        
+        <div class="border-box paginator-btn allowed">
+            <a class="border-box"
+               href="/archives/2025/page/5/"
+            ><i class="fa-solid fa-chevron-left"></i></a>
+        </div>
+
+
+        <div class="page-number-box border-box flex-center">
+            <input class="page-number-input border-box base-style"
+                   type="number"
+                   value="6"
+                   min="1"
+                   max="6"
+            /><span class="delimiter base-style">/</span><span class="base-style">6</span>
+        </div>
+
+
+        <div class="border-box paginator-btn">
+            <a class="border-box"
+               href="/"
+            ><i class="fa-solid fa-chevron-right"></i></a>
+        </div>
+
+        <div class="border-box last-page paginator-btn not-allow">
+            <a class="border-box"><i class="fa-solid fa-angle-double-right"></i></a>
+        </div>
     </div>
+
+
+
+
 </div>
 
 
@@ -365,27 +269,6 @@
     </div>
 
     <!-- post tools -->
-    
-        <div class="post-tools right-toc">
-            <div class="post-tools-container border-box">
-    <ul class="post-tools-list border-box">
-        <!-- PC encrypt again -->
-        
-
-        <!-- PC TOC show toggle -->
-        
-
-        <!-- PC go comment -->
-        
-
-        <!-- PC full screen -->
-        <li class="tools-item flex-center full-screen">
-            <i class="fa-solid fa-expand"></i>
-        </li>
-    </ul>
-</div>
-
-        </div>
     
 
     <!-- side tools -->
@@ -480,6 +363,7 @@
 
 
 
+
 <!-- common js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
 
@@ -496,18 +380,6 @@
     
 
     <!-- post page -->
-    
-        <!-- post-helper -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
-
-        <!-- toc -->
-        
-
-        <!-- copyright-info -->
-        
-
-        <!-- share -->
-        
     
 
     <!-- categories page -->

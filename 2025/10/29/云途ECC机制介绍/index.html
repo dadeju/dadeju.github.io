@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="GaoSheng">
+    
+    <title>
+        
+            云途ECC机制介绍 |
+        
+        GaoSheng
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/font/css/brands.min.css">
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#0066cc","title":"GaoSheng","author":"GaoSheng","avatar":null,"logo":null,"favicon":null},"menu":{"home":"/","archives":"/archives","佩奇语录":"/佩奇语录"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"我也许不知道答案，但我知道怎么找到答案","hitokoto":false},"social_contact":{"enable":true,"links":{"weixin":"img | ./images/wxcode.png","email":null}},"scroll":{"progress_bar":false,"percent":false,"hide_header":true},"home":{"announcement":null,"category":false,"tag":false,"post_datetime":"updated"},"post":{"author_badge":{"enable":true,"level_badge":true,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":false,"min2read":false},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":false,"share":false,"reward":{"enable":false,"img_link":null,"text":null,"icon":null}},"code_block":{"tools":{"enable":true,"style":"default"},"highlight_theme":"default"},"toc":{"enable":false,"number":false,"expand_all":false,"init_open":true,"layout":"right"},"website_count":{"busuanzi_count":{"enable":false,"site_uv":false,"site_pv":false,"page_pv":false}},"local_search":{"enable":true,"preload":false},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.39"},"waline":{"server_url":null,"reaction":false,"version":"3.3.2"},"giscus":{"repo":null,"repo_id":null,"category":"Announcements","category_id":null,"reactions_enabled":false},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":false},"lazyload":{"enable":false},"cdn":{"enable":true,"provider":"cdnjs"},"pjax":{"enable":false},"footer":{"since":2020,"word_count":false,"site_deploy":{"enable":true,"provider":"github","url":null},"record":{"enable":false,"list":[{"code":null,"link":null}]}},"inject":{"enable":false,"css":[null],"js":[null]},"root":"","source_data":{},"version":"4.2.5"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+
+<main class="page-container border-box">
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left flex-start border-box">
+            
+            <a class="site-name border-box" href="/">
+               GaoSheng
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc border-box">
+                <ul class="menu-list border-box">
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/">
+                                
+                                首页
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/archives">
+                                
+                                归档
+                                
+                            </a>
+                            
+                        </li>
+                    
+                        
+                        <li class="menu-item flex-start border-box">
+                            <a class="menu-text-color border-box" href="/%E4%BD%A9%E5%A5%87%E8%AF%AD%E5%BD%95">
+                                
+                                佩奇语录
+                                
+                            </a>
+                            
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="menu-text-color fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile border-box flex-start">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list border-box">
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/">
+                            
+                            首页
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/archives">
+                            
+                            归档
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+                
+                <li class="drawer-menu-item border-box not-sub-menu">
+                    <label class="drawer-menu-label border-box">
+                        <a class="drawer-menu-text-color left-side flex-start border-box" href="/%E4%BD%A9%E5%A5%87%E8%AF%AD%E5%BD%95">
+                            
+                            佩奇语录
+                        </a>
+                        
+                    </label>
+                    
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        云途ECC机制介绍
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">GaoSheng</span>
+                                
+                                    <span class="author-badge">Lv5</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2025-10-29 22:46:38</span>
+            </span>
+
+            
+                <span class="meta-info-item post-update-date">
+                    <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                    <span class="datetime" data-updated="Wed Oct 29 2025 23:33:55 GMT+0800">2025-10-29 23:33:55</span>
+                </span>
+            
+        
+
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body ">
+                    
+
+                    
+                         <p>ECC：Error Correction Code，纠错码。是一种用于检测和纠正 Flash 存储器中的错误的技术<br>云途MCU可以做到单bit错误自动纠正，2bit或多bit错误报错的机制。ECC单bit错误可以不做处理，多bit错误默认会跳转到HardFault<br>本文要简要介绍一下云途ECC error处理库UtilityFlashEccFault的原理</p>
+<p>首先在YCT工具中安装UtilityFlashEccFault组件<br><img   src="https://dadeju.github.io/picx-images-hosting/image.7eh6kvv4p7.png"  alt="image"></p>
+<p>安装完后在Board_Init函数里面尽量快的初始化 UtilityFlashEccFault 模块，建议放在时钟初始化后面，不然可能会出现奇怪的错误，比如在测试ECC注入时直接报错（理论上注入ECC不会立马触发错误，只要读到对应的错误地址才会触发）<br><img   src="https://dadeju.github.io/picx-images-hosting/image.4joif3l7sn.png"  alt="image"></p>
+<p>UtilityFlashEccFault的大致原理：<br>在FLASH_ECC_Fault_Init中，FLASH_ECC_Fault_Handler会接管HardFault错误，<br><img   src="https://dadeju.github.io/picx-images-hosting/image.9rjt23mjm2.png"  alt="image"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">FLASH_ECC_Fault_Handler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    __asm <span class="title function_">volatile</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="string">&quot;MOVS R0, #4                        \n&quot;</span> <span class="comment">// Load immediate value 4 into R0 to test the LR bit.</span></span></span><br><span class="line"><span class="params">        <span class="string">&quot;MOV R1, LR                         \n&quot;</span> <span class="comment">// Copy Link Register (LR) into R1.</span></span></span><br><span class="line"><span class="params">        <span class="string">&quot;TST R1, R0                         \n&quot;</span> <span class="comment">// Test if bit2 of LR is set.</span></span></span><br><span class="line"><span class="params">        <span class="string">&quot;BNE get_psp                        \n&quot;</span> <span class="comment">// If bit2 is set, use Process Stack Pointer (PSP).</span></span></span><br><span class="line"><span class="params">        <span class="string">&quot;MRS R0, MSP                        \n&quot;</span> <span class="comment">// Otherwise, load Main Stack Pointer (MSP) into R0.</span></span></span><br><span class="line"><span class="params">        <span class="string">&quot;B c_handler                        \n&quot;</span> <span class="comment">// Branch to call the C fault handler.</span></span></span><br><span class="line"><span class="params">    <span class="string">&quot;get_psp:                               \n&quot;</span></span></span><br><span class="line"><span class="params">        <span class="string">&quot;MRS R0, PSP                        \n&quot;</span> <span class="comment">// Load Process Stack Pointer (PSP) into R0.</span></span></span><br><span class="line"><span class="params">    <span class="string">&quot;c_handler:                             \n&quot;</span></span></span><br><span class="line"><span class="params">        <span class="string">&quot;LDR R2, =FLASH_ECC_Fault_Handler_C \n&quot;</span> <span class="comment">// Load to FLASH_ECC_Fault_Handler_C to R2</span></span></span><br><span class="line"><span class="params">        <span class="string">&quot;BX  R2                             \n&quot;</span> <span class="comment">// jump address in R2</span></span></span><br><span class="line"><span class="params">    )</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>FLASH_ECC_Fault_Handler看起来可能有些难以理解，我们只需要它是识别异常发生在哪个栈上（MSP 还是 PSP），然后把那个栈的地址作（R0）为参数传入FLASH_ECC_Fault_Handler_C函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">FLASH_ECC_Fault_Handler_C</span><span class="params">(<span class="type">hw_stackframe_t</span> *fault_stack)</span></span><br><span class="line">&#123;</span><br><span class="line">    DEV_ASSERT(s_FlashEccFaultStatePtr != <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">uint16_t</span> opcode = *((<span class="type">uint16_t</span> *)(fault_stack-&gt;pc));</span><br><span class="line">    <span class="type">uint8_t</span> instrSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Determine the instruction size based on the opcode. */</span></span><br><span class="line">    <span class="keyword">if</span> ((opcode &amp; <span class="number">0xE800</span>) == <span class="number">0xE800</span> ||  <span class="comment">// 32-bit instruction check (pattern 11101x...)</span></span><br><span class="line">        (opcode &amp; <span class="number">0xF000</span>) == <span class="number">0xF000</span> ||  <span class="comment">// 32-bit instruction check (pattern 11110x...)</span></span><br><span class="line">        (opcode &amp; <span class="number">0xF800</span>) == <span class="number">0xF800</span>)    <span class="comment">// 32-bit instruction check (pattern 11111x...)</span></span><br><span class="line">    &#123;</span><br><span class="line">        instrSize = <span class="number">4</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        instrSize = <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* If the Flash ECC unrecovery error flag is set, skip the faulting instruction. */</span></span><br><span class="line">    <span class="keyword">if</span> (EFM-&gt;STS &amp; EFM_STS_UNRECOVERR_MASK)</span><br><span class="line">    &#123;</span><br><span class="line">        fault_stack-&gt;pc += instrSize;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> SCB_SHCSR_BUSFAULTENA_Msk</span></span><br><span class="line">        SCB-&gt;CFSR = SCB_CFSR_BUSFAULTSR_Msk | SCB_CFSR_PRECISERR_Msk;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">/* SCB_SHCSR_BUSFAULTENA_Msk */</span></span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (s_FlashEccFaultStatePtr-&gt;eccCallback != <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            s_FlashEccFaultStatePtr-&gt;eccCallback();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> EFM_STS_CI_UNRECOVERR_MASK</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (EFM-&gt;STS &amp; EFM_STS_CI_UNRECOVERR_MASK)</span><br><span class="line">    &#123;</span><br><span class="line">        fault_stack-&gt;pc += instrSize;</span><br><span class="line">        SCB-&gt;CFSR = SCB_CFSR_BUSFAULTSR_Msk | SCB_CFSR_PRECISERR_Msk;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (s_FlashEccFaultStatePtr-&gt;eccCallback != <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            s_FlashEccFaultStatePtr-&gt;eccCallback();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">/* EFM_STS_CI_UNRECOVERR_MASK */</span></span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(s_FlashEccFaultStatePtr-&gt;otherFaultCallback != <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            s_FlashEccFaultStatePtr-&gt;otherFaultCallback(fault_stack);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>FLASH_ECC_Fault_Handler_C收到PC的地址后，根据Thumb指令集编码规则判断当前指令是16位还是32位，然后修改堆栈中的PC指针，跳过当前读取指令。这样就不会卡死在HardFault中。判断EFM_STS_CI_UNRECOVERR_MASK寄存器，如果是ECC错误则运行eccCallback()函数，其他情景导致的HardFault则运行otherFaultCallback()函数。</p>
+<p>需要还需要我们来实现EFM_UnrecoveryErrorHandler和HardFault_Callback函数，这两个函数其实不用自己去实现（Frankie曾工已经给出示例，建议照搬XD<br>EFM_UnrecoveryErrorHandler中会对出错的扇区进行擦除处理</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">EFM_UnrecoveryErrorHandler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">uint32_t</span> error_addr = EFM-&gt;ECCERR_ADDR;</span><br><span class="line">    PRINTF(<span class="string">&quot;Flash ECC Un-recovery Error Handler.\r\n&quot;</span>);</span><br><span class="line">    PRINTF(<span class="string">&quot;Ecc Error Address(EFM-&gt;ECCERR_ADDR): 0x%x\r\n&quot;</span>, error_addr);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Clear ECC error flag, EFM-&gt;ECCERR_ADDR will be cleared at the same time. */</span></span><br><span class="line">    EFM-&gt;STS = EFM_STS_UNRECOVERR_MASK;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* The sector containing the ECC error address MUST be erased to fix the error. */</span></span><br><span class="line">    <span class="keyword">if</span> (error_addr &gt;= TEST_DATA_START_ADDR &amp;&amp; error_addr &lt;= TEST_DATA_END_ADDR)</span><br><span class="line">    &#123;</span><br><span class="line">        FLASH_DRV_EraseSector(FLASH_INST,</span><br><span class="line">                              error_addr &amp; ~(FEATURE_EFM_MAIN_ARRAY_SECTOR_SIZE - <span class="number">1</span>),</span><br><span class="line">                              FEATURE_EFM_MAIN_ARRAY_SECTOR_SIZE);</span><br><span class="line">        PRINTF(<span class="string">&quot;Erased the sector containing the ECC error address.\r\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Do nothing for the location of the program</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>HardFault_Callback函数如下，如果客户之前有自己实现对HardFaul的处理，可以放到这个部分</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">HardFault_Callback</span><span class="params">(<span class="type">hw_stackframe_t</span> *fault_stack)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* Note: The handling of your own hardfault can be done here.</span></span><br><span class="line"><span class="comment">       The following code is just an example of how to access the fault stack. */</span></span><br><span class="line">    <span class="comment">/* Note: Debug output inserted just for demo clarity. */</span></span><br><span class="line">    PRINTF(<span class="string">&quot;HardFault Callback. Fault Stack:\r\n&quot;</span>);</span><br><span class="line">    PRINTF(<span class="string">&quot;R0: 0x%x\r\n&quot;</span>, fault_stack-&gt;r0);</span><br><span class="line">    PRINTF(<span class="string">&quot;R1: 0x%x\r\n&quot;</span>, fault_stack-&gt;r1);  </span><br><span class="line">    PRINTF(<span class="string">&quot;R2: 0x%x\r\n&quot;</span>, fault_stack-&gt;r2);</span><br><span class="line">    PRINTF(<span class="string">&quot;R3: 0x%x\r\n&quot;</span>, fault_stack-&gt;r3);</span><br><span class="line">    PRINTF(<span class="string">&quot;R12: 0x%x\r\n&quot;</span>, fault_stack-&gt;r12);</span><br><span class="line">    PRINTF(<span class="string">&quot;LR: 0x%x\r\n&quot;</span>, fault_stack-&gt;lr);</span><br><span class="line">    PRINTF(<span class="string">&quot;PC: 0x%x\r\n&quot;</span>, fault_stack-&gt;pc);</span><br><span class="line">    PRINTF(<span class="string">&quot;PSR: 0x%x\r\n&quot;</span>, fault_stack-&gt;psr);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Reset for default exception handling in HardFault */</span></span><br><span class="line">    PRINTF(<span class="string">&quot;System Software Reset.\r\n&quot;</span>);</span><br><span class="line">    SystemSoftwareReset();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>常见疑问：<br>Q1. Pflash和Dflash都会出现ECC错误吗？<br>A1. Pflash和Dflash都会出现ECC错误，但是Dflash的ECC错误概率更高。</p>
+<p>Q2. 怎么判断出现了ECC错误？<br>A2. 如果MCU上电直接跳转硬件错误中断，且EFM-&gt;STS的UNRECOVERR位被置起。断电重新上电现象依然存在（出现在Dflash中）.使用jflash无法读取<br><img   src="https://dadeju.github.io/picx-images-hosting/c55e0d2f0c3b6bc05c93c1d24f57987.b9b5avh2y.png"  alt="c55e0d2f0c3b6bc05c93c1d24f57987"></p>
+<p>Q3.Flash ECC 错误产生的原因<br>A3. 电压波动（特别是上下电过程中进行擦写） 、电磁辐射、器件老化（超Flash使用寿命，flash通常寿命为10万次读写，10年）</p>
+<p>Q4. 如果ECC错误的地址刚好是UtilityFlashEccFault库的处理部分，ECC错误处理还会生效吗？<br>A4. 不能生效。只能上次全擦除整个flash，重新烧录</p>
+
+                    
+                </div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                    </div>
+                    <div>
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2025/10/23/%E6%A6%82%E7%8E%87%E6%80%A7bug%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF/"
+                                   title="概率性问题解决思路"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">概率性问题解决思路</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="copyright-info info-item">
+    &copy;&nbsp;<span>2020</span>&nbsp;-&nbsp;2025
+    
+            &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">GaoSheng</a>
+        
+    </div>
+
+    <!-- <div class="theme-info info-item">
+        由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+    </div> -->
+
+    
+        
+        <div class="deploy-info info-item">
+            
+            本站由 <span class="tooltip" data-tooltip-content="GitHub Pages"><img src="/images/brands/github.png"></span> 提供部署服务
+            
+        </div>
+    
+
+    
+
+    
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="post-tools-list border-box">
+        <!-- PC encrypt again -->
+        
+
+        <!-- PC TOC show toggle -->
+        
+
+        <!-- PC go comment -->
+        
+
+        <!-- PC full screen -->
+        <li class="tools-item flex-center full-screen">
+            <i class="fa-solid fa-expand"></i>
+        </li>
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <!-- toggle mode -->
+        
+            <li class="tools-item tool-toggle-theme-mode flex-center">
+                <i class="fas fa-moon"></i>
+            </li>
+        
+
+        <!-- rss -->
+        
+
+        <!-- to bottom -->
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+</main>
+
+
+
+
+
+<!-- common js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/header-shrink.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/back2top.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/toggle-theme.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/code-block.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/libs/anime.min.js"></script>
+
+<!-- local search -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/local-search.min.js"></script>
+
+
+<!-- lazyload -->
+
+
+<div class="">
+    <!-- home page -->
+    
+
+    <!-- post page -->
+    
+        <!-- post-helper -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-keep/4.2.5/js/post/post-helper.min.js"></script>
+
+        <!-- toc -->
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
+    
+
+    <!-- categories page -->
+    
+
+    <!-- links page -->
+    
+
+    <!-- photos page -->
+    
+
+    <!-- tools page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+
+
+</body>
+</html>
